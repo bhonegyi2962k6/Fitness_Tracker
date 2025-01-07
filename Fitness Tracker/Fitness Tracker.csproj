@@ -159,6 +159,7 @@
     <Compile Include="Entities\Record.cs" />
     <Compile Include="Entities\Schedule.cs" />
     <Compile Include="Entities\ScheduleActivity.cs" />
+    <Compile Include="Entities\UserRecord.cs" />
     <Compile Include="Entities\WeightTracking.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -35,7 +35,7 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                if (!double.TryParse(txtSwimmingHeartRate.Text, out double averageHeartRate) || averageHeartRate <= 220)
+                if (!double.TryParse(txtSwimmingHeartRate.Text, out double averageHeartRate) || averageHeartRate <= 0)
                 {
                     MessageBox.Show("Please enter a valid positive number for Average Heart Rate.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;

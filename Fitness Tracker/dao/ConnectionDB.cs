@@ -13,6 +13,7 @@ using System.Windows.Forms;
 
 namespace Fitness_Tracker.dao
 {
+    
     public class ConnectionDB
     {
         // declare
@@ -206,27 +207,42 @@ namespace Fitness_Tracker.dao
 
             try
             {
+                // Insert into the `record` table
                 string sql = @"
             INSERT INTO record (record_date, burned_calories, activity_id, person_id)
-            VALUES (@recordDate, @burnedCalories, @activityId, @personID)";
+            VALUES (@recordDate, @burnedCalories, @activityId, @personID);
+            SELECT LAST_INSERT_ID();"; // Get the last inserted record ID
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@recordDate", DateTime.Now.ToString("yyyy-MM-dd"));
                 cmd.Parameters.AddWithValue("@burnedCalories", burnedCalories);
                 cmd.Parameters.AddWithValue("@activityId", activityId);
                 cmd.Parameters.AddWithValue("@personID", frmLogin.person.PersonID);
 
-                int rowsAffected = cmd.ExecuteNonQuery();
+                // Execute the query and get the last inserted record ID
+                int recordId = Convert.ToInt32(cmd.ExecuteScalar());
 
-                if (rowsAffected > 0)
+                if (recordId > 0)
                 {
-                    flag = true;
+                    // Insert into the `user_record` table
+                    string userRecordSql = @"INSERT INTO user_record (person_id, record_id)
+                                             VALUES (@personID, @recordID);";
+
+                    MySqlCommand userRecordCmd = new MySqlCommand(userRecordSql, conn);
+                    userRecordCmd.Parameters.AddWithValue("@personID", frmLogin.person.PersonID);
+                    userRecordCmd.Parameters.AddWithValue("@recordID", recordId);
+
+                    int userRecordRowsAffected = userRecordCmd.ExecuteNonQuery();
+
+                    // If the insertion in both tables was successful
+                    flag = userRecordRowsAffected > 0;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error inserting record: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
             return flag;
         }
 
@@ -238,11 +254,11 @@ namespace Fitness_Tracker.dao
             {
                 foreach (var metric in metrics)
                 {
-                    string sql = @"
+                    sql = @"
                 INSERT INTO metric_values (activity_id, metric_id, value, unit, recorded_date)
                 VALUES (@activityId, @metricId, @value, @unit, @recordedDate)";
 
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd = new MySqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@activityId", activityId);
                     cmd.Parameters.AddWithValue("@metricId", metric.Key);
                     cmd.Parameters.AddWithValue("@value", metric.Value);
@@ -275,7 +291,7 @@ namespace Fitness_Tracker.dao
             {
                 string sql = @"  SELECT unit FROM metric_values WHERE metric_id = @metricId";
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@metricId", key); // Use the method parameter
 
                 using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -320,7 +336,7 @@ namespace Fitness_Tracker.dao
         {
             try
             {
-                string sql = @"INSERT INTO schedule_activity (schedule_id, activity_id, start_time, duration_minutes)
+                 sql = @"INSERT INTO schedule_activity (schedule_id, activity_id, start_time, duration_minutes)
                        VALUES (@scheduleId, @activityId, @startTime, @durationMinutes)";
 
                 cmd = new MySqlCommand(sql, conn);
@@ -342,16 +358,16 @@ namespace Fitness_Tracker.dao
         {
             try
             {
-                sql = @"
-            SELECT 
-                a.activity_name AS 'Activity', 
-                s.scheduled_date AS 'Date', 
-                sa.start_time AS 'Start Time', 
-                sa.duration_minutes AS 'Duration'
-            FROM schedule s
-            JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
-            JOIN activity a ON sa.activity_id = a.activity_id
-            WHERE s.person_id = @personId";
+                sql = @"SELECT 
+                            s.schedule_id AS 'Schedule Id',
+                            a.activity_name AS 'Activity', 
+                            s.scheduled_date AS 'Date', 
+                            sa.start_time AS 'Start Time', 
+                            sa.duration_minutes AS 'Duration'
+                        FROM schedule s
+                        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+                        JOIN activity a ON sa.activity_id = a.activity_id
+                        WHERE s.person_id = @personId;"; // Sort by date and time
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personID);
@@ -377,7 +393,7 @@ namespace Fitness_Tracker.dao
             {
                 OpenConnection();
 
-                string sql = "SELECT activity_id, activity_name FROM activity";
+                sql = "SELECT activity_id, activity_name FROM activity";
                 cmd = new MySqlCommand(sql, conn);
 
                 using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -398,6 +414,38 @@ namespace Fitness_Tracker.dao
             }
 
             return activities;
+        }
+
+        public bool DeleteSchedule(int scheduleId)
+        {
+            try
+            {
+                // Open the database connection
+                OpenConnection();
+
+                // Delete schedule activities associated with the schedule
+                sql = "DELETE FROM schedule_activity WHERE schedule_id = @scheduleId";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@scheduleId", scheduleId);
+                cmd.ExecuteNonQuery();
+
+                // Delete the schedule
+                sql = "DELETE FROM schedule WHERE schedule_id = @scheduleId";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@scheduleId", scheduleId);
+
+                return cmd.ExecuteNonQuery() > 0; // Return true if rows were affected
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error deleting schedule: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            finally
+            {
+                // Ensure the connection is closed
+                CloseConnection();
+            }
         }
     }
     

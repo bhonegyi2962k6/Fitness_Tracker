@@ -33,10 +33,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridViewSchedule = new Guna.UI2.WinForms.Guna2DataGridView();
-            this.colActivity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colScheduleDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colScheduleStartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDuration = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -47,6 +43,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnMakeSchedule = new Guna.UI2.WinForms.Guna2Button();
             this.label5 = new System.Windows.Forms.Label();
+            this.colScheduledId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNO = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colActivity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colScheduleDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colScheduleStartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDuration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDelete = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSchedule)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,20 +68,23 @@
             this.dataGridViewSchedule.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridViewSchedule.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
             this.dataGridViewSchedule.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colScheduledId,
+            this.colNO,
             this.colActivity,
             this.colScheduleDate,
             this.colScheduleStartTime,
-            this.colDuration});
+            this.colDuration,
+            this.colDelete});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(214)))), ((int)(((byte)(218)))), ((int)(((byte)(223)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(119)))), ((int)(((byte)(133)))), ((int)(((byte)(147)))));
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridViewSchedule.DefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridViewSchedule.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(199)))), ((int)(((byte)(206)))));
-            this.dataGridViewSchedule.Location = new System.Drawing.Point(511, 115);
+            this.dataGridViewSchedule.Location = new System.Drawing.Point(436, 100);
             this.dataGridViewSchedule.Name = "dataGridViewSchedule";
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.RoyalBlue;
@@ -91,7 +97,7 @@
             this.dataGridViewSchedule.RowHeadersVisible = false;
             this.dataGridViewSchedule.RowHeadersWidth = 51;
             this.dataGridViewSchedule.RowTemplate.Height = 24;
-            this.dataGridViewSchedule.Size = new System.Drawing.Size(754, 702);
+            this.dataGridViewSchedule.Size = new System.Drawing.Size(819, 702);
             this.dataGridViewSchedule.TabIndex = 0;
             this.dataGridViewSchedule.Theme = Guna.UI2.WinForms.Enums.DataGridViewPresetThemes.WetAsphalt;
             this.dataGridViewSchedule.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(194)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
@@ -103,47 +109,19 @@
             this.dataGridViewSchedule.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(199)))), ((int)(((byte)(206)))));
             this.dataGridViewSchedule.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
             this.dataGridViewSchedule.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.dataGridViewSchedule.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dataGridViewSchedule.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dataGridViewSchedule.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.White;
             this.dataGridViewSchedule.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
             this.dataGridViewSchedule.ThemeStyle.HeaderStyle.Height = 23;
             this.dataGridViewSchedule.ThemeStyle.ReadOnly = false;
             this.dataGridViewSchedule.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(214)))), ((int)(((byte)(218)))), ((int)(((byte)(223)))));
             this.dataGridViewSchedule.ThemeStyle.RowsStyle.BorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dataGridViewSchedule.ThemeStyle.RowsStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dataGridViewSchedule.ThemeStyle.RowsStyle.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dataGridViewSchedule.ThemeStyle.RowsStyle.ForeColor = System.Drawing.Color.Black;
-            this.dataGridViewSchedule.ThemeStyle.RowsStyle.Height = 24;
+            this.dataGridViewSchedule.ThemeStyle.RowsStyle.Height = 30;
             this.dataGridViewSchedule.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(119)))), ((int)(((byte)(133)))), ((int)(((byte)(147)))));
             this.dataGridViewSchedule.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.Black;
             this.dataGridViewSchedule.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewSchedule_CellContentClick);
-            // 
-            // colActivity
-            // 
-            this.colActivity.HeaderText = "Activity";
-            this.colActivity.MinimumWidth = 6;
-            this.colActivity.Name = "colActivity";
-            this.colActivity.ReadOnly = true;
-            // 
-            // colScheduleDate
-            // 
-            this.colScheduleDate.HeaderText = "Date";
-            this.colScheduleDate.MinimumWidth = 6;
-            this.colScheduleDate.Name = "colScheduleDate";
-            this.colScheduleDate.ReadOnly = true;
-            // 
-            // colScheduleStartTime
-            // 
-            this.colScheduleStartTime.HeaderText = "Start Time";
-            this.colScheduleStartTime.MinimumWidth = 6;
-            this.colScheduleStartTime.Name = "colScheduleStartTime";
-            this.colScheduleStartTime.ReadOnly = true;
-            // 
-            // colDuration
-            // 
-            this.colDuration.HeaderText = "Duration";
-            this.colDuration.MinimumWidth = 6;
-            this.colDuration.Name = "colDuration";
-            this.colDuration.ReadOnly = true;
             // 
             // label4
             // 
@@ -297,6 +275,56 @@
             this.label5.TabIndex = 61;
             this.label5.Text = "Schedule Table";
             // 
+            // colScheduledId
+            // 
+            this.colScheduledId.HeaderText = "Schedule Id";
+            this.colScheduledId.MinimumWidth = 6;
+            this.colScheduledId.Name = "colScheduledId";
+            this.colScheduledId.ReadOnly = true;
+            this.colScheduledId.Visible = false;
+            // 
+            // colNO
+            // 
+            this.colNO.HeaderText = "No";
+            this.colNO.MinimumWidth = 6;
+            this.colNO.Name = "colNO";
+            this.colNO.ReadOnly = true;
+            // 
+            // colActivity
+            // 
+            this.colActivity.HeaderText = "Activity";
+            this.colActivity.MinimumWidth = 6;
+            this.colActivity.Name = "colActivity";
+            this.colActivity.ReadOnly = true;
+            // 
+            // colScheduleDate
+            // 
+            this.colScheduleDate.HeaderText = "Date";
+            this.colScheduleDate.MinimumWidth = 6;
+            this.colScheduleDate.Name = "colScheduleDate";
+            this.colScheduleDate.ReadOnly = true;
+            // 
+            // colScheduleStartTime
+            // 
+            this.colScheduleStartTime.HeaderText = "Start Time";
+            this.colScheduleStartTime.MinimumWidth = 6;
+            this.colScheduleStartTime.Name = "colScheduleStartTime";
+            this.colScheduleStartTime.ReadOnly = true;
+            // 
+            // colDuration
+            // 
+            this.colDuration.HeaderText = "Duration";
+            this.colDuration.MinimumWidth = 6;
+            this.colDuration.Name = "colDuration";
+            this.colDuration.ReadOnly = true;
+            // 
+            // colDelete
+            // 
+            this.colDelete.HeaderText = "Delete";
+            this.colDelete.MinimumWidth = 6;
+            this.colDelete.Name = "colDelete";
+            this.colDelete.Text = "Delete";
+            // 
             // frmSchedule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -333,11 +361,14 @@
         private Guna.UI2.WinForms.Guna2TextBox txtActivityStartTime;
         private Guna.UI2.WinForms.Guna2TextBox txtActivityDuration;
         private System.Windows.Forms.Label label1;
+        private Guna.UI2.WinForms.Guna2Button btnMakeSchedule;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colScheduledId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNO;
         private System.Windows.Forms.DataGridViewTextBoxColumn colActivity;
         private System.Windows.Forms.DataGridViewTextBoxColumn colScheduleDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn colScheduleStartTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDuration;
-        private Guna.UI2.WinForms.Guna2Button btnMakeSchedule;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewButtonColumn colDelete;
     }
 }

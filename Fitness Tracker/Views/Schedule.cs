@@ -22,6 +22,7 @@ namespace Fitness_Tracker.Views
 
         private void frmSchedule_Load(object sender, EventArgs e)
         {
+            dtpScheduleDate.MinDate = DateTime.Today;
             LoadSchedules();
             LoadActivities();
         }
@@ -32,29 +33,23 @@ namespace Fitness_Tracker.Views
                 db = new ConnectionDB();
                 db.OpenConnection();
 
-                // Set the font for column headers
-                dataGridViewSchedule.ColumnHeadersDefaultCellStyle.Font = new Font("Century Gothic", 10, FontStyle.Bold);
-                dataGridViewSchedule.ColumnHeadersDefaultCellStyle.ForeColor = Color.White; // Optional, for text color
-
                 DataTable dt = db.GetSchedules(frmLogin.person.PersonID);
-
-                dataGridViewSchedule.Rows.Clear(); // Clear previous rows
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    dataGridViewSchedule.Rows.Clear(); // Clear existing rows
+                    int rowIndex = 1;
                     foreach (DataRow row in dt.Rows)
                     {
-                        int rowIndex = dataGridViewSchedule.Rows.Add(
+                        dataGridViewSchedule.Rows.Add(row["Schedule Id"],
+                            rowIndex++, // Row number (for colNo)
                             row["Activity"].ToString(),
                             Convert.ToDateTime(row["Date"]).ToString("yyyy-MM-dd"),
                             TimeSpan.Parse(row["Start Time"].ToString()).ToString(@"hh\:mm"),
-                            $"{row["Duration"]} minutes"
+                            $"{row["Duration"]} minutes",
+                            "Delete" // Text for the delete button
+                             // Populate the hidden column
                         );
-
-                        // Apply the font to the newly added row
-                        DataGridViewRow addedRow = dataGridViewSchedule.Rows[rowIndex];
-                        
-                        addedRow.DefaultCellStyle.Font = new Font("Century Gothic", 9, FontStyle.Regular);
                     }
                 }
                 else
@@ -66,12 +61,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading schedules: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                if (db != null) db.CloseConnection();
-            }
         }
-
 
         private void LoadActivities()
         {
@@ -100,9 +90,20 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                if (!TimeSpan.TryParse(txtActivityStartTime.Text, out TimeSpan startTime))
+                // Validate and process Start Time
+                string startTimeInput = txtActivityStartTime.Text.Trim();
+
+                // Check if input is only an hour (like "6")
+                if (int.TryParse(startTimeInput, out int hour) && hour >= 0 && hour <= 23)
                 {
-                    MessageBox.Show("Please enter a valid start time.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    // Convert "6" to "06:00" (6 AM)
+                    startTimeInput = $"{hour:D2}:00";
+                }
+
+                // Try parsing the final input as TimeSpan
+                if (!TimeSpan.TryParse(startTimeInput, out TimeSpan startTime))
+                {
+                    MessageBox.Show("Invalid Start Time. Please enter a valid time (e.g., 6, 6:30, or 15:45).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -131,6 +132,12 @@ namespace Fitness_Tracker.Views
                 {
                     MessageBox.Show("Schedule successfully created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadSchedules(); // Refresh grid
+
+                    // Clear input fields
+                    txtActivityStartTime.Text = string.Empty;
+                    txtActivityDuration.Text = string.Empty;
+                    cboActivity.SelectedIndex = -1; // Reset combo box selection
+                    dtpScheduleDate.Value = DateTime.Today; // Reset to today's date
                 }
                 else
                 {
@@ -149,7 +156,40 @@ namespace Fitness_Tracker.Views
 
         private void dataGridViewSchedule_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.ColumnIndex == dataGridViewSchedule.Columns["colDelete"].Index && e.RowIndex >= 0)
+            {
+                DialogResult confirmResult = MessageBox.Show(
+                    "Are you sure you want to delete this schedule?",
+                    "Confirm Delete",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
 
+                if (confirmResult == DialogResult.Yes)
+                {
+                    try
+                    {
+                        // Get schedule_id from the hidden column
+                        int scheduleId = Convert.ToInt32(dataGridViewSchedule.Rows[e.RowIndex].Cells["colScheduledId"].Value);
+
+                        ConnectionDB db = new ConnectionDB();
+
+                        if (db.DeleteSchedule(scheduleId))
+                        {
+                            MessageBox.Show("Schedule deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadSchedules(); // Refresh the table after deletion
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete the schedule.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error occurred while deleting the schedule: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }
