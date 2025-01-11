@@ -37,6 +37,8 @@
             this.txtRowingTimeTaken = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtRowingDistance = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtRowingStrokes = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cboIntensity = new Guna.UI2.WinForms.Guna2ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -60,7 +62,7 @@
             this.btnRowingRecord.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnRowingRecord.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRowingRecord.ForeColor = System.Drawing.Color.White;
-            this.btnRowingRecord.Location = new System.Drawing.Point(735, 558);
+            this.btnRowingRecord.Location = new System.Drawing.Point(619, 606);
             this.btnRowingRecord.Name = "btnRowingRecord";
             this.btnRowingRecord.Size = new System.Drawing.Size(122, 46);
             this.btnRowingRecord.TabIndex = 52;
@@ -71,7 +73,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(456, 338);
+            this.label4.Location = new System.Drawing.Point(513, 352);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(89, 21);
             this.label4.TabIndex = 51;
@@ -81,7 +83,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(456, 464);
+            this.label3.Location = new System.Drawing.Point(513, 478);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(107, 21);
             this.label3.TabIndex = 50;
@@ -91,7 +93,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(456, 225);
+            this.label2.Location = new System.Drawing.Point(513, 239);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(119, 21);
             this.label2.TabIndex = 49;
@@ -123,7 +125,7 @@
             this.txtRowingTimeTaken.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtRowingTimeTaken.IconLeft = global::Fitness_Tracker.Properties.Resources.hourglass;
             this.txtRowingTimeTaken.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtRowingTimeTaken.Location = new System.Drawing.Point(650, 437);
+            this.txtRowingTimeTaken.Location = new System.Drawing.Point(517, 503);
             this.txtRowingTimeTaken.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtRowingTimeTaken.Name = "txtRowingTimeTaken";
             this.txtRowingTimeTaken.PasswordChar = '\0';
@@ -150,7 +152,7 @@
             this.txtRowingDistance.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtRowingDistance.IconLeft = global::Fitness_Tracker.Properties.Resources.distance;
             this.txtRowingDistance.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtRowingDistance.Location = new System.Drawing.Point(650, 311);
+            this.txtRowingDistance.Location = new System.Drawing.Point(517, 377);
             this.txtRowingDistance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtRowingDistance.Name = "txtRowingDistance";
             this.txtRowingDistance.PasswordChar = '\0';
@@ -177,7 +179,7 @@
             this.txtRowingStrokes.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtRowingStrokes.IconLeft = global::Fitness_Tracker.Properties.Resources.man_in_canoe;
             this.txtRowingStrokes.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtRowingStrokes.Location = new System.Drawing.Point(650, 198);
+            this.txtRowingStrokes.Location = new System.Drawing.Point(517, 264);
             this.txtRowingStrokes.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtRowingStrokes.Name = "txtRowingStrokes";
             this.txtRowingStrokes.PasswordChar = '\0';
@@ -188,11 +190,43 @@
             this.txtRowingStrokes.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.txtRowingStrokes.TabIndex = 45;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(513, 159);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(122, 21);
+            this.label5.TabIndex = 59;
+            this.label5.Text = "Activity Type:";
+            // 
+            // cboIntensity
+            // 
+            this.cboIntensity.BackColor = System.Drawing.Color.Transparent;
+            this.cboIntensity.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.cboIntensity.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboIntensity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboIntensity.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.Font = new System.Drawing.Font("Century Gothic", 10.2F);
+            this.cboIntensity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cboIntensity.ItemHeight = 30;
+            this.cboIntensity.Items.AddRange(new object[] {
+            "Light",
+            "Moderate",
+            "Vigorous"});
+            this.cboIntensity.Location = new System.Drawing.Point(517, 183);
+            this.cboIntensity.Name = "cboIntensity";
+            this.cboIntensity.Size = new System.Drawing.Size(321, 36);
+            this.cboIntensity.TabIndex = 58;
+            // 
             // frmRowing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.cboIntensity);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnRowingRecord);
             this.Controls.Add(this.label4);
@@ -221,5 +255,7 @@
         private Guna.UI2.WinForms.Guna2TextBox txtRowingTimeTaken;
         private Guna.UI2.WinForms.Guna2TextBox txtRowingDistance;
         private Guna.UI2.WinForms.Guna2TextBox txtRowingStrokes;
+        private System.Windows.Forms.Label label5;
+        private Guna.UI2.WinForms.Guna2ComboBox cboIntensity;
     }
 }

@@ -37,6 +37,9 @@
             this.txtWalkingTimeTaken = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtWalkingDistance = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtWalkingSteps = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cboIntensity = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.cartesianChart = new LiveCharts.WinForms.CartesianChart();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,7 +53,7 @@
             this.btnWalkingRecord.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnWalkingRecord.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnWalkingRecord.ForeColor = System.Drawing.Color.White;
-            this.btnWalkingRecord.Location = new System.Drawing.Point(731, 559);
+            this.btnWalkingRecord.Location = new System.Drawing.Point(592, 592);
             this.btnWalkingRecord.Name = "btnWalkingRecord";
             this.btnWalkingRecord.Size = new System.Drawing.Size(122, 46);
             this.btnWalkingRecord.TabIndex = 25;
@@ -61,7 +64,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(452, 339);
+            this.label4.Location = new System.Drawing.Point(492, 339);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(89, 21);
             this.label4.TabIndex = 24;
@@ -71,7 +74,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(452, 465);
+            this.label3.Location = new System.Drawing.Point(492, 465);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(107, 21);
             this.label3.TabIndex = 23;
@@ -81,7 +84,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(452, 226);
+            this.label2.Location = new System.Drawing.Point(492, 226);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 21);
             this.label2.TabIndex = 22;
@@ -123,7 +126,7 @@
             this.txtWalkingTimeTaken.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtWalkingTimeTaken.IconLeft = global::Fitness_Tracker.Properties.Resources.hourglass;
             this.txtWalkingTimeTaken.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtWalkingTimeTaken.Location = new System.Drawing.Point(646, 438);
+            this.txtWalkingTimeTaken.Location = new System.Drawing.Point(496, 490);
             this.txtWalkingTimeTaken.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtWalkingTimeTaken.Name = "txtWalkingTimeTaken";
             this.txtWalkingTimeTaken.PasswordChar = '\0';
@@ -150,7 +153,7 @@
             this.txtWalkingDistance.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtWalkingDistance.IconLeft = global::Fitness_Tracker.Properties.Resources.distance;
             this.txtWalkingDistance.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtWalkingDistance.Location = new System.Drawing.Point(646, 312);
+            this.txtWalkingDistance.Location = new System.Drawing.Point(496, 364);
             this.txtWalkingDistance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtWalkingDistance.Name = "txtWalkingDistance";
             this.txtWalkingDistance.PasswordChar = '\0';
@@ -177,7 +180,7 @@
             this.txtWalkingSteps.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtWalkingSteps.IconLeft = global::Fitness_Tracker.Properties.Resources.footsteps;
             this.txtWalkingSteps.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtWalkingSteps.Location = new System.Drawing.Point(646, 199);
+            this.txtWalkingSteps.Location = new System.Drawing.Point(496, 251);
             this.txtWalkingSteps.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtWalkingSteps.Name = "txtWalkingSteps";
             this.txtWalkingSteps.PasswordChar = '\0';
@@ -188,11 +191,52 @@
             this.txtWalkingSteps.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.txtWalkingSteps.TabIndex = 18;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(492, 142);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(122, 21);
+            this.label5.TabIndex = 59;
+            this.label5.Text = "Activity Type:";
+            // 
+            // cboIntensity
+            // 
+            this.cboIntensity.BackColor = System.Drawing.Color.Transparent;
+            this.cboIntensity.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.cboIntensity.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboIntensity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboIntensity.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.Font = new System.Drawing.Font("Century Gothic", 10.2F);
+            this.cboIntensity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cboIntensity.ItemHeight = 30;
+            this.cboIntensity.Items.AddRange(new object[] {
+            "Light",
+            "Moderate",
+            "Vigorous"});
+            this.cboIntensity.Location = new System.Drawing.Point(496, 166);
+            this.cboIntensity.Name = "cboIntensity";
+            this.cboIntensity.Size = new System.Drawing.Size(321, 36);
+            this.cboIntensity.TabIndex = 58;
+            // 
+            // cartesianChart
+            // 
+            this.cartesianChart.Location = new System.Drawing.Point(867, 142);
+            this.cartesianChart.Name = "cartesianChart";
+            this.cartesianChart.Size = new System.Drawing.Size(585, 403);
+            this.cartesianChart.TabIndex = 60;
+            this.cartesianChart.Text = "cartesianChart";
+            // 
             // frmWalking
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.cartesianChart);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.cboIntensity);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnWalkingRecord);
             this.Controls.Add(this.label4);
@@ -203,7 +247,7 @@
             this.Controls.Add(this.txtWalkingDistance);
             this.Controls.Add(this.txtWalkingSteps);
             this.Name = "frmWalking";
-            this.Size = new System.Drawing.Size(1037, 700);
+            this.Size = new System.Drawing.Size(1537, 900);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -221,5 +265,8 @@
         private Guna.UI2.WinForms.Guna2TextBox txtWalkingTimeTaken;
         private Guna.UI2.WinForms.Guna2TextBox txtWalkingDistance;
         private Guna.UI2.WinForms.Guna2TextBox txtWalkingSteps;
+        private System.Windows.Forms.Label label5;
+        private Guna.UI2.WinForms.Guna2ComboBox cboIntensity;
+        private LiveCharts.WinForms.CartesianChart cartesianChart;
     }
 }

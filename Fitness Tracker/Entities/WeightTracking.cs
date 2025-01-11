@@ -10,21 +10,22 @@ namespace Fitness_Tracker.Entities
     {
         private int weightTrackingId;
         private Person person;
-        private decimal weight;
+        private double currentWeight;
         private DateTime recordedDate;
 
-        private WeightTracking() { }
-        public WeightTracking(int weightTrackingId, Person person, decimal weight, DateTime recordedDate)
+        public WeightTracking() { }
+
+        public WeightTracking(int weightTrackingId, Person person, double currentWeight, DateTime recordedDate)
         {
             this.weightTrackingId = weightTrackingId;
             this.person = person;
-            this.weight = weight;
+            this.currentWeight = currentWeight;
             this.recordedDate = recordedDate;
         }
 
         public int WeightTrackingId { get => weightTrackingId; set => weightTrackingId = value; }
         public Person Person { get => person; set => person = value; }
-        public decimal Weight { get => weight; set => weight = value; }
+        public double CurrentWeight { get => currentWeight; set => currentWeight = value; }
         public DateTime RecordedDate { get => recordedDate; set => recordedDate = value; }
     }
 }

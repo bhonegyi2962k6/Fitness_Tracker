@@ -37,6 +37,8 @@
             this.txtHikingTimeTaken = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtHikingDistance = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtHikingElevation = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cboIntensity = new Guna.UI2.WinForms.Guna2ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,7 +52,7 @@
             this.btnHikingRecord.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnHikingRecord.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHikingRecord.ForeColor = System.Drawing.Color.White;
-            this.btnHikingRecord.Location = new System.Drawing.Point(738, 557);
+            this.btnHikingRecord.Location = new System.Drawing.Point(607, 609);
             this.btnHikingRecord.Name = "btnHikingRecord";
             this.btnHikingRecord.Size = new System.Drawing.Size(122, 46);
             this.btnHikingRecord.TabIndex = 43;
@@ -61,7 +63,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(459, 337);
+            this.label4.Location = new System.Drawing.Point(494, 357);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(89, 21);
             this.label4.TabIndex = 42;
@@ -71,7 +73,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(459, 463);
+            this.label3.Location = new System.Drawing.Point(494, 483);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(107, 21);
             this.label3.TabIndex = 41;
@@ -81,7 +83,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(459, 224);
+            this.label2.Location = new System.Drawing.Point(494, 244);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(160, 21);
             this.label2.TabIndex = 40;
@@ -123,7 +125,7 @@
             this.txtHikingTimeTaken.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtHikingTimeTaken.IconLeft = global::Fitness_Tracker.Properties.Resources.hourglass;
             this.txtHikingTimeTaken.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtHikingTimeTaken.Location = new System.Drawing.Point(653, 436);
+            this.txtHikingTimeTaken.Location = new System.Drawing.Point(498, 508);
             this.txtHikingTimeTaken.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtHikingTimeTaken.Name = "txtHikingTimeTaken";
             this.txtHikingTimeTaken.PasswordChar = '\0';
@@ -150,7 +152,7 @@
             this.txtHikingDistance.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtHikingDistance.IconLeft = global::Fitness_Tracker.Properties.Resources.distance;
             this.txtHikingDistance.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtHikingDistance.Location = new System.Drawing.Point(653, 310);
+            this.txtHikingDistance.Location = new System.Drawing.Point(498, 382);
             this.txtHikingDistance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtHikingDistance.Name = "txtHikingDistance";
             this.txtHikingDistance.PasswordChar = '\0';
@@ -177,7 +179,7 @@
             this.txtHikingElevation.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtHikingElevation.IconLeft = global::Fitness_Tracker.Properties.Resources.mountain;
             this.txtHikingElevation.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtHikingElevation.Location = new System.Drawing.Point(653, 197);
+            this.txtHikingElevation.Location = new System.Drawing.Point(498, 269);
             this.txtHikingElevation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtHikingElevation.Name = "txtHikingElevation";
             this.txtHikingElevation.PasswordChar = '\0';
@@ -188,11 +190,42 @@
             this.txtHikingElevation.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.txtHikingElevation.TabIndex = 36;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(494, 158);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(122, 21);
+            this.label5.TabIndex = 59;
+            this.label5.Text = "Activity Type:";
+            // 
+            // cboIntensity
+            // 
+            this.cboIntensity.BackColor = System.Drawing.Color.Transparent;
+            this.cboIntensity.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.cboIntensity.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboIntensity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboIntensity.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.Font = new System.Drawing.Font("Century Gothic", 10.2F);
+            this.cboIntensity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cboIntensity.ItemHeight = 30;
+            this.cboIntensity.Items.AddRange(new object[] {
+            "Moderate",
+            "Vigorous"});
+            this.cboIntensity.Location = new System.Drawing.Point(498, 182);
+            this.cboIntensity.Name = "cboIntensity";
+            this.cboIntensity.Size = new System.Drawing.Size(321, 36);
+            this.cboIntensity.TabIndex = 58;
+            // 
             // frmHiking
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.cboIntensity);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnHikingRecord);
             this.Controls.Add(this.label4);
@@ -221,5 +254,7 @@
         private Guna.UI2.WinForms.Guna2TextBox txtHikingTimeTaken;
         private Guna.UI2.WinForms.Guna2TextBox txtHikingDistance;
         private Guna.UI2.WinForms.Guna2TextBox txtHikingElevation;
+        private System.Windows.Forms.Label label5;
+        private Guna.UI2.WinForms.Guna2ComboBox cboIntensity;
     }
 }

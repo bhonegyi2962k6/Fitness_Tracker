@@ -37,6 +37,9 @@
             this.txtSwimmingHeartRate = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtSwimmingTime = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtSwimmingLaps = new Guna.UI2.WinForms.Guna2TextBox();
+            this.cboIntensity = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,7 +57,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(450, 233);
+            this.label2.Location = new System.Drawing.Point(474, 213);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 21);
             this.label2.TabIndex = 4;
@@ -64,7 +67,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(450, 472);
+            this.label3.Location = new System.Drawing.Point(474, 452);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(186, 21);
             this.label3.TabIndex = 5;
@@ -74,7 +77,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(450, 346);
+            this.label4.Location = new System.Drawing.Point(474, 326);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(107, 21);
             this.label4.TabIndex = 6;
@@ -90,7 +93,7 @@
             this.btnSwimmingRecord.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnSwimmingRecord.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSwimmingRecord.ForeColor = System.Drawing.Color.White;
-            this.btnSwimmingRecord.Location = new System.Drawing.Point(729, 566);
+            this.btnSwimmingRecord.Location = new System.Drawing.Point(579, 575);
             this.btnSwimmingRecord.Name = "btnSwimmingRecord";
             this.btnSwimmingRecord.Size = new System.Drawing.Size(122, 46);
             this.btnSwimmingRecord.TabIndex = 16;
@@ -123,7 +126,7 @@
             this.txtSwimmingHeartRate.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtSwimmingHeartRate.IconLeft = global::Fitness_Tracker.Properties.Resources.heart_rate;
             this.txtSwimmingHeartRate.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtSwimmingHeartRate.Location = new System.Drawing.Point(644, 445);
+            this.txtSwimmingHeartRate.Location = new System.Drawing.Point(478, 477);
             this.txtSwimmingHeartRate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSwimmingHeartRate.Name = "txtSwimmingHeartRate";
             this.txtSwimmingHeartRate.PasswordChar = '\0';
@@ -150,7 +153,7 @@
             this.txtSwimmingTime.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtSwimmingTime.IconLeft = global::Fitness_Tracker.Properties.Resources.distance;
             this.txtSwimmingTime.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtSwimmingTime.Location = new System.Drawing.Point(644, 319);
+            this.txtSwimmingTime.Location = new System.Drawing.Point(478, 351);
             this.txtSwimmingTime.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSwimmingTime.Name = "txtSwimmingTime";
             this.txtSwimmingTime.PasswordChar = '\0';
@@ -177,7 +180,7 @@
             this.txtSwimmingLaps.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtSwimmingLaps.IconLeft = global::Fitness_Tracker.Properties.Resources.reload;
             this.txtSwimmingLaps.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtSwimmingLaps.Location = new System.Drawing.Point(644, 206);
+            this.txtSwimmingLaps.Location = new System.Drawing.Point(478, 238);
             this.txtSwimmingLaps.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSwimmingLaps.Name = "txtSwimmingLaps";
             this.txtSwimmingLaps.PasswordChar = '\0';
@@ -188,11 +191,52 @@
             this.txtSwimmingLaps.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.txtSwimmingLaps.TabIndex = 0;
             // 
+            // cboIntensity
+            // 
+            this.cboIntensity.BackColor = System.Drawing.Color.Transparent;
+            this.cboIntensity.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.cboIntensity.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboIntensity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboIntensity.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.Font = new System.Drawing.Font("Century Gothic", 10.2F);
+            this.cboIntensity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cboIntensity.ItemHeight = 30;
+            this.cboIntensity.Items.AddRange(new object[] {
+            "Light",
+            "Moderate",
+            "Vigorous"});
+            this.cboIntensity.Location = new System.Drawing.Point(478, 152);
+            this.cboIntensity.Name = "cboIntensity";
+            this.cboIntensity.Size = new System.Drawing.Size(321, 36);
+            this.cboIntensity.TabIndex = 56;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(474, 128);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(122, 21);
+            this.label5.TabIndex = 57;
+            this.label5.Text = "Activity Type:";
+            // 
+            // cartesianChart1
+            // 
+            this.cartesianChart1.Location = new System.Drawing.Point(865, 233);
+            this.cartesianChart1.Name = "cartesianChart1";
+            this.cartesianChart1.Size = new System.Drawing.Size(401, 334);
+            this.cartesianChart1.TabIndex = 59;
+            this.cartesianChart1.Text = "cartesianChart1";
+            // 
             // frmSwimming
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.cartesianChart1);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.cboIntensity);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnSwimmingRecord);
             this.Controls.Add(this.label4);
@@ -203,7 +247,7 @@
             this.Controls.Add(this.txtSwimmingTime);
             this.Controls.Add(this.txtSwimmingLaps);
             this.Name = "frmSwimming";
-            this.Size = new System.Drawing.Size(1037, 700);
+            this.Size = new System.Drawing.Size(1337, 900);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -221,5 +265,8 @@
         private System.Windows.Forms.Label label4;
         private Guna.UI2.WinForms.Guna2Button btnSwimmingRecord;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private Guna.UI2.WinForms.Guna2ComboBox cboIntensity;
+        private System.Windows.Forms.Label label5;
+        private LiveCharts.WinForms.CartesianChart cartesianChart1;
     }
 }

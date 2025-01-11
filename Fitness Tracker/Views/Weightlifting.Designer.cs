@@ -37,6 +37,8 @@
             this.txtWeightliftingReps = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtWeightliftingWeight = new Guna.UI2.WinForms.Guna2TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cboIntensity = new Guna.UI2.WinForms.Guna2ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,7 +52,7 @@
             this.btnWeightliftingRecord.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnWeightliftingRecord.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnWeightliftingRecord.ForeColor = System.Drawing.Color.White;
-            this.btnWeightliftingRecord.Location = new System.Drawing.Point(727, 559);
+            this.btnWeightliftingRecord.Location = new System.Drawing.Point(606, 609);
             this.btnWeightliftingRecord.Name = "btnWeightliftingRecord";
             this.btnWeightliftingRecord.Size = new System.Drawing.Size(122, 46);
             this.btnWeightliftingRecord.TabIndex = 61;
@@ -61,7 +63,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(448, 339);
+            this.label4.Location = new System.Drawing.Point(502, 353);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(107, 21);
             this.label4.TabIndex = 60;
@@ -71,7 +73,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(448, 465);
+            this.label3.Location = new System.Drawing.Point(502, 479);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(149, 21);
             this.label3.TabIndex = 59;
@@ -81,7 +83,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(448, 226);
+            this.label2.Location = new System.Drawing.Point(502, 240);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(125, 21);
             this.label2.TabIndex = 58;
@@ -113,7 +115,7 @@
             this.txtWeightliftingSets.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtWeightliftingSets.IconLeft = global::Fitness_Tracker.Properties.Resources.check;
             this.txtWeightliftingSets.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtWeightliftingSets.Location = new System.Drawing.Point(642, 438);
+            this.txtWeightliftingSets.Location = new System.Drawing.Point(506, 504);
             this.txtWeightliftingSets.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtWeightliftingSets.Name = "txtWeightliftingSets";
             this.txtWeightliftingSets.PasswordChar = '\0';
@@ -140,7 +142,7 @@
             this.txtWeightliftingReps.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtWeightliftingReps.IconLeft = global::Fitness_Tracker.Properties.Resources.reload;
             this.txtWeightliftingReps.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtWeightliftingReps.Location = new System.Drawing.Point(642, 312);
+            this.txtWeightliftingReps.Location = new System.Drawing.Point(506, 378);
             this.txtWeightliftingReps.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtWeightliftingReps.Name = "txtWeightliftingReps";
             this.txtWeightliftingReps.PasswordChar = '\0';
@@ -167,7 +169,7 @@
             this.txtWeightliftingWeight.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtWeightliftingWeight.IconLeft = global::Fitness_Tracker.Properties.Resources.weight_lifting;
             this.txtWeightliftingWeight.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtWeightliftingWeight.Location = new System.Drawing.Point(642, 199);
+            this.txtWeightliftingWeight.Location = new System.Drawing.Point(506, 265);
             this.txtWeightliftingWeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtWeightliftingWeight.Name = "txtWeightliftingWeight";
             this.txtWeightliftingWeight.PasswordChar = '\0';
@@ -188,11 +190,43 @@
             this.pictureBox1.TabIndex = 62;
             this.pictureBox1.TabStop = false;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(502, 160);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(122, 21);
+            this.label5.TabIndex = 64;
+            this.label5.Text = "Activity Type:";
+            // 
+            // cboIntensity
+            // 
+            this.cboIntensity.BackColor = System.Drawing.Color.Transparent;
+            this.cboIntensity.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.cboIntensity.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboIntensity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboIntensity.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboIntensity.Font = new System.Drawing.Font("Century Gothic", 10.2F);
+            this.cboIntensity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cboIntensity.ItemHeight = 30;
+            this.cboIntensity.Items.AddRange(new object[] {
+            "Light",
+            "Moderate",
+            "Vigorous"});
+            this.cboIntensity.Location = new System.Drawing.Point(506, 184);
+            this.cboIntensity.Name = "cboIntensity";
+            this.cboIntensity.Size = new System.Drawing.Size(321, 36);
+            this.cboIntensity.TabIndex = 63;
+            // 
             // frmWeightlifting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.cboIntensity);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnWeightliftingRecord);
             this.Controls.Add(this.label4);
@@ -220,5 +254,7 @@
         private Guna.UI2.WinForms.Guna2TextBox txtWeightliftingReps;
         private Guna.UI2.WinForms.Guna2TextBox txtWeightliftingWeight;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label5;
+        private Guna.UI2.WinForms.Guna2ComboBox cboIntensity;
     }
 }

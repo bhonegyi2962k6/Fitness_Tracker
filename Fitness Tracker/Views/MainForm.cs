@@ -170,5 +170,18 @@ namespace Fitness_Tracker.Views
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmSchedule());
         }
+
+        private void btnRecords_Click(object sender, EventArgs e)
+        {
+            panelMain.Controls.Clear();
+            panelMain.Controls.Add(new frmMonitorActivity());
+        }
+
+        private void btnSetGoal_Click(object sender, EventArgs e)
+        {
+            panelMain.Controls.Clear();
+            panelMain.Controls.Add(new frmSetGoal());
+        }
+
     }
 }

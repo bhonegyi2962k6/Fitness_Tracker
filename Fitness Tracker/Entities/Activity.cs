@@ -11,11 +11,11 @@ namespace Fitness_Tracker.Entities
         private int activityId;
         private string activityName;
         private string descriptions;
-
         public Activity() 
         { 
 
         }
+
         public Activity(int activityId, string activityName, string descriptions)
         {
             this.activityId = activityId;

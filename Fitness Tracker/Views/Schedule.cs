@@ -23,6 +23,8 @@ namespace Fitness_Tracker.Views
         private void frmSchedule_Load(object sender, EventArgs e)
         {
             dtpScheduleDate.MinDate = DateTime.Today;
+            dataGridViewSchedule.RowTemplate.Height = 50; // Adjust this value to your desired height
+            dataGridViewSchedule.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
             LoadSchedules();
             LoadActivities();
         }
