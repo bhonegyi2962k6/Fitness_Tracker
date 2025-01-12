@@ -32,6 +32,36 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            Guna.Charts.WinForms.ChartFont chartFont1 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont2 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont3 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont4 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid1 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick1 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont5 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid2 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick2 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont6 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid3 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.PointLabel pointLabel1 = new Guna.Charts.WinForms.PointLabel();
+            Guna.Charts.WinForms.ChartFont chartFont7 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Tick tick3 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont8 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont9 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont10 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont11 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont12 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid4 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick4 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont13 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid5 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick5 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont14 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid6 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.PointLabel pointLabel2 = new Guna.Charts.WinForms.PointLabel();
+            Guna.Charts.WinForms.ChartFont chartFont15 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Tick tick6 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont16 = new Guna.Charts.WinForms.ChartFont();
             this.cboGoalType = new Guna.UI2.WinForms.Guna2ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtTargetWeight = new Guna.UI2.WinForms.Guna2TextBox();
@@ -41,6 +71,8 @@
             this.btnSetGoal = new Guna.UI2.WinForms.Guna2Button();
             this.btnEditGoal = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.lblActivity = new System.Windows.Forms.Label();
+            this.lblTargetDate = new System.Windows.Forms.Label();
             this.bntDeleteGoal = new Guna.UI2.WinForms.Guna2Button();
             this.btnAchieved = new Guna.UI2.WinForms.Guna2Button();
             this.lblGoalAdvice = new System.Windows.Forms.Label();
@@ -57,7 +89,9 @@
             this.colTargetWeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDailyCaloriesTarget = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCreatedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTargetDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colIsAchieved = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colActivity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblAchievedGoal = new System.Windows.Forms.Label();
             this.lblUserWeight = new System.Windows.Forms.Label();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
@@ -66,7 +100,17 @@
             this.lblWeightLossAchieved = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
+            this.cboTargetActivity = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.dtpTargetDate = new Guna.UI2.WinForms.Guna2DateTimePicker();
             this.label9 = new System.Windows.Forms.Label();
+            this.lblProgress = new System.Windows.Forms.Label();
+            this.progressBar = new Guna.UI2.WinForms.Guna2CircleProgressBar();
+            this.chartGoalAchievementByMonth = new Guna.Charts.WinForms.GunaChart();
+            this.gunaBarDataset1 = new Guna.Charts.WinForms.GunaBarDataset();
+            this.chartAchievedVsPending = new Guna.Charts.WinForms.GunaChart();
+            this.gunaPieDataset1 = new Guna.Charts.WinForms.GunaPieDataset();
             this.guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGoals)).BeginInit();
             this.guna2Panel2.SuspendLayout();
@@ -88,16 +132,17 @@
             "Weight Loss",
             "Weight Gain",
             "Maintain Weight"});
-            this.cboGoalType.Location = new System.Drawing.Point(18, 87);
+            this.cboGoalType.Location = new System.Drawing.Point(18, 74);
             this.cboGoalType.Name = "cboGoalType";
-            this.cboGoalType.Size = new System.Drawing.Size(253, 36);
+            this.cboGoalType.Size = new System.Drawing.Size(357, 36);
             this.cboGoalType.TabIndex = 56;
+            this.cboGoalType.SelectedIndexChanged += new System.EventHandler(this.cboGoalType_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(17, 63);
+            this.label2.Location = new System.Drawing.Point(17, 50);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 21);
             this.label2.TabIndex = 57;
@@ -119,14 +164,14 @@
             this.txtTargetWeight.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtTargetWeight.IconLeft = global::Fitness_Tracker.Properties.Resources.calendar;
             this.txtTargetWeight.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtTargetWeight.Location = new System.Drawing.Point(18, 185);
+            this.txtTargetWeight.Location = new System.Drawing.Point(18, 236);
             this.txtTargetWeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTargetWeight.Name = "txtTargetWeight";
             this.txtTargetWeight.PasswordChar = '\0';
             this.txtTargetWeight.PlaceholderForeColor = System.Drawing.Color.Gray;
             this.txtTargetWeight.PlaceholderText = "Enter Your Target Weight";
             this.txtTargetWeight.SelectedText = "";
-            this.txtTargetWeight.Size = new System.Drawing.Size(256, 48);
+            this.txtTargetWeight.Size = new System.Drawing.Size(357, 48);
             this.txtTargetWeight.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.txtTargetWeight.TabIndex = 1;
             // 
@@ -134,7 +179,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(17, 160);
+            this.label1.Location = new System.Drawing.Point(17, 211);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(133, 21);
             this.label1.TabIndex = 59;
@@ -156,14 +201,14 @@
             this.txtCaloriesTarget.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtCaloriesTarget.IconLeft = global::Fitness_Tracker.Properties.Resources.calendar;
             this.txtCaloriesTarget.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtCaloriesTarget.Location = new System.Drawing.Point(18, 290);
+            this.txtCaloriesTarget.Location = new System.Drawing.Point(18, 332);
             this.txtCaloriesTarget.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtCaloriesTarget.Name = "txtCaloriesTarget";
             this.txtCaloriesTarget.PasswordChar = '\0';
             this.txtCaloriesTarget.PlaceholderForeColor = System.Drawing.Color.Gray;
             this.txtCaloriesTarget.PlaceholderText = "Enter Your Calories Target";
             this.txtCaloriesTarget.SelectedText = "";
-            this.txtCaloriesTarget.Size = new System.Drawing.Size(256, 48);
+            this.txtCaloriesTarget.Size = new System.Drawing.Size(357, 48);
             this.txtCaloriesTarget.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.txtCaloriesTarget.TabIndex = 60;
             // 
@@ -171,7 +216,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(17, 265);
+            this.label3.Location = new System.Drawing.Point(17, 307);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(140, 21);
             this.label3.TabIndex = 61;
@@ -187,7 +232,7 @@
             this.btnSetGoal.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnSetGoal.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSetGoal.ForeColor = System.Drawing.Color.White;
-            this.btnSetGoal.Location = new System.Drawing.Point(21, 418);
+            this.btnSetGoal.Location = new System.Drawing.Point(18, 510);
             this.btnSetGoal.Name = "btnSetGoal";
             this.btnSetGoal.Size = new System.Drawing.Size(122, 46);
             this.btnSetGoal.TabIndex = 62;
@@ -204,7 +249,7 @@
             this.btnEditGoal.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnEditGoal.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditGoal.ForeColor = System.Drawing.Color.White;
-            this.btnEditGoal.Location = new System.Drawing.Point(152, 418);
+            this.btnEditGoal.Location = new System.Drawing.Point(250, 510);
             this.btnEditGoal.Name = "btnEditGoal";
             this.btnEditGoal.Size = new System.Drawing.Size(122, 46);
             this.btnEditGoal.TabIndex = 63;
@@ -216,6 +261,8 @@
             this.guna2Panel1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.guna2Panel1.BorderRadius = 10;
             this.guna2Panel1.BorderThickness = 2;
+            this.guna2Panel1.Controls.Add(this.lblActivity);
+            this.guna2Panel1.Controls.Add(this.lblTargetDate);
             this.guna2Panel1.Controls.Add(this.bntDeleteGoal);
             this.guna2Panel1.Controls.Add(this.btnAchieved);
             this.guna2Panel1.Controls.Add(this.lblGoalAdvice);
@@ -225,10 +272,28 @@
             this.guna2Panel1.Controls.Add(this.lblTargetWeight);
             this.guna2Panel1.Controls.Add(this.lblGoalType);
             this.guna2Panel1.Controls.Add(this.label4);
-            this.guna2Panel1.Location = new System.Drawing.Point(338, 433);
+            this.guna2Panel1.Location = new System.Drawing.Point(853, 29);
             this.guna2Panel1.Name = "guna2Panel1";
-            this.guna2Panel1.Size = new System.Drawing.Size(389, 391);
+            this.guna2Panel1.Size = new System.Drawing.Size(389, 568);
             this.guna2Panel1.TabIndex = 64;
+            // 
+            // lblActivity
+            // 
+            this.lblActivity.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblActivity.Location = new System.Drawing.Point(29, 321);
+            this.lblActivity.Name = "lblActivity";
+            this.lblActivity.Size = new System.Drawing.Size(318, 21);
+            this.lblActivity.TabIndex = 72;
+            this.lblActivity.Text = "Activity:";
+            // 
+            // lblTargetDate
+            // 
+            this.lblTargetDate.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTargetDate.Location = new System.Drawing.Point(29, 277);
+            this.lblTargetDate.Name = "lblTargetDate";
+            this.lblTargetDate.Size = new System.Drawing.Size(318, 21);
+            this.lblTargetDate.TabIndex = 71;
+            this.lblTargetDate.Text = "Target Date:";
             // 
             // bntDeleteGoal
             // 
@@ -240,9 +305,9 @@
             this.bntDeleteGoal.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.bntDeleteGoal.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bntDeleteGoal.ForeColor = System.Drawing.Color.White;
-            this.bntDeleteGoal.Location = new System.Drawing.Point(204, 323);
+            this.bntDeleteGoal.Location = new System.Drawing.Point(207, 463);
             this.bntDeleteGoal.Name = "bntDeleteGoal";
-            this.bntDeleteGoal.Size = new System.Drawing.Size(167, 46);
+            this.bntDeleteGoal.Size = new System.Drawing.Size(164, 46);
             this.bntDeleteGoal.TabIndex = 65;
             this.bntDeleteGoal.Text = "Delete Goal";
             this.bntDeleteGoal.Click += new System.EventHandler(this.bntDeleteGoal_Click);
@@ -257,9 +322,9 @@
             this.btnAchieved.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnAchieved.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAchieved.ForeColor = System.Drawing.Color.White;
-            this.btnAchieved.Location = new System.Drawing.Point(21, 323);
+            this.btnAchieved.Location = new System.Drawing.Point(16, 463);
             this.btnAchieved.Name = "btnAchieved";
-            this.btnAchieved.Size = new System.Drawing.Size(167, 46);
+            this.btnAchieved.Size = new System.Drawing.Size(157, 46);
             this.btnAchieved.TabIndex = 65;
             this.btnAchieved.Text = "Achieved Goal";
             this.btnAchieved.Click += new System.EventHandler(this.btnAchieved_Click);
@@ -267,15 +332,15 @@
             // lblGoalAdvice
             // 
             this.lblGoalAdvice.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblGoalAdvice.Location = new System.Drawing.Point(29, 268);
+            this.lblGoalAdvice.Location = new System.Drawing.Point(29, 372);
             this.lblGoalAdvice.Name = "lblGoalAdvice";
-            this.lblGoalAdvice.Size = new System.Drawing.Size(318, 21);
+            this.lblGoalAdvice.Size = new System.Drawing.Size(342, 43);
             this.lblGoalAdvice.TabIndex = 70;
             // 
             // lblIsAchieved
             // 
             this.lblIsAchieved.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblIsAchieved.Location = new System.Drawing.Point(29, 230);
+            this.lblIsAchieved.Location = new System.Drawing.Point(29, 236);
             this.lblIsAchieved.Name = "lblIsAchieved";
             this.lblIsAchieved.Size = new System.Drawing.Size(318, 21);
             this.lblIsAchieved.TabIndex = 69;
@@ -284,7 +349,7 @@
             // lblCreatedDate
             // 
             this.lblCreatedDate.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCreatedDate.Location = new System.Drawing.Point(29, 188);
+            this.lblCreatedDate.Location = new System.Drawing.Point(29, 194);
             this.lblCreatedDate.Name = "lblCreatedDate";
             this.lblCreatedDate.Size = new System.Drawing.Size(318, 21);
             this.lblCreatedDate.TabIndex = 68;
@@ -293,7 +358,7 @@
             // lblCaloriesTarget
             // 
             this.lblCaloriesTarget.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCaloriesTarget.Location = new System.Drawing.Point(29, 146);
+            this.lblCaloriesTarget.Location = new System.Drawing.Point(29, 152);
             this.lblCaloriesTarget.Name = "lblCaloriesTarget";
             this.lblCaloriesTarget.Size = new System.Drawing.Size(318, 21);
             this.lblCaloriesTarget.TabIndex = 67;
@@ -302,7 +367,7 @@
             // lblTargetWeight
             // 
             this.lblTargetWeight.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTargetWeight.Location = new System.Drawing.Point(29, 103);
+            this.lblTargetWeight.Location = new System.Drawing.Point(29, 109);
             this.lblTargetWeight.Name = "lblTargetWeight";
             this.lblTargetWeight.Size = new System.Drawing.Size(318, 21);
             this.lblTargetWeight.TabIndex = 66;
@@ -311,7 +376,7 @@
             // lblGoalType
             // 
             this.lblGoalType.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblGoalType.Location = new System.Drawing.Point(29, 62);
+            this.lblGoalType.Location = new System.Drawing.Point(29, 68);
             this.lblGoalType.Name = "lblGoalType";
             this.lblGoalType.Size = new System.Drawing.Size(318, 21);
             this.lblGoalType.TabIndex = 65;
@@ -321,7 +386,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(29, 21);
+            this.label4.Location = new System.Drawing.Point(28, 13);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(112, 19);
             this.label4.TabIndex = 65;
@@ -351,7 +416,9 @@
             this.colTargetWeight,
             this.colDailyCaloriesTarget,
             this.colCreatedAt,
-            this.colIsAchieved});
+            this.colTargetDate,
+            this.colIsAchieved,
+            this.colActivity});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(214)))), ((int)(((byte)(218)))), ((int)(((byte)(223)))));
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -361,7 +428,7 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvGoals.DefaultCellStyle = dataGridViewCellStyle3;
             this.dgvGoals.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(199)))), ((int)(((byte)(206)))));
-            this.dgvGoals.Location = new System.Drawing.Point(745, 178);
+            this.dgvGoals.Location = new System.Drawing.Point(27, 633);
             this.dgvGoals.Name = "dgvGoals";
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.RoyalBlue;
@@ -374,7 +441,7 @@
             this.dgvGoals.RowHeadersVisible = false;
             this.dgvGoals.RowHeadersWidth = 51;
             this.dgvGoals.RowTemplate.Height = 50;
-            this.dgvGoals.Size = new System.Drawing.Size(867, 646);
+            this.dgvGoals.Size = new System.Drawing.Size(1215, 316);
             this.dgvGoals.TabIndex = 65;
             this.dgvGoals.Theme = Guna.UI2.WinForms.Enums.DataGridViewPresetThemes.WetAsphalt;
             this.dgvGoals.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(194)))), ((int)(((byte)(200)))), ((int)(((byte)(207)))));
@@ -402,7 +469,7 @@
             // 
             // colNo
             // 
-            this.colNo.FillWeight = 33.22845F;
+            this.colNo.FillWeight = 36.63394F;
             this.colNo.HeaderText = "No";
             this.colNo.MinimumWidth = 6;
             this.colNo.Name = "colNo";
@@ -418,7 +485,7 @@
             // 
             // colGoalType
             // 
-            this.colGoalType.FillWeight = 117.6287F;
+            this.colGoalType.FillWeight = 129.6841F;
             this.colGoalType.HeaderText = "Goal Type";
             this.colGoalType.MinimumWidth = 6;
             this.colGoalType.Name = "colGoalType";
@@ -426,7 +493,7 @@
             // 
             // colTargetWeight
             // 
-            this.colTargetWeight.FillWeight = 117.6287F;
+            this.colTargetWeight.FillWeight = 101.6193F;
             this.colTargetWeight.HeaderText = "Target Weight";
             this.colTargetWeight.MinimumWidth = 6;
             this.colTargetWeight.Name = "colTargetWeight";
@@ -434,7 +501,7 @@
             // 
             // colDailyCaloriesTarget
             // 
-            this.colDailyCaloriesTarget.FillWeight = 117.6287F;
+            this.colDailyCaloriesTarget.FillWeight = 129.6841F;
             this.colDailyCaloriesTarget.HeaderText = "Daily Calories Target";
             this.colDailyCaloriesTarget.MinimumWidth = 6;
             this.colDailyCaloriesTarget.Name = "colDailyCaloriesTarget";
@@ -442,19 +509,33 @@
             // 
             // colCreatedAt
             // 
-            this.colCreatedAt.FillWeight = 117.6287F;
+            this.colCreatedAt.FillWeight = 96.25668F;
             this.colCreatedAt.HeaderText = "Created At";
             this.colCreatedAt.MinimumWidth = 6;
             this.colCreatedAt.Name = "colCreatedAt";
             this.colCreatedAt.ReadOnly = true;
             // 
+            // colTargetDate
+            // 
+            this.colTargetDate.HeaderText = "TargetDate";
+            this.colTargetDate.MinimumWidth = 6;
+            this.colTargetDate.Name = "colTargetDate";
+            this.colTargetDate.ReadOnly = true;
+            // 
             // colIsAchieved
             // 
-            this.colIsAchieved.FillWeight = 96.25668F;
+            this.colIsAchieved.FillWeight = 106.1217F;
             this.colIsAchieved.HeaderText = "Is Achieved";
             this.colIsAchieved.MinimumWidth = 6;
             this.colIsAchieved.Name = "colIsAchieved";
             this.colIsAchieved.ReadOnly = true;
+            // 
+            // colActivity
+            // 
+            this.colActivity.HeaderText = "Activity";
+            this.colActivity.MinimumWidth = 6;
+            this.colActivity.Name = "colActivity";
+            this.colActivity.ReadOnly = true;
             // 
             // lblAchievedGoal
             // 
@@ -470,11 +551,11 @@
             // 
             this.lblUserWeight.AutoSize = true;
             this.lblUserWeight.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUserWeight.Location = new System.Drawing.Point(334, 107);
+            this.lblUserWeight.Location = new System.Drawing.Point(449, 280);
             this.lblUserWeight.Name = "lblUserWeight";
-            this.lblUserWeight.Size = new System.Drawing.Size(116, 21);
+            this.lblUserWeight.Size = new System.Drawing.Size(183, 21);
             this.lblUserWeight.TabIndex = 67;
-            this.lblUserWeight.Text = "Your Weight:";
+            this.lblUserWeight.Text = "Your Current Weight:";
             // 
             // guna2Panel2
             // 
@@ -486,9 +567,9 @@
             this.guna2Panel2.Controls.Add(this.lblWeightLossAchieved);
             this.guna2Panel2.Controls.Add(this.label5);
             this.guna2Panel2.Controls.Add(this.lblAchievedGoal);
-            this.guna2Panel2.Location = new System.Drawing.Point(338, 178);
+            this.guna2Panel2.Location = new System.Drawing.Point(444, 29);
             this.guna2Panel2.Name = "guna2Panel2";
-            this.guna2Panel2.Size = new System.Drawing.Size(389, 219);
+            this.guna2Panel2.Size = new System.Drawing.Size(389, 228);
             this.guna2Panel2.TabIndex = 71;
             // 
             // lblMaintainWeightAchieved
@@ -497,9 +578,8 @@
             this.lblMaintainWeightAchieved.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMaintainWeightAchieved.Location = new System.Drawing.Point(17, 136);
             this.lblMaintainWeightAchieved.Name = "lblMaintainWeightAchieved";
-            this.lblMaintainWeightAchieved.Size = new System.Drawing.Size(240, 21);
+            this.lblMaintainWeightAchieved.Size = new System.Drawing.Size(0, 21);
             this.lblMaintainWeightAchieved.TabIndex = 74;
-            this.lblMaintainWeightAchieved.Text = "Maintain Weight Achieved:";
             // 
             // lblWeightGainedAchieved
             // 
@@ -507,9 +587,8 @@
             this.lblWeightGainedAchieved.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblWeightGainedAchieved.Location = new System.Drawing.Point(17, 102);
             this.lblWeightGainedAchieved.Name = "lblWeightGainedAchieved";
-            this.lblWeightGainedAchieved.Size = new System.Drawing.Size(229, 21);
+            this.lblWeightGainedAchieved.Size = new System.Drawing.Size(0, 21);
             this.lblWeightGainedAchieved.TabIndex = 73;
-            this.lblWeightGainedAchieved.Text = "Weight Gained Achieved:";
             // 
             // lblWeightLossAchieved
             // 
@@ -517,9 +596,8 @@
             this.lblWeightLossAchieved.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblWeightLossAchieved.Location = new System.Drawing.Point(17, 71);
             this.lblWeightLossAchieved.Name = "lblWeightLossAchieved";
-            this.lblWeightLossAchieved.Size = new System.Drawing.Size(199, 21);
+            this.lblWeightLossAchieved.Size = new System.Drawing.Size(0, 21);
             this.lblWeightLossAchieved.TabIndex = 72;
-            this.lblWeightLossAchieved.Text = "Weight Loss Achieved:";
             // 
             // label5
             // 
@@ -536,6 +614,10 @@
             this.guna2Panel3.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.guna2Panel3.BorderRadius = 10;
             this.guna2Panel3.BorderThickness = 2;
+            this.guna2Panel3.Controls.Add(this.cboTargetActivity);
+            this.guna2Panel3.Controls.Add(this.label7);
+            this.guna2Panel3.Controls.Add(this.label6);
+            this.guna2Panel3.Controls.Add(this.dtpTargetDate);
             this.guna2Panel3.Controls.Add(this.label9);
             this.guna2Panel3.Controls.Add(this.btnEditGoal);
             this.guna2Panel3.Controls.Add(this.cboGoalType);
@@ -545,10 +627,65 @@
             this.guna2Panel3.Controls.Add(this.btnSetGoal);
             this.guna2Panel3.Controls.Add(this.txtCaloriesTarget);
             this.guna2Panel3.Controls.Add(this.label3);
-            this.guna2Panel3.Location = new System.Drawing.Point(19, 178);
+            this.guna2Panel3.Location = new System.Drawing.Point(27, 28);
             this.guna2Panel3.Name = "guna2Panel3";
-            this.guna2Panel3.Size = new System.Drawing.Size(301, 646);
+            this.guna2Panel3.Size = new System.Drawing.Size(396, 569);
             this.guna2Panel3.TabIndex = 75;
+            // 
+            // cboTargetActivity
+            // 
+            this.cboTargetActivity.BackColor = System.Drawing.Color.Transparent;
+            this.cboTargetActivity.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.cboTargetActivity.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboTargetActivity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboTargetActivity.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboTargetActivity.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cboTargetActivity.Font = new System.Drawing.Font("Century Gothic", 10.2F);
+            this.cboTargetActivity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cboTargetActivity.ItemHeight = 30;
+            this.cboTargetActivity.Items.AddRange(new object[] {
+            "Weight Loss",
+            "Weight Gain",
+            "Maintain Weight"});
+            this.cboTargetActivity.Location = new System.Drawing.Point(18, 152);
+            this.cboTargetActivity.Name = "cboTargetActivity";
+            this.cboTargetActivity.Size = new System.Drawing.Size(357, 36);
+            this.cboTargetActivity.TabIndex = 74;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(14, 128);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(367, 21);
+            this.label7.TabIndex = 75;
+            this.label7.Text = "Target Activity (or) Recommended Activity";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(17, 404);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(117, 21);
+            this.label6.TabIndex = 73;
+            this.label6.Text = "Target Date:";
+            // 
+            // dtpTargetDate
+            // 
+            this.dtpTargetDate.BorderRadius = 5;
+            this.dtpTargetDate.Checked = true;
+            this.dtpTargetDate.FillColor = System.Drawing.Color.DarkGray;
+            this.dtpTargetDate.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpTargetDate.Format = System.Windows.Forms.DateTimePickerFormat.Long;
+            this.dtpTargetDate.Location = new System.Drawing.Point(18, 428);
+            this.dtpTargetDate.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
+            this.dtpTargetDate.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
+            this.dtpTargetDate.Name = "dtpTargetDate";
+            this.dtpTargetDate.Size = new System.Drawing.Size(354, 48);
+            this.dtpTargetDate.TabIndex = 72;
+            this.dtpTargetDate.Value = new System.DateTime(2024, 12, 31, 21, 38, 13, 14);
             // 
             // label9
             // 
@@ -560,11 +697,123 @@
             this.label9.TabIndex = 71;
             this.label9.Text = "Set a Goal";
             // 
+            // lblProgress
+            // 
+            this.lblProgress.AutoSize = true;
+            this.lblProgress.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblProgress.Location = new System.Drawing.Point(563, 538);
+            this.lblProgress.Name = "lblProgress";
+            this.lblProgress.Size = new System.Drawing.Size(82, 21);
+            this.lblProgress.TabIndex = 77;
+            this.lblProgress.Text = "Progress:";
+            // 
+            // progressBar
+            // 
+            this.progressBar.BackColor = System.Drawing.Color.Transparent;
+            this.progressBar.FillColor = System.Drawing.Color.Gray;
+            this.progressBar.FillThickness = 35;
+            this.progressBar.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.progressBar.ForeColor = System.Drawing.Color.Black;
+            this.progressBar.Location = new System.Drawing.Point(542, 329);
+            this.progressBar.Minimum = 0;
+            this.progressBar.Name = "progressBar";
+            this.progressBar.ProgressEndCap = System.Drawing.Drawing2D.LineCap.Round;
+            this.progressBar.ProgressThickness = 35;
+            this.progressBar.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
+            this.progressBar.Size = new System.Drawing.Size(182, 182);
+            this.progressBar.TabIndex = 78;
+            // 
+            // chartGoalAchievementByMonth
+            // 
+            this.chartGoalAchievementByMonth.Datasets.AddRange(new Guna.Charts.Interfaces.IGunaDataset[] {
+            this.gunaBarDataset1});
+            chartFont1.FontName = "Arial";
+            this.chartGoalAchievementByMonth.Legend.LabelFont = chartFont1;
+            this.chartGoalAchievementByMonth.Location = new System.Drawing.Point(1263, 42);
+            this.chartGoalAchievementByMonth.Name = "chartGoalAchievementByMonth";
+            this.chartGoalAchievementByMonth.Size = new System.Drawing.Size(376, 286);
+            this.chartGoalAchievementByMonth.TabIndex = 79;
+            chartFont2.FontName = "Arial";
+            chartFont2.Size = 12;
+            chartFont2.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartGoalAchievementByMonth.Title.Font = chartFont2;
+            chartFont3.FontName = "Arial";
+            this.chartGoalAchievementByMonth.Tooltips.BodyFont = chartFont3;
+            chartFont4.FontName = "Arial";
+            chartFont4.Size = 9;
+            chartFont4.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartGoalAchievementByMonth.Tooltips.TitleFont = chartFont4;
+            this.chartGoalAchievementByMonth.XAxes.GridLines = grid1;
+            chartFont5.FontName = "Arial";
+            tick1.Font = chartFont5;
+            this.chartGoalAchievementByMonth.XAxes.Ticks = tick1;
+            this.chartGoalAchievementByMonth.YAxes.GridLines = grid2;
+            chartFont6.FontName = "Arial";
+            tick2.Font = chartFont6;
+            this.chartGoalAchievementByMonth.YAxes.Ticks = tick2;
+            this.chartGoalAchievementByMonth.ZAxes.GridLines = grid3;
+            chartFont7.FontName = "Arial";
+            pointLabel1.Font = chartFont7;
+            this.chartGoalAchievementByMonth.ZAxes.PointLabels = pointLabel1;
+            chartFont8.FontName = "Arial";
+            tick3.Font = chartFont8;
+            this.chartGoalAchievementByMonth.ZAxes.Ticks = tick3;
+            // 
+            // gunaBarDataset1
+            // 
+            this.gunaBarDataset1.Label = "Bar1";
+            this.gunaBarDataset1.TargetChart = this.chartGoalAchievementByMonth;
+            // 
+            // chartAchievedVsPending
+            // 
+            this.chartAchievedVsPending.Datasets.AddRange(new Guna.Charts.Interfaces.IGunaDataset[] {
+            this.gunaPieDataset1});
+            chartFont9.FontName = "Arial";
+            this.chartAchievedVsPending.Legend.LabelFont = chartFont9;
+            this.chartAchievedVsPending.Location = new System.Drawing.Point(1263, 401);
+            this.chartAchievedVsPending.Name = "chartAchievedVsPending";
+            this.chartAchievedVsPending.Size = new System.Drawing.Size(376, 260);
+            this.chartAchievedVsPending.TabIndex = 80;
+            chartFont10.FontName = "Arial";
+            chartFont10.Size = 12;
+            chartFont10.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartAchievedVsPending.Title.Font = chartFont10;
+            chartFont11.FontName = "Arial";
+            this.chartAchievedVsPending.Tooltips.BodyFont = chartFont11;
+            chartFont12.FontName = "Arial";
+            chartFont12.Size = 9;
+            chartFont12.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartAchievedVsPending.Tooltips.TitleFont = chartFont12;
+            this.chartAchievedVsPending.XAxes.GridLines = grid4;
+            chartFont13.FontName = "Arial";
+            tick4.Font = chartFont13;
+            this.chartAchievedVsPending.XAxes.Ticks = tick4;
+            this.chartAchievedVsPending.YAxes.GridLines = grid5;
+            chartFont14.FontName = "Arial";
+            tick5.Font = chartFont14;
+            this.chartAchievedVsPending.YAxes.Ticks = tick5;
+            this.chartAchievedVsPending.ZAxes.GridLines = grid6;
+            chartFont15.FontName = "Arial";
+            pointLabel2.Font = chartFont15;
+            this.chartAchievedVsPending.ZAxes.PointLabels = pointLabel2;
+            chartFont16.FontName = "Arial";
+            tick6.Font = chartFont16;
+            this.chartAchievedVsPending.ZAxes.Ticks = tick6;
+            // 
+            // gunaPieDataset1
+            // 
+            this.gunaPieDataset1.Label = "Pie1";
+            this.gunaPieDataset1.TargetChart = this.chartAchievedVsPending;
+            // 
             // frmSetGoal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.chartAchievedVsPending);
+            this.Controls.Add(this.chartGoalAchievementByMonth);
+            this.Controls.Add(this.progressBar);
+            this.Controls.Add(this.lblProgress);
             this.Controls.Add(this.guna2Panel3);
             this.Controls.Add(this.guna2Panel2);
             this.Controls.Add(this.lblUserWeight);
@@ -572,7 +821,7 @@
             this.Controls.Add(this.guna2Panel1);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Name = "frmSetGoal";
-            this.Size = new System.Drawing.Size(1637, 900);
+            this.Size = new System.Drawing.Size(1657, 980);
             this.Load += new System.EventHandler(this.frmSetGoal_Load);
             this.guna2Panel1.ResumeLayout(false);
             this.guna2Panel1.PerformLayout();
@@ -607,13 +856,6 @@
         private Guna.UI2.WinForms.Guna2Button btnAchieved;
         private System.Windows.Forms.Label lblGoalAdvice;
         private Guna.UI2.WinForms.Guna2DataGridView dgvGoals;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGoalId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGoalType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colTargetWeight;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDailyCaloriesTarget;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colCreatedAt;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colIsAchieved;
         private System.Windows.Forms.Label lblAchievedGoal;
         private System.Windows.Forms.Label lblUserWeight;
         private System.Windows.Forms.Label label5;
@@ -623,5 +865,26 @@
         private System.Windows.Forms.Label lblWeightLossAchieved;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel3;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label6;
+        private Guna.UI2.WinForms.Guna2DateTimePicker dtpTargetDate;
+        private System.Windows.Forms.Label lblTargetDate;
+        private System.Windows.Forms.Label lblProgress;
+        private Guna.UI2.WinForms.Guna2CircleProgressBar progressBar;
+        private Guna.UI2.WinForms.Guna2ComboBox cboTargetActivity;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblActivity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGoalId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGoalType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTargetWeight;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDailyCaloriesTarget;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCreatedAt;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTargetDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colIsAchieved;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colActivity;
+        private Guna.Charts.WinForms.GunaChart chartGoalAchievementByMonth;
+        private Guna.Charts.WinForms.GunaBarDataset gunaBarDataset1;
+        private Guna.Charts.WinForms.GunaChart chartAchievedVsPending;
+        private Guna.Charts.WinForms.GunaPieDataset gunaPieDataset1;
     }
 }

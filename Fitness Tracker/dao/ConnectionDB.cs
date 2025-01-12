@@ -535,48 +535,24 @@ namespace Fitness_Tracker.dao
             return metValue;
         }
 
-        public bool InsertGoal(int personID, string goalType, double targetWeight, double dailyCaloriesTarget)
+
+        public bool UpdateGoal(int goalId, string goalType, double targetWeight, double dailyCaloriesTarget, DateTime targetDate, int activityId)
         {
             try
             {
-                string sql = @"
-        INSERT INTO goal_tracking 
-        (person_id, goal_type, target_weight, daily_calories_target, is_achieved, created_at)
-        VALUES (@personID, @goalType, @targetWeight, @dailyCaloriesTarget, 0, NOW())";
+                string sql = @"UPDATE goal_tracking SET goal_type = @goalType, target_weight = @targetWeight, " +
+                   "daily_calories_target = @dailyCaloriesTarget, target_date = @targetDate, activity_id = @activityId " +
+                   "WHERE goal_id = @goalId";
 
                 cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
+                cmd.Parameters.AddWithValue("@goalID", goalId);
                 cmd.Parameters.AddWithValue("@goalType", goalType);
                 cmd.Parameters.AddWithValue("@targetWeight", targetWeight);
                 cmd.Parameters.AddWithValue("@dailyCaloriesTarget", dailyCaloriesTarget);
+                cmd.Parameters.AddWithValue("@targetDate", targetDate.Date);
+                cmd.Parameters.AddWithValue("@activityId", activityId);
 
-                return cmd.ExecuteNonQuery() > 0; // Returns true if the insert was successful
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error inserting goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
-
-        public bool UpdateGoal(int goalId, string goalType, double targetWeight, double dailyCaloriesTarget)
-        {
-            try
-            {
-                sql = @"UPDATE goal_tracking 
-                                    SET 
-                                        goal_type = @goalType, 
-                                        target_weight = @targetWeight, 
-                                        daily_calories_target = @dailyCaloriesTarget 
-                                    WHERE goal_id = @goalID";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@goalId", goalId);
-                cmd.Parameters.AddWithValue("@goalType", goalType);
-                cmd.Parameters.AddWithValue("@targetWeight", targetWeight);
-                cmd.Parameters.AddWithValue("@dailyCaloriesTarget", dailyCaloriesTarget);
-
-                return cmd.ExecuteNonQuery() > 0; // Returns true if the update was successful
+                return cmd.ExecuteNonQuery() > 0;
             }
             catch (Exception ex)
             {
@@ -587,31 +563,17 @@ namespace Fitness_Tracker.dao
 
         public bool DeleteGoal(int goalId)
         {
-            MySqlTransaction transaction = null;
-
             try
             {
-                transaction = conn.BeginTransaction();
+                sql = "DELETE FROM goal_tracking WHERE goal_id = @goalId";
 
-                // Step 1: Delete from weight_tracking
-                string weightSql = @"DELETE FROM weight_tracking 
-                             WHERE person_id = (SELECT person_id FROM goal_tracking WHERE goal_id = @goalID)";
-                MySqlCommand weightCmd = new MySqlCommand(weightSql, conn, transaction);
-                weightCmd.Parameters.AddWithValue("@goalID", goalId);
-                weightCmd.ExecuteNonQuery();
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@goalId", goalId);
 
-                // Step 2: Delete from goal_tracking
-                string goalSql = @"DELETE FROM goal_tracking WHERE goal_id = @goalID";
-                MySqlCommand goalCmd = new MySqlCommand(goalSql, conn, transaction);
-                goalCmd.Parameters.AddWithValue("@goalID", goalId);
-                goalCmd.ExecuteNonQuery();
-
-                transaction.Commit();
-                return true;
+                return cmd.ExecuteNonQuery() > 0; // Returns true if the delete operation is successful
             }
             catch (Exception ex)
             {
-                transaction?.Rollback();
                 MessageBox.Show($"Error deleting goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -621,12 +583,15 @@ namespace Fitness_Tracker.dao
         {
             try
             {
-                string sql = "UPDATE goal_tracking SET is_achieved = 1 WHERE goal_id = @goalID";
+                string query = @"
+        UPDATE goal_tracking
+        SET is_achieved = TRUE, achieved_date = NOW()
+        WHERE goal_id = @goalID";
 
-                cmd = new MySqlCommand(sql, conn);
+                MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@goalID", goalID);
 
-                return cmd.ExecuteNonQuery() > 0; // Returns true if the update was successful
+                return cmd.ExecuteNonQuery() > 0;
             }
             catch (Exception ex)
             {
@@ -640,17 +605,22 @@ namespace Fitness_Tracker.dao
             DataTable dt = new DataTable();
             try
             {
-                string sql = @"
-        SELECT 
-            goal_id, 
-            goal_type, 
-            target_weight, 
-            daily_calories_target, 
-            created_at, 
-            is_achieved 
-        FROM goal_tracking 
-        WHERE person_id = @personID
-        ORDER BY created_at ASC";
+                string sql = @"SELECT 
+            goal_tracking.goal_id,
+            goal_tracking.goal_type,
+            goal_tracking.target_weight,
+            goal_tracking.daily_calories_target,
+            goal_tracking.is_achieved,
+            goal_tracking.created_at,
+            goal_tracking.target_date,
+            activity.activity_name
+        FROM 
+            goal_tracking
+        LEFT JOIN 
+            activity ON goal_tracking.activity_id = activity.activity_id
+        WHERE 
+            goal_tracking.person_id = @personID
+                            ORDER BY created_at ASC";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -682,6 +652,122 @@ namespace Fitness_Tracker.dao
             {
                 MessageBox.Show($"Error retrieving achieved goals count for {goalType}: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return 0; // Return 0 on error
+            }
+        }
+
+        public bool InsertGoal(int personID, string goalType, double targetWeight, double dailyCaloriesTarget, DateTime targetDate, int activityId)
+        {
+            try
+            {
+                string sql = @"
+        INSERT INTO goal_tracking 
+        (person_id, goal_type, target_weight, daily_calories_target, is_achieved, created_at, target_date, activity_id)
+        VALUES (@personID, @goalType, @targetWeight, @dailyCaloriesTarget, 0, NOW(), @targetDate, @activityId)";
+
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+                cmd.Parameters.AddWithValue("@goalType", goalType);
+                cmd.Parameters.AddWithValue("@targetWeight", targetWeight);
+                cmd.Parameters.AddWithValue("@dailyCaloriesTarget", dailyCaloriesTarget);
+                cmd.Parameters.AddWithValue("@targetDate", targetDate.Date);
+                cmd.Parameters.AddWithValue("@activityId", activityId);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error inserting goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public bool UpdateUserWeight(int personID, double newWeight)
+        {
+            try
+            {
+                string sql = "UPDATE person SET weight = @newWeight WHERE person_id = @personID";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@newWeight", newWeight);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                return cmd.ExecuteNonQuery() > 0; // Return true if rows were updated
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating weight: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+
+        public int GetActivityIdByName(string activityName)
+        {
+            try
+            {
+                sql = "SELECT activity_id FROM activity WHERE activity_name = @activityName";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@activityName", activityName);
+
+                object result = cmd.ExecuteScalar();
+                if (result != null && int.TryParse(result.ToString(), out int activityId))
+                {
+                    return activityId;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving activity ID: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return -1; // Return -1 if not found
+        }
+
+        public DataTable GetGoalAchievementByMonth()
+        {
+            try
+            {
+
+                string query = @"
+            SELECT 
+                DATE_FORMAT(achieved_date, '%Y-%m') AS achievement_month, 
+                COUNT(*) AS achieved_count
+            FROM 
+                goal_tracking
+            WHERE 
+                is_achieved = 1
+            GROUP BY 
+                DATE_FORMAT(achieved_date, '%Y-%m')
+            ORDER BY 
+                achievement_month ASC";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching goal achievement by month: {ex.Message}");
+            }
+        }
+
+        public DataTable GetAchievedAndPendingGoals(int personID)
+        {
+            string query = @"
+        SELECT 
+            SUM(CASE WHEN is_achieved = 1 THEN 1 ELSE 0 END) AS achieved_count,
+            SUM(CASE WHEN is_achieved = 0 THEN 1 ELSE 0 END) AS pending_count
+        FROM goal_tracking
+        WHERE person_id = @personID";
+            using (MySqlCommand cmd = new MySqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@personID", personID);
+                using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                {
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
+                }
             }
         }
     }

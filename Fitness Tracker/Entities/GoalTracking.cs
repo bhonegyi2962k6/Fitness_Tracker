@@ -15,10 +15,11 @@ namespace Fitness_Tracker.Entities
         private double dailyCaloriesTarget;
         private bool isAchieved;
         private DateTime createdAt;
+        private DateTime targetDate;
 
         public GoalTracking() { }
 
-        public GoalTracking(int goalId, Person person, string goalType, decimal targetWeight, double dailyCaloriesTarget, bool isAchieved, DateTime createdAt)
+        public GoalTracking(int goalId, Person person, string goalType, decimal targetWeight, double dailyCaloriesTarget, bool isAchieved, DateTime createdAt, DateTime targetDate)
         {
             this.goalId = goalId;
             this.person = person;
@@ -27,6 +28,7 @@ namespace Fitness_Tracker.Entities
             this.dailyCaloriesTarget = dailyCaloriesTarget;
             this.isAchieved = isAchieved;
             this.createdAt = createdAt;
+            this.targetDate = targetDate;
         }
 
         public int GoalId { get => goalId; set => goalId = value; }
@@ -36,5 +38,6 @@ namespace Fitness_Tracker.Entities
         public double DailyCaloriesTarget { get => dailyCaloriesTarget; set => dailyCaloriesTarget = value; }
         public bool IsAchieved { get => isAchieved; set => isAchieved = value; }
         public DateTime CreatedAt { get => createdAt; set => createdAt = value; }
+        public DateTime TargetDate { get => targetDate; set => targetDate = value; }
     }
 }
