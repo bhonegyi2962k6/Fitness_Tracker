@@ -183,5 +183,9 @@ namespace Fitness_Tracker.Views
             panelMain.Controls.Add(new frmSetGoal());
         }
 
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

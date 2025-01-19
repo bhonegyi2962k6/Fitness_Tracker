@@ -7,13 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.Media3D;
 
 namespace Fitness_Tracker.dao
 {
-    
+
     public class ConnectionDB
     {
         // declare
@@ -301,7 +303,7 @@ namespace Fitness_Tracker.dao
         {
             try
             {
-                 sql = @"INSERT INTO schedule_activity (schedule_id, activity_id, start_time, duration_minutes)
+                sql = @"INSERT INTO schedule_activity (schedule_id, activity_id, start_time, duration_minutes)
                        VALUES (@scheduleId, @activityId, @startTime, @durationMinutes)";
 
                 cmd = new MySqlCommand(sql, conn);
@@ -579,17 +581,17 @@ namespace Fitness_Tracker.dao
             }
         }
 
-        public bool MarkGoalAsAchieved(int goalID)
+        public bool MarkGoalAsAchieved(int goalId)
         {
             try
             {
                 string query = @"
         UPDATE goal_tracking
-        SET is_achieved = TRUE, achieved_date = NOW()
-        WHERE goal_id = @goalID";
+        SET is_achieved = 1, achieved_date = NOW()
+        WHERE goal_id = @goalID;";
 
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@goalID", goalID);
+                cmd.Parameters.AddWithValue("@goalID", goalId);
 
                 return cmd.ExecuteNonQuery() > 0;
             }
@@ -770,6 +772,1123 @@ namespace Fitness_Tracker.dao
                 }
             }
         }
+
+        public bool InsertWeightTracking(int personID, double weight)
+        {
+            try
+            {
+                string sql = @"
+        INSERT INTO weight_tracking (person_id, recorded_date, weight)
+        VALUES (@personID, NOW(), @weight);";
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+                cmd.Parameters.AddWithValue("@weight", weight);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error inserting weight tracking: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public DataTable GetWeightTrackingData(int personID)
+        {
+            try
+            {
+                string query = @"
+            SELECT 
+                DATE_FORMAT(recorded_date, '%Y-%m-%d') AS recorded_date,
+                weight
+            FROM 
+                weight_tracking
+            WHERE 
+                person_id = @personID
+            ORDER BY 
+                recorded_date ASC";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching weight tracking data: {ex.Message}");
+                return null;
+            }
+        }
+
+        public DataTable GetRecordsForDateRange(int personID, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_id AS 'Record Id',
+            a.activity_name AS 'Activity',
+            r.record_date AS 'Record Date',
+            r.burned_calories AS 'Burned Calories',
+            r.intensity_level AS 'Activity Type'
+        FROM record r
+        JOIN activity a ON r.activity_id = a.activity_id
+        WHERE r.person_id = @personID AND r.record_date BETWEEN @startDate AND @endDate
+        ORDER BY r.record_date DESC";
+
+                cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+                cmd.Parameters.AddWithValue("@startDate", startDate);
+                cmd.Parameters.AddWithValue("@endDate", endDate);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving records for date range: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        public DataTable GetRecordsByActivity(int personID, string activityName)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_id AS 'Record Id',
+            a.activity_name AS 'Activity',
+            r.record_date AS 'Record Date',
+            r.burned_calories AS 'Burned Calories',
+            r.intensity_level AS 'Activity Type'
+        FROM record r
+        JOIN activity a ON r.activity_id = a.activity_id
+        WHERE r.person_id = @personID AND a.activity_name = @activityName
+        ORDER BY r.record_date DESC";
+
+                cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+                cmd.Parameters.AddWithValue("@activityName", activityName);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving records by activity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        public DataTable GetDailyCaloriesData(int personID, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                string query = @"
+            SELECT 
+                DATE(record_date) AS record_date, 
+                SUM(burned_calories) AS total_calories
+            FROM record
+            WHERE person_id = @personID AND record_date BETWEEN @startDate AND @endDate
+            GROUP BY DATE(record_date)
+            ORDER BY record_date ASC;";
+
+                cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+                cmd.Parameters.AddWithValue("@startDate", startDate.ToString("yyyy-MM-dd"));
+                cmd.Parameters.AddWithValue("@endDate", endDate.ToString("yyyy-MM-dd"));
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving daily calories data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        public DataTable GetSchedulesSummary(int personID)
+        {
+            try
+            {
+                string query = @"
+            SELECT 
+                a.activity_name AS Activity,
+                COUNT(s.schedule_id) AS TotalSchedules
+            FROM schedule s
+            JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+            JOIN activity a ON sa.activity_id = a.activity_id
+            WHERE s.person_id = @personID
+            GROUP BY a.activity_name
+            ORDER BY TotalSchedules DESC";
+
+                cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving schedules summary: {ex.Message}");
+            }
+        }
+        public int GetScheduleCountForDate(int personID, DateTime date)
+        {
+            try
+            {
+                string query = @"
+            SELECT COUNT(*) 
+            FROM schedule s
+            JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+            WHERE s.person_id = @personId AND s.scheduled_date = @scheduleDate;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+                cmd.Parameters.AddWithValue("@scheduleDate", date.Date);
+
+                object result = cmd.ExecuteScalar();
+                return result != DBNull.Value ? Convert.ToInt32(result) : 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving schedule count: {ex.Message}");
+            }
+        }
+
+        public DataTable GetFilteredSchedules(int personID, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                string query = @"
+            SELECT 
+                s.schedule_id AS 'Schedule Id',
+                a.activity_name AS 'Activity',
+                s.scheduled_date AS 'Date',
+                sa.start_time AS 'Start Time',
+                sa.duration_minutes AS 'Duration'
+            FROM schedule s
+            JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+            JOIN activity a ON sa.activity_id = a.activity_id
+            WHERE s.person_id = @personID"
+                ;
+
+                if (startDate.HasValue && endDate.HasValue)
+                {
+                    query += " AND DATE(s.scheduled_date) BETWEEN @startDate AND @endDate";
+                }
+
+                query += " ORDER BY s.scheduled_date ASC";
+
+                cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+                cmd.Parameters.AddWithValue("@startDate", startDate.HasValue ? (object)startDate.Value.ToString("yyyy-MM-dd") : DBNull.Value);
+                cmd.Parameters.AddWithValue("@endDate", endDate.HasValue ? (object)endDate.Value.ToString("yyyy-MM-dd") : DBNull.Value);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving filtered schedules: {ex.Message}");
+            }
+        }
+
+        public bool IsOverlappingSchedule(int personId, DateTime date, TimeSpan startTime, int durationMinutes)
+        {
+            string sql = @"
+        SELECT COUNT(*) 
+        FROM schedule s
+        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+        WHERE s.person_id = @personId
+        AND s.scheduled_date = @date
+        AND (
+            (@startTime >= sa.start_time AND @startTime < ADDTIME(sa.start_time, SEC_TO_TIME(sa.duration_minutes * 60)))
+            OR (ADDTIME(@startTime, SEC_TO_TIME(@durationMinutes * 60)) > sa.start_time 
+                AND ADDTIME(@startTime, SEC_TO_TIME(@durationMinutes * 60)) <= ADDTIME(sa.start_time, SEC_TO_TIME(sa.duration_minutes * 60)))
+        )";
+
+            cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@personId", personId);
+            cmd.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
+            cmd.Parameters.AddWithValue("@startTime", startTime.ToString(@"hh\:mm\:ss")); // Convert TimeSpan to MySQL TIME format
+            cmd.Parameters.AddWithValue("@durationMinutes", durationMinutes);
+
+            return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+        }
+
+        public DataTable GetScheduleDistributionByTime(int personId)
+        {
+            try
+            {
+                string query = @"
+            SELECT 
+                HOUR(sa.start_time) AS Hour, 
+                COUNT(*) AS Count
+            FROM schedule s
+            JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+            WHERE s.person_id = @personId
+            GROUP BY Hour
+            ORDER BY Hour;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving schedule distribution: {ex.Message}");
+            }
+        }
+        public DataTable GetActivityGraphData(int personID, int activityID)
+        {
+            try
+            {
+                string query = @"
+    SELECT 
+        DATE(r.record_date) AS Date, 
+        SUM(r.burned_calories) AS CaloriesBurned
+    FROM record r
+    JOIN activity a ON r.activity_id = a.activity_id
+    WHERE r.person_id = @personId AND r.activity_id = @activityId
+    GROUP BY DATE(r.record_date)
+    ORDER BY DATE(r.record_date);";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+                cmd.Parameters.AddWithValue("@activityId", activityID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving activity graph data: {ex.Message}");
+            }
+        }
+
+        public DataTable GetSwimmingMetricsOverTime(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_date AS Date, 
+            MAX(CASE WHEN m.metric_name = 'Laps' THEN mv.value ELSE 0 END) AS Laps,
+            MAX(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken,
+            MAX(CASE WHEN m.metric_name = 'Average Heart Rate' THEN mv.value ELSE 0 END) AS AvgHeartRate
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        JOIN 
+            activity a ON r.activity_id = a.activity_id
+        WHERE 
+            r.person_id = @personID
+            AND a.activity_name = 'Swimming'
+        GROUP BY 
+            r.record_date
+        ORDER BY 
+            r.record_date;
+        ";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving swimming metrics over time: {ex.Message}");
+            }
+        }
+
+        public DataTable GetSwimmingSummary(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            SUM(CASE WHEN m.metric_name = 'Laps' THEN mv.value ELSE 0 END) AS TotalLaps,
+            AVG(CASE WHEN m.metric_name = 'Average Heart Rate' THEN mv.value ELSE NULL END) AS AvgHeartRate,
+            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        WHERE 
+            r.person_id = @personId
+            AND r.activity_id = 1;"; // 1 represents Swimming activity
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving swimming summary: {ex.Message}");
+            }
+        }
+
+        public DataRow GetRecentSwimmingActivity(int personId)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_date AS `Date`,
+            SUM(CASE WHEN m.metric_name = 'Laps' THEN mv.value ELSE 0 END) AS `Laps`,
+            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS `TimeTaken`,
+            AVG(CASE WHEN m.metric_name = 'Average Heart Rate' THEN mv.value ELSE NULL END) AS `HeartRate`,
+            r.burned_calories AS `CaloriesBurned`
+        FROM 
+            record r
+        JOIN 
+            metric_values mv ON r.record_id = mv.record_id
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        WHERE 
+            r.person_id = @personId
+            AND r.activity_id = 1
+        GROUP BY 
+            r.record_id, r.record_date, r.burned_calories
+        ORDER BY 
+            r.record_date DESC
+        LIMIT 1;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving recent swimming activity: {ex.Message}");
+            }
+        }
+
+        public double GetMaxCaloriesForActivity(int personID, int activityID)
+        {
+            try
+            {
+                string query = @"
+SELECT MAX(r.burned_calories) AS MaxCalories
+FROM record r
+WHERE r.person_id = @personId
+  AND r.activity_id = @activityId;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+                cmd.Parameters.AddWithValue("@activityId", activityID);
+
+                object result = cmd.ExecuteScalar();
+                return result != DBNull.Value ? Convert.ToDouble(result) : 0.0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving maximum calories for activity ID {activityID}: {ex.Message}");
+            }
+        }
+
+        public DataTable GetHistoricalComparison(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            a.activity_name AS ActivityName,
+            SUM(r.burned_calories) AS CaloriesBurned
+        FROM record r
+        JOIN activity a ON r.activity_id = a.activity_id
+        WHERE r.person_id = @personId
+        GROUP BY a.activity_id, a.activity_name
+        ORDER BY CaloriesBurned DESC;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving historical comparison data: {ex.Message}");
+            }
+        }
+
+        public DataTable GetWalkingMetricsOverTime(int personID)
+        {
+            try
+            {
+                string query = @"
+         SELECT 
+            r.record_date AS Date, 
+            MAX(CASE WHEN m.metric_name = 'Steps' THEN mv.value ELSE 0 END) AS TotalSteps,
+            MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
+            MAX(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        JOIN 
+            activity a ON r.activity_id = a.activity_id
+        WHERE 
+            r.person_id = @personID
+            AND a.activity_name = 'Walking'
+        GROUP BY 
+            r.record_date
+        ORDER BY 
+            r.record_date;
+        ";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving Walking metrics over time: {ex.Message}");
+            }
+
+        }
+
+        public DataTable GetWalkingSummary(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            SUM(CASE WHEN m.metric_name = 'Steps' THEN mv.value ELSE 0 END) AS TotalSteps,
+            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
+            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        WHERE 
+            r.person_id = @personId
+            AND r.activity_id = 2;"; // 2 represents Walking activity
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving walking summary: {ex.Message}");
+            }
+        }
+
+        public DataRow GetRecentWalkingActivity(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_date AS `Date`,
+            SUM(CASE WHEN m.metric_name = 'Steps' THEN mv.value ELSE 0 END) AS `Steps`,
+            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS `Distance`,
+            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE NULL END) AS `TimeTaken`,
+            r.burned_calories AS `CaloriesBurned`
+        FROM 
+            record r
+        JOIN 
+            metric_values mv ON r.record_id = mv.record_id
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        WHERE 
+            r.person_id = @personId
+            AND r.activity_id = 2
+        GROUP BY 
+            r.record_id, r.record_date, r.burned_calories
+        ORDER BY 
+            r.record_date DESC
+        LIMIT 1;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving recent swimming activity: {ex.Message}");
+            }
+        }
+
+        public DataTable GetCyclingMetricsOverTime(int personID)
+        {
+            try
+            {
+                string query = @"
+                            SELECT 
+                        r.record_date AS Date, 
+                        MAX(CASE WHEN m.metric_name = 'Speed' THEN mv.value ELSE 0 END) AS Speed,
+                        MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
+                        MAX(CASE WHEN m.metric_name = 'Ride Duration' THEN mv.value ELSE 0 END) AS RideDuration
+                    FROM 
+                        metric_values mv
+                    JOIN 
+                        metric m ON mv.metric_id = m.metric_id
+                    JOIN 
+                        record r ON mv.record_id = r.record_id
+                    JOIN 
+                        activity a ON r.activity_id = a.activity_id
+                    WHERE 
+                        r.person_id = @personID
+                        AND a.activity_name = 'Cycling' -- Corrected activity name
+                    GROUP BY 
+                        r.record_date
+                    ORDER BY 
+                        r.record_date; ";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving Walking metrics over time: {ex.Message}");
+            }
+        }
+
+        public DataRow GetRecentCyclingActivity(int personID)
+        {
+            try
+            {
+                string query = @"
+                                SELECT 
+                            r.record_date AS `Date`,
+                            MAX(CASE WHEN m.metric_name = 'Speed' THEN mv.value ELSE 0 END) AS Speed,
+                            MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
+                            MAX(CASE WHEN m.metric_name = 'Ride Duration' THEN mv.value ELSE 0 END) AS RideDuration,
+                            r.burned_calories AS `CaloriesBurned`
+                        FROM 
+                            record r
+                        JOIN 
+                            metric_values mv ON r.record_id = mv.record_id
+                        JOIN 
+                            metric m ON mv.metric_id = m.metric_id
+                        JOIN 
+                            activity a ON r.activity_id = a.activity_id
+                        WHERE 
+                            r.person_id = @personId
+                            AND a.activity_name = 'Cycling' -- Corrected activity name
+                        GROUP BY 
+                            r.record_id, r.record_date, r.burned_calories
+                        ORDER BY 
+                            r.record_date DESC
+                        LIMIT 1;"
+                        ;
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving recent swimming activity: {ex.Message}");
+            }
+        }
+
+        public DataTable GetCyclingSummary(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            Avg(CASE WHEN m.metric_name = 'Speed' THEN mv.value ELSE 0 END) AS Speed,
+            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
+            SUM(CASE WHEN m.metric_name = 'Ride Duration' THEN mv.value ELSE 0 END) AS RideDuration
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        WHERE 
+            r.person_id = @personId
+            AND r.activity_id = 3;"; // 2 represents Walking activity
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving walking summary: {ex.Message}");
+            }
+        }
+
+        public DataTable GetHikingMetricsOverTime(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_date AS Date, 
+            MAX(CASE WHEN m.metric_name = 'Elevation Gained' THEN mv.value ELSE 0 END) AS ElevationGained,
+            MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
+            MAX(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        JOIN 
+            activity a ON r.activity_id = a.activity_id
+        WHERE 
+            r.person_id = @personID
+            AND a.activity_name = 'Hiking'
+        GROUP BY 
+            r.record_date
+        ORDER BY 
+            r.record_date;
+        ";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving hiking metrics over time: {ex.Message}");
+            }
+        }
+
+        public DataTable GetHikingSummary(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            SUM(CASE WHEN m.metric_name = 'Elevation Gained' THEN mv.value ELSE 0 END) AS TotalElevation,
+            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
+            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        JOIN 
+            activity a ON r.activity_id = a.activity_id
+        WHERE 
+            r.person_id = @personID
+            AND a.activity_name = 'Hiking';
+        ";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving hiking summary: {ex.Message}");
+            }
+        }
+
+        public DataRow GetRecentHikingActivity(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_date AS `Date`,
+            SUM(CASE WHEN m.metric_name = 'Elevation Gained' THEN mv.value ELSE 0 END) AS ElevationGained,
+            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
+            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken,
+            r.burned_calories AS CaloriesBurned
+        FROM 
+            record r
+        JOIN 
+            metric_values mv ON r.record_id = mv.record_id
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            activity a ON r.activity_id = a.activity_id
+        WHERE 
+            r.person_id = @personID
+            AND a.activity_name = 'Hiking'
+        GROUP BY 
+            r.record_id, r.record_date, r.burned_calories
+        ORDER BY 
+            r.record_date DESC
+        LIMIT 1;
+        ";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving recent hiking activity: {ex.Message}");
+            }
+        }
+
+        public DataTable GetWeightliftingSummary(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            AVG(CASE WHEN m.metric_name = 'Weight Lifted' THEN mv.value ELSE 0 END) AS AvgWeight,
+            SUM(CASE WHEN m.metric_name = 'Repetitions' THEN mv.value ELSE 0 END) AS TotalRepetitions,
+            SUM(CASE WHEN m.metric_name = 'Sets Completed' THEN mv.value ELSE 0 END) AS TotalSets
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        WHERE 
+            r.person_id = @personId
+            AND r.activity_id = 5; -- 5 represents Weightlifting Activity";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving weightlifting summary: {ex.Message}");
+            }
+        }
+
+        public DataRow GetRecentWeightliftingActivity(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_date AS `Date`,
+            MAX(CASE WHEN m.metric_name = 'Weight Lifted' THEN mv.value ELSE 0 END) AS WeightLifted,
+            MAX(CASE WHEN m.metric_name = 'Repetitions' THEN mv.value ELSE 0 END) AS Repetitions,
+            MAX(CASE WHEN m.metric_name = 'Sets Completed' THEN mv.value ELSE 0 END) AS SetsCompleted,
+            r.burned_calories AS CaloriesBurned
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        WHERE 
+            r.person_id = @personID
+            AND r.activity_id = 5 -- Weightlifting Activity ID
+        GROUP BY 
+            r.record_id, r.record_date, r.burned_calories
+        ORDER BY 
+            r.record_date DESC
+        LIMIT 1;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt.Rows.Count > 0 ? dt.Rows[0] : null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving recent weightlifting activity: {ex.Message}");
+            }
+        }
+
+        public DataTable GetWeightliftingMetricsOverTime(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_date AS Date, 
+            MAX(CASE WHEN m.metric_name = 'Weight Lifted' THEN mv.value ELSE 0 END) AS WeightLifted,
+            MAX(CASE WHEN m.metric_name = 'Repetitions' THEN mv.value ELSE 0 END) AS Repetitions,
+            MAX(CASE WHEN m.metric_name = 'Sets Completed' THEN mv.value ELSE 0 END) AS SetsCompleted
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        JOIN 
+            activity a ON r.activity_id = a.activity_id
+        WHERE 
+            r.person_id = @personID
+            AND a.activity_id = 5 -- 5 is Weightlifting Activity ID
+        GROUP BY 
+            r.record_date
+        ORDER BY 
+            r.record_date;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving weightlifting metrics over time: {ex.Message}");
+            }
+        }
+
+        public DataTable GetRowingMetricsOverTime(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_date AS Date, 
+            MAX(CASE WHEN m.metric_name = 'Total Strokes' THEN mv.value ELSE 0 END) AS TotalStrokes,
+            MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
+            MAX(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        JOIN 
+            activity a ON r.activity_id = a.activity_id
+        WHERE 
+            r.person_id = @personID
+            AND a.activity_name = 'Rowing'
+        GROUP BY 
+            r.record_date
+        ORDER BY 
+            r.record_date;
+        ";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving rowing metrics over time: {ex.Message}");
+            }
+        }
+        public DataTable GetRowingSummary(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            SUM(CASE WHEN m.metric_name = 'Total Strokes' THEN mv.value ELSE 0 END) AS TotalStrokes,
+            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
+            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
+        FROM 
+            metric_values mv
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        JOIN 
+            record r ON mv.record_id = r.record_id
+        WHERE 
+            r.person_id = @personID
+            AND r.activity_id = 6; -- Rowing Activity ID
+        ";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving rowing summary: {ex.Message}");
+            }
+        }
+
+        public DataRow GetRecentRowingActivity(int personID)
+        {
+            try
+            {
+                string query = @"
+        SELECT 
+            r.record_date AS Date,
+            SUM(CASE WHEN m.metric_name = 'Total Strokes' THEN mv.value ELSE 0 END) AS TotalStrokes,
+            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
+            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken,
+            r.burned_calories AS CaloriesBurned
+        FROM 
+            record r
+        JOIN 
+            metric_values mv ON r.record_id = mv.record_id
+        JOIN 
+            metric m ON mv.metric_id = m.metric_id
+        WHERE 
+            r.person_id = @personID
+            AND r.activity_id = 6 -- Rowing Activity ID
+        GROUP BY 
+            r.record_id, r.record_date, r.burned_calories
+        ORDER BY 
+            r.record_date DESC
+        LIMIT 1;
+        ";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt.Rows.Count > 0 ? dt.Rows[0] : null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving recent rowing activity: {ex.Message}");
+            }
+        }
+
+        public DataTable GetUpcomingActivitySchedules(int personID, int activityID)
+        {
+            try
+            {
+                string query = @"
+        SELECT s.scheduled_date AS Date, sa.start_time AS StartTime, sa.duration_minutes AS Duration
+        FROM schedule s
+        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+        WHERE s.person_id = @personId 
+        AND sa.activity_id = @activityId 
+        AND s.scheduled_date >= CURDATE()
+        ORDER BY s.scheduled_date, sa.start_time;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personID);
+                cmd.Parameters.AddWithValue("@activityId", activityID);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving upcoming activity schedules: {ex.Message}");
+            }
+        }
+
+
     }
 }
 

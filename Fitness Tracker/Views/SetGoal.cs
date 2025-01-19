@@ -1,7 +1,6 @@
 ﻿using Fitness_Tracker.dao;
 using Guna.Charts.WinForms;
 using Guna.UI2.WinForms;
-using LiveCharts.WinForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,11 +39,11 @@ namespace Fitness_Tracker.Views
                 {
                     dgvGoals.Rows.Clear(); // Clear existing rows
 
-                    int rowNumber = 1; // Start numbering from 1
+                    int rowNumber = 1;
 
                     foreach (DataRow row in dt.Rows)
                     {
-                        dgvGoals.Rows.Add(
+                        int rowIndex = dgvGoals.Rows.Add(
                             $"{rowNumber++}",
                             row["goal_id"],
                             row["goal_type"],
@@ -53,10 +52,16 @@ namespace Fitness_Tracker.Views
                             Convert.ToDateTime(row["created_at"]).ToString("yyyy-MM-dd"),
                             Convert.ToDateTime(row["target_date"]).ToString("yyyy-MM-dd"),
                             Convert.ToBoolean(row["is_achieved"]) ? "Yes" : "No",
-                            row["activity_name"] // Display the activity name instead of ID
+                            row["activity_name"]
                         );
 
-
+                        // Highlight row if the target date is within 3 days
+                        DateTime targetDate = Convert.ToDateTime(row["target_date"]);
+                        if (!Convert.ToBoolean(row["is_achieved"]) && (targetDate - DateTime.Now).TotalDays <= 3)
+                        {
+                            dgvGoals.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Red;
+                            dgvGoals.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.White;
+                        }
                     }
                 }
             }
@@ -69,6 +74,7 @@ namespace Fitness_Tracker.Views
                 db?.CloseConnection();
             }
         }
+
         private void LoadCurrentGoal()
         {
             try
@@ -82,7 +88,6 @@ namespace Fitness_Tracker.Views
 
                 if (dt == null || dt.Rows.Count == 0)
                 {
-                    MessageBox.Show("No current goal found for this user.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ClearGoalDisplay();
                     return;
                 }
@@ -109,7 +114,6 @@ namespace Fitness_Tracker.Views
                 db?.CloseConnection();
             }
         }
-
 
 
         private void LoadAchievedGoals()
@@ -226,7 +230,6 @@ namespace Fitness_Tracker.Views
                 progressBar.ProgressColor2 = Color.DarkGray; // Gradient for no progress
                 progressBar.GradientMode = System.Drawing.Drawing2D.LinearGradientMode.Horizontal;
             }
-
         }
 
         private void LoadTargetActivityOptions()
@@ -356,6 +359,9 @@ namespace Fitness_Tracker.Views
                     MessageBox.Show("Goal saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadGoalsToGrid();
                     LoadCurrentGoal();
+                    UpdateProgressBar();
+                    LoadGoalAchievementByMonthGraph();
+                    LoadAchievedVsPendingGraph();
                 }
                 else
                 {
@@ -434,6 +440,9 @@ namespace Fitness_Tracker.Views
                     MessageBox.Show("Goal updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadGoalsToGrid();
                     LoadCurrentGoal();
+                    UpdateProgressBar();
+                    LoadGoalAchievementByMonthGraph();
+                    LoadAchievedVsPendingGraph();
                 }
                 else
                 {
@@ -471,8 +480,12 @@ namespace Fitness_Tracker.Views
                         dgvGoals.Rows.RemoveAt(dgvGoals.SelectedRows[0].Index);
 
                         // Update the current goal display and progress
+                        LoadGoalsToGrid(); // Refresh the table to update numbering
                         LoadCurrentGoal();
+                        LoadAchievedGoals();
                         UpdateProgressBar();
+                        LoadGoalAchievementByMonthGraph();
+                        LoadAchievedVsPendingGraph();
                     }
                     else
                     {
@@ -495,37 +508,43 @@ namespace Fitness_Tracker.Views
         }
 
 
-
-
         private void btnAchieved_Click(object sender, EventArgs e)
         {
             try
             {
                 if (dgvGoals.SelectedRows.Count > 0)
                 {
-                    int goalID = Convert.ToInt32(dgvGoals.SelectedRows[0].Cells["colGoalId"].Value);
+                    int goalId = Convert.ToInt32(dgvGoals.SelectedRows[0].Cells["colGoalId"].Value);
                     double targetWeight = Convert.ToDouble(dgvGoals.SelectedRows[0].Cells["colTargetWeight"].Value);
 
-                    db = new ConnectionDB();
                     db.OpenConnection();
 
-                    // Update the goal as achieved and set the achieved date
-                    if (db.MarkGoalAsAchieved(goalID))
+                    // 1. Update the goal as achieved
+                    if (db.MarkGoalAsAchieved(goalId))
                     {
-                        // Update the user's weight after marking the goal as achieved
-                        if (db.UpdateUserWeight(frmLogin.person.PersonID, targetWeight))
+                        // 2. Insert into weight_tracking
+                        if (db.InsertWeightTracking(frmLogin.person.PersonID, targetWeight))
                         {
-                            frmLogin.person.Weight = targetWeight; // Update the in-memory weight
-                            MessageBox.Show("Goal marked as achieved and weight updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            // 3. Update the person's current weight
+                            if (db.UpdateUserWeight(frmLogin.person.PersonID, targetWeight))
+                            {
+                                frmLogin.person.Weight = targetWeight; // Update in-memory value
+                                MessageBox.Show("Goal marked as achieved, weight logged, and updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            LoadCurrentGoal();
-                            LoadGoalsToGrid();
-                            LoadAchievedGoals();
-                            UpdateProgressBar(); // Refresh the progress bar
+                                // Refresh UI components
+                                LoadCurrentGoal();
+                                LoadGoalsToGrid();
+                                LoadAchievedGoals();
+                                UpdateProgressBar();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Failed to update user's weight.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                         else
                         {
-                            MessageBox.Show("Failed to update user's weight.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Failed to log weight in weight tracking.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     else
@@ -544,7 +563,7 @@ namespace Fitness_Tracker.Views
             }
             finally
             {
-                db?.CloseConnection();
+                db.CloseConnection();
             }
         }
 
@@ -557,17 +576,18 @@ namespace Fitness_Tracker.Views
                 // Update labels based on the selected row
                 lblGoalType.Text = $"Goal Type: {selectedRow.Cells["colGoalType"].Value}";
                 lblTargetWeight.Text = $"Target Weight: {selectedRow.Cells["colTargetWeight"].Value} kg";
-                lblCaloriesTarget.Text = $"Calories Target: {selectedRow.Cells["colDailyCaloriesTarget"].Value} cal";
+                lblCaloriesTarget.Text = $"Daily Calories Target: {selectedRow.Cells["colDailyCaloriesTarget"].Value} cal";
                 lblCreatedDate.Text = $"Created At: {selectedRow.Cells["colCreatedAt"].Value}";
                 lblIsAchieved.Text = $"Achieved: {selectedRow.Cells["colIsAchieved"].Value}";
-                lblTargetDate.Text =$"Target Date: {selectedRow.Cells["colTargetDate"].Value}"; 
-
+                lblTargetDate.Text =$"Target Date: {selectedRow.Cells["colTargetDate"].Value}";
+                lblActivity.Text = $"Actvity: {selectedRow.Cells["colActivity"].Value}";
                 // Determine goal advice based on the user's current weight
                 double currentWeight = frmLogin.person.Weight;
                 double targetWeight = Convert.ToDouble(selectedRow.Cells["colTargetWeight"].Value);
 
                 // Enable Achieve button only if the goal is not already achieved
                 btnAchieved.Enabled = selectedRow.Cells["colIsAchieved"].Value.ToString() != "Yes";
+                btnEditGoal.Enabled = selectedRow.Cells["colIsAchieved"].Value.ToString() != "Yes";
                 // Update lblGoalAdvice dynamically
                 UpdateGoalAdvice(selectedRow);
                 UpdateProgressBar();    
@@ -694,7 +714,52 @@ namespace Fitness_Tracker.Views
             }
         }
 
+        private void LoadWeightTrendGraph()
+        {
+            try
+            {
+                db.OpenConnection();
+                DataTable dt = db.GetWeightTrackingData(frmLogin.person.PersonID);
 
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    // Clear existing datasets
+                    gunaLineDataset1.DataPoints.Clear();
+
+                    // Add data points from the query result
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string recordedDate = row["recorded_date"].ToString();
+                        double weight = Convert.ToDouble(row["weight"]);
+                        gunaLineDataset1.DataPoints.Add(recordedDate, weight);
+                    }
+
+                    // Configure dataset properties
+                    gunaLineDataset1.Label = "Weight Trends";
+                    gunaLineDataset1.BorderColor = Color.Blue;
+                    gunaLineDataset1.BorderWidth = 2;
+
+                    // Add the dataset to the chart
+                    chartWeightTrend.Datasets.Clear();
+                    chartWeightTrend.Datasets.Add(gunaLineDataset1);
+
+                    // Set chart title
+                    chartWeightTrend.Title.Text = "Weight Trends Over Time";
+                }
+                else
+                {
+                    MessageBox.Show("No weight tracking data available.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading weight trend graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                db.CloseConnection();
+            }
+        }
 
         private void frmSetGoal_Load(object sender, EventArgs e)
         {
@@ -702,6 +767,8 @@ namespace Fitness_Tracker.Views
             LoadTargetActivityOptions();
             LoadGoalAchievementByMonthGraph();
             LoadAchievedVsPendingGraph();
+            LoadAchievedGoals();
+            LoadWeightTrendGraph();
             dgvGoals.ClearSelection();
             UpdateProgressBar(); // Ensure progress bar is updated on load
             ClearGoalDisplay();
@@ -715,8 +782,8 @@ namespace Fitness_Tracker.Views
         // Define a dictionary for recommended activities based on goal types
         private readonly Dictionary<string, List<string>> activityRecommendations = new Dictionary<string, List<string>>
         {
-                { "Weight Loss", new List<string> { "Walking", "Running", "Cycling" ,"Rowing"} },
-                { "Weight Gain", new List<string> { "Weightlifting" } },
+                { "Weight Loss", new List<string> {"Swimming", "Walking", "Cycling" ,"Rowing"} },
+                { "Weight Gain", new List<string> {"Walking","Hiking", "Weightlifting" } },
                 { "Maintain Weight", new List<string> { "Rowing", "Hiking" } }
         };
 

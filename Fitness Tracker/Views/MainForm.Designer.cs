@@ -50,6 +50,7 @@
             this.lblWelcome = new System.Windows.Forms.Label();
             this.lblWelcomeUsername = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnMinimize = new Guna.UI2.WinForms.Guna2ControlBox();
             this.btnLogOut = new Guna.UI2.WinForms.Guna2Button();
             this.panelMain = new System.Windows.Forms.Panel();
             this.sideMenuTimer = new System.Windows.Forms.Timer(this.components);
@@ -232,7 +233,7 @@
             this.panelSide.MaximumSize = new System.Drawing.Size(263, 1080);
             this.panelSide.MinimumSize = new System.Drawing.Size(75, 948);
             this.panelSide.Name = "panelSide";
-            this.panelSide.Size = new System.Drawing.Size(263, 1080);
+            this.panelSide.Size = new System.Drawing.Size(263, 1000);
             this.panelSide.TabIndex = 10;
             // 
             // btnMenuBar
@@ -272,6 +273,7 @@
             this.btnHome.Size = new System.Drawing.Size(256, 73);
             this.btnHome.TabIndex = 4;
             this.btnHome.Text = "Home";
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
             // 
             // btnSetGoal
             // 
@@ -395,13 +397,14 @@
             // 
             this.lblWelcomeUsername.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblWelcomeUsername.ForeColor = System.Drawing.Color.Red;
-            this.lblWelcomeUsername.Location = new System.Drawing.Point(192, 37);
+            this.lblWelcomeUsername.Location = new System.Drawing.Point(193, 37);
             this.lblWelcomeUsername.Name = "lblWelcomeUsername";
             this.lblWelcomeUsername.Size = new System.Drawing.Size(135, 19);
             this.lblWelcomeUsername.TabIndex = 4;
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.btnMinimize);
             this.panel2.Controls.Add(this.btnExit);
             this.panel2.Controls.Add(this.btnLogOut);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
@@ -409,6 +412,19 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(229, 100);
             this.panel2.TabIndex = 18;
+            // 
+            // btnMinimize
+            // 
+            this.btnMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMinimize.ControlBoxStyle = Guna.UI2.WinForms.Enums.ControlBoxStyle.Custom;
+            this.btnMinimize.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox;
+            this.btnMinimize.CustomIconSize = 15F;
+            this.btnMinimize.FillColor = System.Drawing.Color.Transparent;
+            this.btnMinimize.IconColor = System.Drawing.Color.White;
+            this.btnMinimize.Location = new System.Drawing.Point(127, 4);
+            this.btnMinimize.Name = "btnMinimize";
+            this.btnMinimize.Size = new System.Drawing.Size(45, 29);
+            this.btnMinimize.TabIndex = 18;
             // 
             // btnLogOut
             // 
@@ -435,7 +451,7 @@
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(263, 100);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(1657, 980);
+            this.panelMain.Size = new System.Drawing.Size(1657, 900);
             this.panelMain.TabIndex = 12;
             // 
             // sideMenuTimer
@@ -453,7 +469,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1920, 1080);
+            this.ClientSize = new System.Drawing.Size(1920, 1000);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelSide);
@@ -499,5 +515,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private Guna.UI2.WinForms.Guna2Button btnSchedule;
+        private Guna.UI2.WinForms.Guna2ControlBox btnMinimize;
     }
 }

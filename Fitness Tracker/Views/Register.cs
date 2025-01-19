@@ -26,6 +26,7 @@ namespace Fitness_Tracker.Views
             txtConfirmPassword.UseSystemPasswordChar = true;
             dtpBirthDate.MaxDate = DateTime.Today;
             dtpBirthDate.Value = DateTime.Today;
+            cboRegisterGender.SelectedIndex = 0;
         }
 
         private void linkLabelLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

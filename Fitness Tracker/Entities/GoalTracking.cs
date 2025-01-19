@@ -14,6 +14,7 @@ namespace Fitness_Tracker.Entities
         private decimal targetWeight;
         private double dailyCaloriesTarget;
         private bool isAchieved;
+
         private DateTime createdAt;
         private DateTime targetDate;
 
