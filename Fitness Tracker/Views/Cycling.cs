@@ -14,10 +14,11 @@ namespace Fitness_Tracker.Views
 {
     public partial class frmCycling : UserControl
     {
-        private ConnectionDB db;
+        private readonly ConnectionDB db;
         public frmCycling()
         {
             InitializeComponent();
+            db = ConnectionDB.GetInstance(); // Use the Singleton instance
         }
 
         private void btnCyclingRecord_Click(object sender, EventArgs e)
@@ -66,21 +67,21 @@ namespace Fitness_Tracker.Views
             // Validate Speed
             if (!double.TryParse(txtCyclingSpeed.Text, out speed) || speed <= 0)
             {
-                MessageBox.Show("Please enter a valid positive number for Speed.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a valid positive number for Speed (km/h).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return (false, speed, distance, rideDuration, intensity);
             }
 
             // Validate Distance
             if (!double.TryParse(txtCyclingDistance.Text, out distance) || distance <= 0)
             {
-                MessageBox.Show("Please enter a valid positive number for Distance.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a valid positive number for Distance (km).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return (false, speed, distance, rideDuration, intensity);
             }
 
             // Validate Ride Duration
             if (!double.TryParse(txtCyclingDuration.Text, out rideDuration) || rideDuration <= 0)
             {
-                MessageBox.Show("Please enter a valid positive number for Ride Duration.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a valid positive number for Ride Duration (minutes).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return (false, speed, distance, rideDuration, intensity);
             }
 
@@ -92,9 +93,26 @@ namespace Fitness_Tracker.Views
             }
 
             intensity = cboIntensity.SelectedItem.ToString();
+
+            // Intensity-based validation
+            if (intensity == "Light" && (speed > 15 || distance > 10 || rideDuration > 30))
+            {
+                MessageBox.Show("For Light intensity, speed should be ≤ 15 km/h, distance ≤ 10 km, and duration ≤ 30 minutes. Please adjust your inputs or intensity level.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, speed, distance, rideDuration, intensity);
+            }
+            else if (intensity == "Moderate" && (speed < 16 || speed > 25 || distance > 20 || rideDuration > 60))
+            {
+                MessageBox.Show("For Moderate intensity, speed should be between 16 and 25 km/h, distance ≤ 20 km, and duration ≤ 60 minutes. Please adjust your inputs or intensity level.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, speed, distance, rideDuration, intensity);
+            }
+            else if (intensity == "Vigorous" && (speed < 26 || distance > 50 || rideDuration > 120))
+            {
+                MessageBox.Show("For Vigorous intensity, speed should be ≥ 26 km/h, distance ≤ 50 km, and duration ≤ 120 minutes. Please adjust your inputs or intensity level.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, speed, distance, rideDuration, intensity);
+            }
+
             return (true, speed, distance, rideDuration, intensity);
         }
-
         private double CalculateBurnedCalories(Dictionary<int, double> metrics, Dictionary<int, double> calculationFactors, double metValue, double userWeight, double durationHours)
         {
             double caloriesFromMet = metValue * userWeight * durationHours;
@@ -116,8 +134,7 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+              
 
                 // Step 1: Retrieve calculation factors and MET value
                 var calculationFactors = db.GetCalculationFactors(activityId);
@@ -131,7 +148,7 @@ namespace Fitness_Tracker.Views
                 }
 
                 // Step 2: Retrieve user's weight and calculate duration
-                double userWeight = frmLogin.person.Weight;
+                double userWeight = frmLogin.user.Weight;
                 double durationHours = metrics[9] / 60; // Convert duration from minutes to hours
 
                 // Step 3: Calculate calories burned
@@ -159,19 +176,13 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
         private void LoadCyclingGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataTable cyclingGraphData = db.GetActivityGraphData(frmLogin.person.PersonID, 3); 
+                DataTable cyclingGraphData = db.GetActivityGraphData(frmLogin.user.PersonID, 3); 
 
                 if (cyclingGraphData != null && cyclingGraphData.Rows.Count > 0)
                 {
@@ -202,19 +213,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading cycling graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+          
         }
         private void LoadCyclingMetrics()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataTable metricData = db.GetCyclingMetricsOverTime(frmLogin.person.PersonID);
+                DataTable metricData = db.GetCyclingMetricsOverTime(frmLogin.user.PersonID);
 
                 chartCyclingMetrics.Datasets.Clear();
 
@@ -269,19 +275,13 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading cycling metrics chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void LoadCyclingSummary()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataTable summaryData = db.GetCyclingSummary(frmLogin.person.PersonID);
+                DataTable summaryData = db.GetCyclingSummary(frmLogin.user.PersonID);
 
                 if (summaryData != null && summaryData.Rows.Count > 0)
                 {
@@ -308,10 +308,8 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataRow recentActivity = db.GetRecentCyclingActivity(frmLogin.person.PersonID);
+                DataRow recentActivity = db.GetRecentCyclingActivity(frmLogin.user.PersonID);
                 if (recentActivity != null)
                 {
                     // Extract values from the DataRow
@@ -341,10 +339,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading recent cycling activity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+            
         }
 
         private void LoadCyclingTips()
@@ -378,11 +373,9 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Get max calories burned for swimming
-                double maxCaloriesForCycling = db.GetMaxCaloriesForActivity(frmLogin.person.PersonID, 3); // 1 is Cycling activity ID
+                double maxCaloriesForCycling = db.GetMaxCaloriesForActivity(frmLogin.user.PersonID, 3); // 1 is Cycling activity ID
                 lblMaxCalories.Text = $"Maximum Calories Burned: {maxCaloriesForCycling} kcal";
 
 
@@ -399,19 +392,13 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading Cycling insights: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+            
         }
         private void LoadHistoricalComparisonGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
-                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.person.PersonID);
+                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.user.PersonID);
 
                 chartHistoricalComparison.Datasets.Clear();
 
@@ -433,20 +420,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void DisplayActivityScheduleReminder(int activityId, string activityName)
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Ensure the query fetches schedules for today or later
-                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.person.PersonID, activityId);
+                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.user.PersonID, activityId);
 
                 if (scheduleData != null && scheduleData.Rows.Count > 0)
                 {
@@ -484,10 +465,6 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading {activityName} schedule reminder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
         private void frmCycling_Load(object sender, EventArgs e)
         {
@@ -504,6 +481,11 @@ namespace Fitness_Tracker.Views
         private void cboIntensity_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadCyclingTips();
+        }
+
+        private void chartCyclingProgress_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

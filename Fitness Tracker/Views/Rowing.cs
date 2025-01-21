@@ -14,10 +14,11 @@ namespace Fitness_Tracker.Views
 {
     public partial class frmRowing : UserControl
     {
-        private ConnectionDB db;
+        private readonly ConnectionDB db;
         public frmRowing()
         {
             InitializeComponent();
+            db = ConnectionDB.GetInstance(); // Use the Singleton instance
         }
 
         private void btnRowingRecord_Click(object sender, EventArgs e)
@@ -93,9 +94,26 @@ namespace Fitness_Tracker.Views
             }
 
             intensity = cboIntensity.SelectedItem.ToString();
+
+            // Intensity-Based Validation
+            if (intensity == "Light" && (totalStrokes > 500 || distance > 2 || timeTaken > 20))
+            {
+                MessageBox.Show("For Light intensity, total strokes should be ≤ 500, distance ≤ 2 km, and time ≤ 20 minutes. Adjust your inputs or intensity.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, totalStrokes, distance, timeTaken, intensity);
+            }
+            else if (intensity == "Moderate" && (totalStrokes > 1000 || distance > 5 || timeTaken > 40))
+            {
+                MessageBox.Show("For Moderate intensity, total strokes should be ≤ 1000, distance ≤ 5 km, and time ≤ 40 minutes. Adjust your inputs or intensity.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, totalStrokes, distance, timeTaken, intensity);
+            }
+            else if (intensity == "Vigorous" && (totalStrokes <= 1000 || distance <= 5 || timeTaken <= 40))
+            {
+                MessageBox.Show("For Vigorous intensity, total strokes should be > 1000, distance > 5 km, and time > 40 minutes. Adjust your inputs or intensity.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, totalStrokes, distance, timeTaken, intensity);
+            }
+
             return (true, totalStrokes, distance, timeTaken, intensity);
         }
-
         private double CalculateBurnedCalories(Dictionary<int, double> metrics, Dictionary<int, double> calculationFactors, double metValue, double userWeight, double durationHours)
         {
             double caloriesFromMet = metValue * userWeight * durationHours;
@@ -117,9 +135,6 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Step 1: Retrieve calculation factors and MET value
                 var calculationFactors = db.GetCalculationFactors(activityId);
                 double metValue = db.GetMetValue(activityId, intensity);
@@ -132,7 +147,7 @@ namespace Fitness_Tracker.Views
                 }
 
                 // Step 2: Retrieve user's weight and calculate duration
-                double userWeight = frmLogin.person.Weight;
+                double userWeight = frmLogin.user.Weight;
                 double durationHours = metrics[18] / 60; // Convert Time Taken (minutes) to hours
 
                 // Step 3: Calculate calories burned
@@ -160,19 +175,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+           
         }
         private void LoadRowingGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataTable rowingGraphData = db.GetActivityGraphData(frmLogin.person.PersonID, 6); // 6 is Rowing Activity ID
+                DataTable rowingGraphData = db.GetActivityGraphData(frmLogin.user.PersonID, 6); // 6 is Rowing Activity ID
 
                 if (rowingGraphData != null && rowingGraphData.Rows.Count > 0)
                 {
@@ -203,20 +213,15 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading rowing graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+            
         }
 
         private void LoadRowingMetrics()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataTable metricData = db.GetRowingMetricsOverTime(frmLogin.person.PersonID);
+                DataTable metricData = db.GetRowingMetricsOverTime(frmLogin.user.PersonID);
 
                 chartRowingMetrics.Datasets.Clear();
 
@@ -271,19 +276,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading rowing metrics chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+            
         }
         private void LoadRowingSummary()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataTable summaryData = db.GetRowingSummary(frmLogin.person.PersonID);
+                DataTable summaryData = db.GetRowingSummary(frmLogin.user.PersonID);
 
                 if (summaryData != null && summaryData.Rows.Count > 0)
                 {
@@ -306,19 +306,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading rowing summary: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+            
         }
         private void LoadRecentRowingActivity()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataRow recentActivity = db.GetRecentRowingActivity(frmLogin.person.PersonID);
+                DataRow recentActivity = db.GetRecentRowingActivity(frmLogin.user.PersonID);
 
                 if (recentActivity != null)
                 {
@@ -346,10 +341,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading recent rowing activity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db?.CloseConnection();
             }
         }
         private void LoadRowingTips()
@@ -383,10 +374,9 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                
 
-                double maxCaloriesForRowing = db.GetMaxCaloriesForActivity(frmLogin.person.PersonID, 6); // 6 is Rowing Activity ID
+                double maxCaloriesForRowing = db.GetMaxCaloriesForActivity(frmLogin.user.PersonID, 6); // 6 is Rowing Activity ID
 
                 if (maxCaloriesForRowing > 0)
                 {
@@ -401,20 +391,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading rowing insights: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
         private void LoadHistoricalComparisonGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Fetch historical data for calories burned across all activities
-                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.person.PersonID);
+                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.user.PersonID);
 
                 // Clear existing datasets
                 chartHistoricalComparison.Datasets.Clear();
@@ -453,20 +437,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void DisplayActivityScheduleReminder(int activityId, string activityName)
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Ensure the query fetches schedules for today or later
-                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.person.PersonID, activityId);
+                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.user.PersonID, activityId);
 
                 if (scheduleData != null && scheduleData.Rows.Count > 0)
                 {
@@ -503,10 +481,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading {activityName} schedule reminder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db?.CloseConnection();
             }
         }
         private void frmRowing_Load(object sender, EventArgs e)

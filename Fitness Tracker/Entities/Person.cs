@@ -7,48 +7,45 @@ using System.Threading.Tasks;
 
 namespace Fitness_Tracker.Entities
 {
-    public class Person
+    /// <summary>
+    /// Abstract base class representing a person.
+    /// </summary>
+    public abstract class Person
     {
-        private int personID;
-        private string username;
-        private string password;
-        private string firstname;
-        private string lastname;
-        private string email;
-        private DateTime dateOfBirth;
-        private string gender;
-        private string mobile;
-        private double weight;
-        private double height;
-        private string photoPath;
-        public Person() { }
-        public Person(int personID, string username, string password, string firstname, string lastname, string email, DateTime dateOfBirth, string gender, string mobile, double weight, double height, string photoPath)
-        {
-            this.personID = personID;
-            this.username = username;
-            this.password = password;
-            this.firstname = firstname;
-            this.lastname = lastname;
-            this.email = email;
-            this.dateOfBirth = dateOfBirth;
-            this.gender = gender;
-            this.mobile = mobile;
-            this.weight = weight;
-            this.height = height;
-            this.photoPath = photoPath;
-        }
+        // Common properties
+        public int PersonID { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+        public string Email { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Gender { get; set; }
+        public string Mobile { get; set; }
+        public double Weight { get; set; }
+        public double Height { get; set; }
+        public string PhotoPath { get; set; }
 
-        public int PersonID { get => personID; set => personID = value; }
-        public string Username { get => username; set => username = value; }
-        public string Password { get => password; set => password = value; }
-        public string Firstname { get => firstname; set => firstname = value; }
-        public string Lastname { get => lastname; set => lastname = value; }
-        public string Email { get => email; set => email = value; }
-        public DateTime DateOfBirth { get => dateOfBirth; set => dateOfBirth = value; }
-        public string Gender { get => gender; set => gender = value; }
-        public string Mobile { get => mobile; set => mobile = value; }
-        public double Weight { get => weight; set => weight = value; }
-        public double Height { get => height; set => height = value; }
-        public string PhotoPath { get => photoPath; set => photoPath = value; }
+        // Default constructor
+        protected Person() { }
+
+        // Parameterized constructor
+        protected Person(int personID, string username, string password, string firstname, string lastname,
+                         string email, DateTime dateOfBirth, string gender, string mobile, double weight,
+                         double height, string photoPath)
+        {
+            PersonID = personID;
+            Username = username;
+            Password = password;
+            Firstname = firstname;
+            Lastname = lastname;
+            Email = email;
+            DateOfBirth = dateOfBirth;
+            Gender = gender;
+            Mobile = mobile;
+            Weight = weight;
+            Height = height;
+            PhotoPath = photoPath;
+        }
     }
 }

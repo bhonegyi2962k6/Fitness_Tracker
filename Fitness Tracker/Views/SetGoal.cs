@@ -16,7 +16,7 @@ namespace Fitness_Tracker.Views
 {
     public partial class frmSetGoal : System.Windows.Forms.UserControl
     {
-        private ConnectionDB db;
+        private readonly ConnectionDB db;
         public frmSetGoal()
         {
             InitializeComponent();
@@ -24,16 +24,14 @@ namespace Fitness_Tracker.Views
             dtpTargetDate.MinDate = DateTime.Today;
             dgvGoals.RowTemplate.Height = 45; // Adjust this value to your desired height
             dgvGoals.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            db = ConnectionDB.GetInstance(); // Use the Singleton instance
         }
         private void LoadGoalsToGrid()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Fetch goals from the database
-                DataTable dt = db.GetGoals(frmLogin.person.PersonID);
+                DataTable dt = db.GetGoals(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -69,30 +67,26 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading goals: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
-
         private void LoadCurrentGoal()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                if (frmLogin.user == null)
+                {
+                    MessageBox.Show("User not logged in. Please log in again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                lblUserWeight.Text = $"Your Current Weight: {frmLogin.person.Weight} kg";
+                lblUserWeight.Text = $"Your Current Weight: {frmLogin.user.Weight} kg";
 
-                DataTable dt = db.GetGoals(frmLogin.person.PersonID);
-
+                DataTable dt = db?.GetGoals(frmLogin.user.PersonID);
                 if (dt == null || dt.Rows.Count == 0)
                 {
                     ClearGoalDisplay();
                     return;
                 }
 
-                // Assuming the first row is the current goal
                 DataRow goal = dt.Rows[0];
 
                 lblGoalType.Text = $"Goal Type: {goal["goal_type"]}";
@@ -109,24 +103,15 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading current goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
-
-
         private void LoadAchievedGoals()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Fetch counts for each goal type
-                int weightLossAchieved = db.GetAchievedGoalsCountByType(frmLogin.person.PersonID, "Weight Loss");
-                int weightGainAchieved = db.GetAchievedGoalsCountByType(frmLogin.person.PersonID, "Weight Gain");
-                int maintainWeightAchieved = db.GetAchievedGoalsCountByType(frmLogin.person.PersonID, "Maintain Weight");
+                int weightLossAchieved = db.GetAchievedGoalsCountByType(frmLogin.user.PersonID, "Weight Loss");
+                int weightGainAchieved = db.GetAchievedGoalsCountByType(frmLogin.user.PersonID, "Weight Gain");
+                int maintainWeightAchieved = db.GetAchievedGoalsCountByType(frmLogin.user.PersonID, "Maintain Weight");
 
                 // Update labels
                 lblWeightLossAchieved.Text = $"Weight Loss Achieved: {weightLossAchieved}";
@@ -140,10 +125,6 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading achieved goals: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
 
         private void UpdateProgressBar()
@@ -154,7 +135,7 @@ namespace Fitness_Tracker.Views
 
             // Baseline weight when the goal was created
             double baselineWeight = 100; // Example value, replace with actual baseline
-            double currentWeight = frmLogin.person.Weight;
+            double currentWeight = frmLogin.user.Weight;
             double targetWeight;
 
             DateTime createdAt;
@@ -236,8 +217,6 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Fetch activities as a dictionary
                 Dictionary<int, string> activities = db.GetActivities();
@@ -258,10 +237,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading activities: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db?.CloseConnection();
             }
         }
 
@@ -328,7 +303,7 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                double currentWeight = frmLogin.person.Weight;
+                double currentWeight = frmLogin.user.Weight;
 
                 if (goalType == "Weight Loss" && targetWeight >= currentWeight)
                 {
@@ -342,9 +317,6 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Get activity_id from activity_name
                 int activityId = db.GetActivityIdByName(activityName);
 
@@ -354,7 +326,7 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                if (db.InsertGoal(frmLogin.person.PersonID, goalType, targetWeight, dailyCaloriesTarget, dtpTargetDate.Value, activityId))
+                if (db.InsertGoal(frmLogin.user.PersonID, goalType, targetWeight, dailyCaloriesTarget, dtpTargetDate.Value, activityId))
                 {
                     MessageBox.Show("Goal saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadGoalsToGrid();
@@ -372,10 +344,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error saving goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+            
         }
 
         private void btnEditGoal_Click(object sender, EventArgs e)
@@ -421,9 +390,6 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Get activity_id from activity_name
                 int activityId = db.GetActivityIdByName(activityName);
 
@@ -453,10 +419,6 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error updating goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
 
         private void bntDeleteGoal_Click(object sender, EventArgs e)
@@ -468,8 +430,6 @@ namespace Fitness_Tracker.Views
                     // Get the selected goal ID
                     int goalId = Convert.ToInt32(dgvGoals.SelectedRows[0].Cells["colGoalId"].Value);
 
-                    db = new ConnectionDB();
-                    db.OpenConnection();
 
                     // Delete the goal from the database
                     if (db.DeleteGoal(goalId))
@@ -501,10 +461,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error deleting goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+            
         }
 
 
@@ -523,12 +480,12 @@ namespace Fitness_Tracker.Views
                     if (db.MarkGoalAsAchieved(goalId))
                     {
                         // 2. Insert into weight_tracking
-                        if (db.InsertWeightTracking(frmLogin.person.PersonID, targetWeight))
+                        if (db.InsertWeightTracking(frmLogin.user.PersonID, targetWeight))
                         {
                             // 3. Update the person's current weight
-                            if (db.UpdateUserWeight(frmLogin.person.PersonID, targetWeight))
+                            if (db.UpdateUserWeight(frmLogin.user.PersonID, targetWeight))
                             {
-                                frmLogin.person.Weight = targetWeight; // Update in-memory value
+                                frmLogin.user.Weight = targetWeight; // Update in-memory value
                                 MessageBox.Show("Goal marked as achieved, weight logged, and updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                                 // Refresh UI components
@@ -561,10 +518,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error marking goal as achieved: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+            
         }
 
         private void dgvGoals_SelectionChanged(object sender, EventArgs e)
@@ -582,7 +536,7 @@ namespace Fitness_Tracker.Views
                 lblTargetDate.Text =$"Target Date: {selectedRow.Cells["colTargetDate"].Value}";
                 lblActivity.Text = $"Actvity: {selectedRow.Cells["colActivity"].Value}";
                 // Determine goal advice based on the user's current weight
-                double currentWeight = frmLogin.person.Weight;
+                double currentWeight = frmLogin.user.Weight;
                 double targetWeight = Convert.ToDouble(selectedRow.Cells["colTargetWeight"].Value);
 
                 // Enable Achieve button only if the goal is not already achieved
@@ -603,7 +557,7 @@ namespace Fitness_Tracker.Views
             try
             {
                 string goalType = selectedRow.Cells["colGoalType"].Value.ToString();
-                double currentWeight = frmLogin.person.Weight;
+                double currentWeight = frmLogin.user.Weight;
                 double targetWeight = Convert.ToDouble(selectedRow.Cells["colTargetWeight"].Value);
 
                 if (goalType == "Weight Loss")
@@ -631,7 +585,7 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db.OpenConnection(); // Ensure connection is opened
+                
                 DataTable dt = db.GetGoalAchievementByMonth();
 
                 if (dt != null && dt.Rows.Count > 0)
@@ -667,18 +621,15 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading goal achievement by month: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection(); // Ensure connection is closed
-            }
+            
+            
         }
 
         private void LoadAchievedVsPendingGraph()
         {
             try
             {
-                db.OpenConnection(); // Open connection
-                DataTable dt = db.GetAchievedAndPendingGoals(frmLogin.person.PersonID);
+                DataTable dt = db.GetAchievedAndPendingGoals(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -708,18 +659,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading Achieved vs Pending Goals chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection(); // Close connection
-            }
+            
         }
 
         private void LoadWeightTrendGraph()
         {
             try
             {
-                db.OpenConnection();
-                DataTable dt = db.GetWeightTrackingData(frmLogin.person.PersonID);
+                DataTable dt = db.GetWeightTrackingData(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -754,10 +701,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading weight trend graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db.CloseConnection();
             }
         }
 

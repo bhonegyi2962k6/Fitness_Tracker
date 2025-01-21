@@ -16,8 +16,8 @@ namespace Fitness_Tracker.Views
 {
     public partial class frmLogin : Form
     {
-        private ConnectionDB db;
-        public static Person person;
+        private readonly ConnectionDB db;
+        public static User user;
 
         private int maxAttempts = 4;
         private int lockoutDuration = 30;
@@ -27,8 +27,8 @@ namespace Fitness_Tracker.Views
         public frmLogin()
         {
             InitializeComponent();
-            txtPassword.UseSystemPasswordChar = true;
-
+            txtPassword.UseSystemPasswordChar = true; 
+            db = ConnectionDB.GetInstance();
             remainingAttempts = maxAttempts;
             lockoutTimeRemaining = lockoutDuration;
             lblLockOutMessage.Visible = false;
@@ -108,14 +108,17 @@ namespace Fitness_Tracker.Views
 
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
-                person = db.IsValidUser(username, password);
-
-                if (person != null)
+                
+                user = User.GetInstance();
+                // Authenticate user
+                var validUser = db.IsValidUser(username, password);
+                if (validUser != null)
                 {
-                    SuccessfulLogin(person);
+                    user.SetUserData(validUser.PersonID, validUser.Username, validUser.Password, validUser.Firstname,
+                                     validUser.Lastname, validUser.Email, validUser.DateOfBirth, validUser.Gender,
+                                     validUser.Mobile, validUser.Weight, validUser.Height, validUser.PhotoPath);
+
+                    SuccessfulLogin(user);
                 }
                 else
                 {
@@ -126,15 +129,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"An error occurred while processing your login: {ex.Message}",
                                 "Login Error",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (db != null)
-                {
-                    db.CloseConnection();
-                }
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void loginAttemptTimer_Tick(object sender, EventArgs e)

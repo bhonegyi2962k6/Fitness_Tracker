@@ -1,4 +1,5 @@
 ﻿using Fitness_Tracker.dao;
+using Fitness_Tracker.Entities;
 using Guna.Charts.WinForms;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,36 @@ namespace Fitness_Tracker.Views
 {
     public partial class frmSwimming : UserControl
     {
-        private ConnectionDB db;
+        private readonly ConnectionDB db;
         public frmSwimming()
         {
             InitializeComponent();
+            db = ConnectionDB.GetInstance(); // Use Singleton for ConnectionDB
         }
 
         private void btnSwimmingRecord_Click(object sender, EventArgs e)
         {
             try
             {
+                var user = User.GetInstance();
+
+
+                var activity = new Activity
+                {
+                    ActivityId = 1, // Swimming Activity ID
+                    ActivityName = "Swimming",
+                    Descriptions = "Swimming activity description."
+                };
+
+                var record = new Record
+                {
+                    RecordDate = DateTime.Now,
+                    Person = user,
+                    Activity = activity,
+                    BurnedCalories = 0, // Placeholder, calculated later
+                    IntesityLevel = cboIntensity.SelectedItem?.ToString()
+                };
+
                 // Validate inputs
                 var (isValid, laps, timeTaken, averageHeartRate, selectedIntensity) = ValidateInputs();
                 if (!isValid) return;
@@ -36,6 +57,7 @@ namespace Fitness_Tracker.Views
                     { 2, timeTaken },        // Metric ID 2: Time Taken (minutes)
                     { 3, averageHeartRate }  // Metric ID 3: Average Heart Rate
                 };
+
                 // Clear input fields after recording
                 txtSwimmingLaps.Clear();
                 txtSwimmingTime.Clear();
@@ -45,7 +67,7 @@ namespace Fitness_Tracker.Views
                 // Display summary
                 lblUserSummary.Text = $"You swam {laps} laps in {timeTaken} minutes with an average heart rate of {averageHeartRate} bpm.";
 
-                // Update the circular progress bar
+                // Update the circular progress bar and handle record
                 LoadSwimmingGraph();
                 LoadSwimmingMetrics();
                 LoadSwimmingSummary();
@@ -58,7 +80,6 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error: {ex.Message}", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private (bool isValid, int laps, double timeTaken, double averageHeartRate, string intensity) ValidateInputs()
         {
             int laps = 0;
@@ -95,6 +116,24 @@ namespace Fitness_Tracker.Views
             }
 
             selectedIntensity = cboIntensity.SelectedItem.ToString();
+
+            // Intensity-based validation for laps
+            if (selectedIntensity == "Light" && (laps < 0 || laps > 14))
+            {
+                MessageBox.Show("For Light intensity, laps should be between 0 and 14. Please adjust your laps or activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, laps, timeTaken, averageHeartRate, selectedIntensity);
+            }
+            else if (selectedIntensity == "Moderate" && (laps < 15 || laps > 29))
+            {
+                MessageBox.Show("For Moderate intensity, laps should be between 15 and 29. Please adjust your laps or activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, laps, timeTaken, averageHeartRate, selectedIntensity);
+            }
+            else if (selectedIntensity == "Vigorous" && laps < 30)
+            {
+                MessageBox.Show("For Vigorous intensity, laps should be 30 or more. Please adjust your laps or activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, laps, timeTaken, averageHeartRate, selectedIntensity);
+            }
+
             return (true, laps, timeTaken, averageHeartRate, selectedIntensity);
         }
         private double CalculateBurnedCalories(Dictionary<int, double> metrics, Dictionary<int, double> calculationFactors, double metValue, double userWeight, double durationHours)
@@ -112,46 +151,47 @@ namespace Fitness_Tracker.Views
 
             return Math.Round(caloriesFromMet + caloriesFromFactors, 2); // Round to 2 decimal places
         }
-
         private void HandleActivityRecord(int activityId, Dictionary<int, double> metrics, string intensity)
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                // Create and link objects
+                var user = User.GetInstance();
 
-                // Step 1: Retrieve calculation factors and MET value
+                var activity = new Activity
+                {
+                    ActivityId = activityId,
+                    ActivityName = db.GetActivityNameById(activityId), // Assuming this method exists in your DB class
+                };
+
+                var record = new Record
+                {
+                    Person = user,
+                    Activity = activity,
+                    RecordDate = DateTime.Now,
+                    IntesityLevel = intensity
+                };
+
+                // Calculate burned calories and update record
                 var calculationFactors = db.GetCalculationFactors(activityId);
                 double metValue = db.GetMetValue(activityId, intensity);
+                double userWeight = frmLogin.user.Weight;
+                double durationHours = metrics[2] / 60; // Convert Time Taken (minutes) to hours
+                record.BurnedCalories = CalculateBurnedCalories(metrics, calculationFactors, metValue, userWeight, durationHours);
 
-                // Validate MET value
-                if (metValue <= 0)
-                {
-                    MessageBox.Show("Invalid MET value. Please check the selected intensity.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                // Insert record and metrics into the database
+                int recordId = db.InsertRecords(
+                    record.BurnedCalories,
+                    record.Activity.ActivityId,
+                    record.IntesityLevel
+                );
 
-                // Step 2: Retrieve user's weight and calculate duration
-                double userWeight = frmLogin.person.Weight;
-                if (metrics[2] <= 0)
-                {
-                    MessageBox.Show("Time Taken must be greater than zero.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                double durationHours = metrics[2] / 60.0; // Convert minutes to hours
-
-                // Step 3: Calculate calories burned
-                double burnedCalories = CalculateBurnedCalories(metrics, calculationFactors, metValue, userWeight, durationHours);
-
-                // Step 4: Insert record into the database
-                int recordId = db.InsertRecords(burnedCalories, activityId, intensity);
                 if (recordId <= 0)
                 {
                     MessageBox.Show("Failed to insert the record.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Step 5: Insert metrics into the database
                 if (db.InsertMetricValues(activityId, recordId, metrics))
                 {
                     MessageBox.Show("Swimming record successfully inserted!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -165,43 +205,35 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
-        
         private void LoadSwimmingGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                // Create or fetch objects
+                var user = User.GetInstance();
+                var activity = new Activity
+                {
+                    ActivityId = 1, // Swimming Activity ID
+                    ActivityName = db.GetActivityNameById(1)
+                };
 
-                DataTable swimmingGraphData = db.GetActivityGraphData(frmLogin.person.PersonID, 1); // 1 is Swimming Activity ID
+                // Fetch graph data
+                DataTable swimmingGraphData = db.GetActivityGraphData(user.PersonID, activity.ActivityId);
 
+                // Clear and update chart
                 if (swimmingGraphData != null && swimmingGraphData.Rows.Count > 0)
                 {
                     gunaLineDataset1.DataPoints.Clear();
-
                     foreach (DataRow row in swimmingGraphData.Rows)
                     {
                         string date = Convert.ToDateTime(row["Date"]).ToString("yyyy-MM-dd");
                         double calories = Convert.ToDouble(row["CaloriesBurned"]);
-
                         gunaLineDataset1.DataPoints.Add(date, calories);
                     }
 
                     gunaLineDataset1.Label = "Calories Burned Over Time";
-                    gunaLineDataset1.BorderWidth = 2;
-                    gunaLineDataset1.PointRadius = 4;
-
-                    if (!chartSwimmingProgress.Datasets.Contains(gunaLineDataset1))
-                    {
-                        chartSwimmingProgress.Datasets.Add(gunaLineDataset1);
-                    }
-
-                    chartSwimmingProgress.Title.Text = "Calories Burn From Swimming";
+                    chartSwimmingProgress.Datasets.Add(gunaLineDataset1);
                     chartSwimmingProgress.Update();
                 }
             }
@@ -209,20 +241,22 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading swimming graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
+
         private void LoadSwimmingMetrics()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                // Create or fetch objects
+                var user = User.GetInstance();
+                var activity = new Activity
+                {
+                    ActivityId = 1, // Swimming Activity ID
+                    ActivityName = db.GetActivityNameById(1)
+                };
 
-                // Fetch the swimming metrics data
-                DataTable metricData = db.GetSwimmingMetricsOverTime(frmLogin.person.PersonID);
+                // Fetch metrics data
+                DataTable metricData = db.GetSwimmingMetricsOverTime(user.PersonID);
 
                 // Clear existing datasets
                 chartSwimmingMetrics.Datasets.Clear();
@@ -289,56 +323,47 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading swimming metrics chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void LoadSwimmingSummary()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                // Create or fetch objects
+                var user = User.GetInstance();
+                var activity = new Activity
+                {
+                    ActivityId = 1,
+                    ActivityName = db.GetActivityNameById(1)
+                };
 
-                // Fetch additional metrics like total laps, average heart rate, and total time
-                DataTable summaryData = db.GetSwimmingSummary(frmLogin.person.PersonID);
+                // Fetch summary data
+                DataTable summaryData = db.GetSwimmingSummary(user.PersonID);
 
+                // Update UI
                 if (summaryData != null && summaryData.Rows.Count > 0)
                 {
-                    double totalLaps = summaryData.Rows[0]["TotalLaps"] != DBNull.Value ? Convert.ToDouble(summaryData.Rows[0]["TotalLaps"]) : 0.0;
-                    double avgHeartRate = summaryData.Rows[0]["AvgHeartRate"] != DBNull.Value ? Convert.ToDouble(summaryData.Rows[0]["AvgHeartRate"]) : 0.0;
-                    double totalTime = summaryData.Rows[0]["TotalTime"] != DBNull.Value ? Convert.ToDouble(summaryData.Rows[0]["TotalTime"]) : 0.0;
-
-                    lblTotalLaps.Text = $"Total Laps: {totalLaps}";
-                    lblAvgHeartRate.Text = $"Average Heart Rate: {Math.Round(avgHeartRate, 2)} bpm";
-                    lblTotalTime.Text = $"Total Time: {Math.Round(totalTime, 2)} minutes";
+                    lblTotalLaps.Text = $"Total Laps: {summaryData.Rows[0]["TotalLaps"]}";
+                    lblTotalTime.Text = $"Total Time: {summaryData.Rows[0]["TotalTime"]} minutes";
+                    lblAvgHeartRate.Text = $"Average Heart Rate: {summaryData.Rows[0]["AvgHeartRate"]} bpm";
                 }
                 else
                 {
                     lblTotalLaps.Text = "Total Laps: 0";
-                    lblAvgHeartRate.Text = "Average Heart Rate: N/A";
                     lblTotalTime.Text = "Total Time: 0 minutes";
+                    lblAvgHeartRate.Text = "Average Heart Rate: N/A";
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading swimming summary: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
         private void LoadRecentSwimmingActivity()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Fetch the most recent swimming activity
-                DataRow recentActivity = db.GetRecentSwimmingActivity(frmLogin.person.PersonID);
+                DataRow recentActivity = db.GetRecentSwimmingActivity(frmLogin.user.PersonID);
 
 
                 if (recentActivity != null)
@@ -370,10 +395,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading recent swimming activity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db?.CloseConnection();
             }
         }
         private void LoadSwimmingTips()
@@ -407,14 +428,18 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                // Create or fetch objects
+                var user = User.GetInstance();
+                var activity = new Activity
+                {
+                    ActivityId = 1, // Swimming Activity ID
+                    ActivityName = db.GetActivityNameById(1) // Get activity name dynamically
+                };
 
-                // Get max calories burned for swimming
-                double maxCaloriesForSwimming = db.GetMaxCaloriesForActivity(frmLogin.person.PersonID, 1); // 1 is Swimming activity ID
-                lblMaxCalories.Text = $"Maximum Calories Burned: {maxCaloriesForSwimming} kcal";
+                // Fetch max calories burned for swimming
+                double maxCaloriesForSwimming = db.GetMaxCaloriesForActivity(user.PersonID, activity.ActivityId);
 
-
+                // Update the UI
                 if (maxCaloriesForSwimming > 0)
                 {
                     lblMaxCalories.Text = $"Maximum Calories Burned: {maxCaloriesForSwimming} kcal";
@@ -428,20 +453,17 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading swimming insights: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
+
         private void LoadHistoricalComparisonGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                // Create or fetch objects
+                var user = User.GetInstance();
 
-                // Fetch historical data for calories burned across all activities
-                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.person.PersonID);
+                // Fetch historical data
+                DataTable comparisonData = db.GetHistoricalComparison(user.PersonID);
 
                 // Clear existing datasets
                 chartHistoricalComparison.Datasets.Clear();
@@ -480,20 +502,21 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void DisplayActivityScheduleReminder(int activityId, string activityName)
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                // Create objects
+                var user = User.GetInstance(); // Fetch the singleton instance of the user
+                var activity = new Activity
+                {
+                    ActivityId = activityId,
+                    ActivityName = activityName
+                };
 
-                // Ensure the query fetches schedules for today or later
-                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.person.PersonID, activityId);
+                // Fetch schedules from the database for the user and activity
+                DataTable scheduleData = db.GetUpcomingActivitySchedules(user.PersonID, activity.ActivityId);
 
                 if (scheduleData != null && scheduleData.Rows.Count > 0)
                 {
@@ -506,7 +529,7 @@ namespace Fitness_Tracker.Views
                         // Display today's schedule first
                         if (date.Date == DateTime.Today)
                         {
-                            lblScheduleReminder.Text = $"Today's {activityName} Schedule: {startTime:hh\\:mm} for {duration} minutes.";
+                            lblScheduleReminder.Text = $"Today's {activity.ActivityName} Schedule: {startTime:hh\\:mm} for {duration} minutes.";
                             lblScheduleReminder.ForeColor = Color.Green;
                             return;
                         }
@@ -518,12 +541,12 @@ namespace Fitness_Tracker.Views
                     TimeSpan upcomingStartTime = TimeSpan.Parse(upcomingRow["StartTime"].ToString());
                     int upcomingDuration = Convert.ToInt32(upcomingRow["Duration"]);
 
-                    lblScheduleReminder.Text = $"Next {activityName} Schedule: {upcomingDate:yyyy-MM-dd} at {upcomingStartTime:hh\\:mm} for {upcomingDuration} minutes.";
+                    lblScheduleReminder.Text = $"Next {activity.ActivityName} Schedule: {upcomingDate:yyyy-MM-dd} at {upcomingStartTime:hh\\:mm} for {upcomingDuration} minutes.";
                     lblScheduleReminder.ForeColor = Color.Blue;
                 }
                 else
                 {
-                    lblScheduleReminder.Text = $"No upcoming {activityName} schedules.";
+                    lblScheduleReminder.Text = $"No upcoming {activity.ActivityName} schedules.";
                     lblScheduleReminder.ForeColor = Color.DarkRed;
                 }
             }
@@ -531,13 +554,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading {activityName} schedule reminder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
-
-
         private void frmSwimming_Load(object sender, EventArgs e)
         {
             DisplayActivityScheduleReminder(1, "Swimming"); // 1 = Swimming Activity ID

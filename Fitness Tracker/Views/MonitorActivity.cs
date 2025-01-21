@@ -15,70 +15,63 @@ namespace Fitness_Tracker.Views
 {
     public partial class frmMonitorActivity : UserControl
     {
-        private ConnectionDB db;
+        private readonly ConnectionDB db;
         public frmMonitorActivity()
         {
             InitializeComponent();
+            db = ConnectionDB.GetInstance(); // Use the Singleton instance
             LoadRecords();
             cboDateRange.SelectedIndex = 0;
         }
-
         private void LoadRecords()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
-                // Query to retrieve records
-                DataTable dt = db.GetRecords(frmLogin.person.PersonID);
-
-                if (dt != null && dt.Rows.Count > 0)
+                if (frmLogin.user == null)
                 {
-                    dataGridViewRecord.Rows.Clear(); // Clear existing rows
-                    int rowIndex = 1;
-                    double totalCalories = 0;
-
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        int recordId = Convert.ToInt32(row["Record Id"]);
-                        string activityDetails = db.GetActivityDetails(recordId); // Fetch details for this record
-
-                        // Add data to DataGridView
-                        dataGridViewRecord.Rows.Add(
-                            row["Record Id"],          // Hidden Record ID
-                            rowIndex++,                // Row number
-                            row["Activity"].ToString(),
-                            Convert.ToDateTime(row["Record Date"]).ToString("yyyy-MM-dd"),
-                            row["Burned Calories"],    // Burned Calories
-                            activityDetails,           // Activity Details
-                            row["Activity Type"],      // Intensity Level (colActivityType)
-                            "Delete"                   // Delete button text
-                        );
-
-                        // Add to total calories
-                        totalCalories += Convert.ToDouble(row["Burned Calories"]);
-                    }
-
-                    // Display total calories
-                    lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)}";
+                    MessageBox.Show("User is not logged in. Please log in again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-                else
+
+                DataTable dt = db?.GetRecords(frmLogin.user.PersonID);
+
+                if (dt == null || dt.Rows.Count == 0)
                 {
-                    // No records found
+                    dataGridViewRecord.Rows.Clear();
                     lblTotalCalories.Text = "Total Calories: 0";
+                    return;
                 }
+
+                dataGridViewRecord.Rows.Clear();
+                int rowIndex = 1;
+                double totalCalories = 0;
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    int recordId = Convert.ToInt32(row["Record Id"]);
+                    string activityDetails = db?.GetActivityDetails(recordId) ?? "N/A";
+
+                    dataGridViewRecord.Rows.Add(
+                        row["Record Id"],          // Hidden Record ID
+                        rowIndex++,                // Row number
+                        row["Activity"].ToString(),
+                        Convert.ToDateTime(row["Record Date"]).ToString("yyyy-MM-dd"),
+                        row["Burned Calories"],
+                        activityDetails,
+                        row["Activity Type"],
+                        "Delete"
+                    );
+
+                    totalCalories += Convert.ToDouble(row["Burned Calories"]);
+                }
+
+                lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)}";
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading records: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
-
         private void LoadDefaultDailyCaloriesGraph()
         {
             DateTime startDate = DateTime.Today.AddDays(-7); // Example: Last 7 days
@@ -105,8 +98,7 @@ namespace Fitness_Tracker.Views
                     {
                         int recordId = Convert.ToInt32(dataGridViewRecord.Rows[e.RowIndex].Cells["colRecordId"].Value);
 
-                        db = new ConnectionDB();
-                        db.OpenConnection();
+                      
 
                         if (db.DeleteRecord(recordId))
                         {
@@ -127,10 +119,6 @@ namespace Fitness_Tracker.Views
                     {
                         MessageBox.Show($"Error deleting record: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    finally
-                    {
-                        if (db != null) db.CloseConnection();
-                    }
                 }
             }
         }
@@ -138,11 +126,9 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Fetch historical data for calories burned across all activities
-                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.person.PersonID);
+                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.user.PersonID);
 
                 // Clear existing datasets
                 chartActivityCalories.Datasets.Clear();
@@ -181,10 +167,6 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void frmMonitorActivity_Load(object sender, EventArgs e)
         {
@@ -198,11 +180,8 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Query to retrieve records within the date range
-                DataTable dt = db.GetRecordsForDateRange(frmLogin.person.PersonID, startDate, endDate);
+                DataTable dt = db.GetRecordsForDateRange(frmLogin.user.PersonID, startDate, endDate);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -244,10 +223,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading records: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db?.CloseConnection();
             }
         }
      
@@ -318,11 +293,9 @@ namespace Fitness_Tracker.Views
                 }
                 else
                 {
-                    db = new ConnectionDB();
-                    db.OpenConnection();
 
                     // Get records for the selected activity
-                    DataTable dt = db.GetRecordsByActivity(frmLogin.person.PersonID, selectedActivity);
+                    DataTable dt = db.GetRecordsByActivity(frmLogin.user.PersonID, selectedActivity);
 
                     if (dt != null && dt.Rows.Count > 0)
                     {
@@ -362,18 +335,12 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error sorting by activity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
 
         private void PopulateActivitySort()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 Dictionary<int, string> activities = db.GetActivities();
 
@@ -391,21 +358,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error populating activities: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
 
         private void LoadDailyCaloriesGraph(DateTime startDate, DateTime endDate)
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Get daily calories data
-                DataTable dt = db.GetDailyCaloriesData(frmLogin.person.PersonID, startDate, endDate);
+                DataTable dt = db.GetDailyCaloriesData(frmLogin.user.PersonID, startDate, endDate);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -440,10 +400,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading daily calories graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db.CloseConnection();
             }
         }
     }

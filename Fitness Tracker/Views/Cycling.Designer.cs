@@ -294,6 +294,7 @@
             chartFont24.FontName = "Arial";
             tick9.Font = chartFont24;
             this.chartCyclingProgress.ZAxes.Ticks = tick9;
+            this.chartCyclingProgress.Load += new System.EventHandler(this.chartCyclingProgress_Load);
             // 
             // gunaLineDataset1
             // 

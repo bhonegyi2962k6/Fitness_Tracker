@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Fitness_Tracker.Entities
 {
-    public class MetricValue
+    public class MetricValues
     {
         private int metricValueId;
-        private Activity activity;
+        private Activity activity; 
         private Record record;
         private Metric metric;
         private double value;
 
-        public MetricValue() { }
-        public MetricValue(int metricValueId, Activity activity, Record record, Metric metric, double value)
+        public MetricValues() { }
+        public MetricValues(int metricValueId, Activity activity, Record record, Metric metric, double value)
         {
             this.metricValueId = metricValueId;
             this.activity = activity;

@@ -15,10 +15,11 @@ namespace Fitness_Tracker.Views
 {
     public partial class frmSchedule : UserControl
     {
-        private ConnectionDB db;
+        private readonly ConnectionDB db;
         public frmSchedule()
         {
             InitializeComponent();
+            db = ConnectionDB.GetInstance(); // Use the Singleton instance
         }
 
         private void frmSchedule_Load(object sender, EventArgs e)
@@ -43,10 +44,7 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
-                DataTable dt = db.GetSchedules(frmLogin.person.PersonID);
+                DataTable dt = db.GetSchedules(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -80,7 +78,6 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
                 Dictionary<int, string> activities = db.GetActivities();
 
                 cboActivity.DataSource = new BindingSource(activities, null);
@@ -126,11 +123,9 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                db = new ConnectionDB();
-                db.OpenConnection();
-
+              
                 // Check the number of schedules the user has for the selected date
-                int scheduleCount = db.GetScheduleCountForDate(frmLogin.person.PersonID, dtpScheduleDate.Value);
+                int scheduleCount = db.GetScheduleCountForDate(frmLogin.user.PersonID, dtpScheduleDate.Value);
 
                 if (scheduleCount >= 2)
                 {
@@ -138,14 +133,14 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                if (db.IsOverlappingSchedule(frmLogin.person.PersonID, dtpScheduleDate.Value, startTime, durationMinutes))
+                if (db.IsOverlappingSchedule(frmLogin.user.PersonID, dtpScheduleDate.Value, startTime, durationMinutes))
                 {
                     MessageBox.Show("This schedule overlaps with an existing one. Please select a different time.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
                 // Insert schedule
-                int scheduleId = db.InsertSchedule(frmLogin.person.PersonID, dtpScheduleDate.Value);
+                int scheduleId = db.InsertSchedule(frmLogin.user.PersonID, dtpScheduleDate.Value);
                 if (scheduleId == -1)
                 {
                     MessageBox.Show("Failed to insert schedule.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -177,10 +172,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+            
         }
 
         private void dataGridViewSchedule_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -201,7 +193,7 @@ namespace Fitness_Tracker.Views
                         // Get schedule_id from the hidden column
                         int scheduleId = Convert.ToInt32(dataGridViewSchedule.Rows[e.RowIndex].Cells["colScheduledId"].Value);
 
-                        ConnectionDB db = new ConnectionDB();
+                       
 
                         if (db.DeleteSchedule(scheduleId))
                         {
@@ -227,11 +219,9 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
+               
                 // Fetch data for the graph
-                DataTable dt = db.GetSchedulesSummary(frmLogin.person.PersonID);
+                DataTable dt = db.GetSchedulesSummary(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -266,10 +256,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading schedules graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db.CloseConnection();
             }
         }
 
@@ -329,10 +315,8 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataTable dt = db.GetFilteredSchedules(frmLogin.person.PersonID, dateFilter, dateEnd);
+                DataTable dt = db.GetFilteredSchedules(frmLogin.user.PersonID, dateFilter, dateEnd);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -359,20 +343,16 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading schedules: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+            
         }
 
         private void LoadSchedulesGraph(DateTime? dateFilter, DateTime? dateEnd)
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                
 
-                DataTable dt = db.GetFilteredSchedules(frmLogin.person.PersonID, dateFilter, dateEnd);
+                DataTable dt = db.GetFilteredSchedules(frmLogin.user.PersonID, dateFilter, dateEnd);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -399,19 +379,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading schedules: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void LoadScheduleDistributionByTime()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                
 
-                DataTable dt = db.GetScheduleDistributionByTime(frmLogin.person.PersonID);
+                DataTable dt = db.GetScheduleDistributionByTime(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -442,10 +417,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading schedule distribution graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+          
         }
 
         private void dataGridViewSchedule_SelectionChanged(object sender, EventArgs e)

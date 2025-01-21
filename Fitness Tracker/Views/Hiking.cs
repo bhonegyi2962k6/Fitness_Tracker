@@ -14,10 +14,11 @@ namespace Fitness_Tracker.Views
 {
     public partial class frmHiking : UserControl
     {
-        private ConnectionDB db;
+        private readonly ConnectionDB db;
         public frmHiking()
         {
             InitializeComponent();
+            db = ConnectionDB.GetInstance(); // Use the Singleton instance
         }
 
         private void btnHikingRecord_Click(object sender, EventArgs e)
@@ -62,35 +63,47 @@ namespace Fitness_Tracker.Views
             // Validate Elevation Gained
             if (!double.TryParse(txtHikingElevation.Text, out elevationGained) || elevationGained < 0)
             {
-                MessageBox.Show("Please enter a valid non-negative number for Elevation Gained.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a valid non-negative number for Elevation Gained (meters).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return (false, elevationGained, distance, timeTaken, intensity);
             }
 
             // Validate Distance
             if (!double.TryParse(txtHikingDistance.Text, out distance) || distance <= 0)
             {
-                MessageBox.Show("Please enter a valid positive number for Distance.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a valid positive number for Distance (kilometers).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return (false, elevationGained, distance, timeTaken, intensity);
             }
 
             // Validate Time Taken
             if (!double.TryParse(txtHikingTimeTaken.Text, out timeTaken) || timeTaken <= 0)
             {
-                MessageBox.Show("Please enter a valid positive number for Time Taken.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a valid positive number for Time Taken (minutes).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return (false, elevationGained, distance, timeTaken, intensity);
             }
 
             // Validate Intensity
             if (cboIntensity.SelectedItem == null)
             {
-                MessageBox.Show("Please select an intensity level.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select an intensity level (Moderate or Vigorous).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return (false, elevationGained, distance, timeTaken, intensity);
             }
 
             intensity = cboIntensity.SelectedItem.ToString();
+
+            // Intensity-based Validation
+            if (intensity == "Moderate" && (elevationGained < 200 || elevationGained > 800 || distance > 10 || timeTaken > 120))
+            {
+                MessageBox.Show("For Moderate intensity, elevation should be between 200m and 800m, distance ≤ 10km, and time ≤ 120 minutes. Please adjust your inputs.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, elevationGained, distance, timeTaken, intensity);
+            }
+            else if (intensity == "Vigorous" && (elevationGained < 801 || distance > 20 || timeTaken > 240))
+            {
+                MessageBox.Show("For Vigorous intensity, elevation should be ≥ 801m, distance ≤ 20km, and time ≤ 240 minutes. Please adjust your inputs.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, elevationGained, distance, timeTaken, intensity);
+            }
+
             return (true, elevationGained, distance, timeTaken, intensity);
         }
-
         private double CalculateBurnedCalories(Dictionary<int, double> metrics, Dictionary<int, double> calculationFactors, double metValue, double userWeight, double durationHours)
         {
             double caloriesFromMet = metValue * userWeight * durationHours;
@@ -112,8 +125,6 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Step 1: Retrieve calculation factors and MET value
                 var calculationFactors = db.GetCalculationFactors(activityId);
@@ -127,7 +138,7 @@ namespace Fitness_Tracker.Views
                 }
 
                 // Step 2: Retrieve user's weight and calculate duration
-                double userWeight = frmLogin.person.Weight;
+                double userWeight = frmLogin.user.Weight;
                 double durationHours = metrics[12] / 60; // Convert Time Taken (minutes) to hours
 
                 // Step 3: Calculate calories burned
@@ -155,19 +166,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+      
         }
         private void LoadHikingGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataTable hikingGraphData = db.GetActivityGraphData(frmLogin.person.PersonID, 4); // 4 is Hiking Activity ID
+                DataTable hikingGraphData = db.GetActivityGraphData(frmLogin.user.PersonID, 4); // 4 is Hiking Activity ID
 
                 if (hikingGraphData != null && hikingGraphData.Rows.Count > 0)
                 {
@@ -198,19 +204,15 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading hiking graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+            
         }
         private void LoadHikingMetrics()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+                
 
-                DataTable metricData = db.GetHikingMetricsOverTime(frmLogin.person.PersonID);
+                DataTable metricData = db.GetHikingMetricsOverTime(frmLogin.user.PersonID);
 
                 chartHikingMetrics.Datasets.Clear();
 
@@ -265,19 +267,13 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading hiking metrics chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void LoadHikingSummary()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataTable summaryData = db.GetHikingSummary(frmLogin.person.PersonID);
+                DataTable summaryData = db.GetHikingSummary(frmLogin.user.PersonID);
 
                 if (summaryData != null && summaryData.Rows.Count > 0)
                 {
@@ -309,10 +305,8 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataRow recentActivity = db.GetRecentHikingActivity(frmLogin.person.PersonID);
+                DataRow recentActivity = db.GetRecentHikingActivity(frmLogin.user.PersonID);
 
                 if (recentActivity != null)
                 {
@@ -375,11 +369,8 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Get max calories burned for swimming
-                double maxCaloriesForHiking = db.GetMaxCaloriesForActivity(frmLogin.person.PersonID, 4); // 1 is Hiking activity ID
+                double maxCaloriesForHiking = db.GetMaxCaloriesForActivity(frmLogin.user.PersonID, 4); // 1 is Hiking activity ID
                 lblMaxCalories.Text = $"Maximum Calories Burned: {maxCaloriesForHiking} kcal";
 
 
@@ -396,20 +387,15 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading swimming insights: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+            
         }
         private void LoadHistoricalComparisonGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Fetch historical data for calories burned across all activities
-                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.person.PersonID);
+                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.user.PersonID);
 
                 // Clear existing datasets
                 chartHistoricalComparison.Datasets.Clear();
@@ -448,20 +434,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void DisplayActivityScheduleReminder(int activityId, string activityName)
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Ensure the query fetches schedules for today or later
-                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.person.PersonID, activityId);
+                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.user.PersonID, activityId);
 
                 if (scheduleData != null && scheduleData.Rows.Count > 0)
                 {
@@ -498,10 +478,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading {activityName} schedule reminder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db?.CloseConnection();
             }
         }
         private void frmHiking_Load(object sender, EventArgs e)

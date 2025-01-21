@@ -287,27 +287,14 @@ namespace Fitness_Tracker.Views
             // Hash the password before storing it
             string hashedPassword = PasswordHelper.HashPassword(password);
             // Prepare person object
-            Person person = new Person
-            {
-                Username = username,
-                Password = hashedPassword,
-                Firstname = firstname,
-                Lastname = lastname,
-                Email = email,
-                DateOfBirth = dateOfBirth,
-                Mobile = mobile,
-                Gender = gender,
-                Weight = weight,
-                Height = height,
-                PhotoPath = photoFilePath
-
-            };
+            User user = User.GetInstance();
+            user.SetUserData(0, username, hashedPassword, firstname, lastname, email, dateOfBirth, gender, mobile,
+                             weight, height, photoFilePath);
 
             try
             {
-                // Initialize and open the database connection
-                db = new ConnectionDB();
-                db.OpenConnection();
+                db = ConnectionDB.GetInstance();
+
 
                 if (db.IsUserExists(username, email))
                 {
@@ -315,12 +302,10 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                // Attempt to insert the user
-                if (db.AddUser(person))
+                if (db.AddUser(user))
                 {
                     MessageBox.Show("Registration successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Navigate to the login form
                     this.Hide();
                     new frmLogin().ShowDialog();
                     this.Close();
@@ -332,22 +317,9 @@ namespace Fitness_Tracker.Views
             }
             catch (Exception ex)
             {
-                // Display any unexpected errors
                 MessageBox.Show($"An error occurred during registration: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                // Close connection on error
-                if (db != null)
-                {
-                    db.CloseConnection();
-                }
             }
-            finally
-            {
-                // Ensure the database connection is closed
-                if (db != null)
-                {
-                    db.CloseConnection();
-                }
-            }
+
         }
 
         private void btnExit_Click_1(object sender, EventArgs e)

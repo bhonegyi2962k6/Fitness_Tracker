@@ -14,10 +14,11 @@ namespace Fitness_Tracker.Views
 {
     public partial class frmWeightlifting : UserControl
     {
-        private ConnectionDB db;
+        private readonly ConnectionDB db;
         public frmWeightlifting()
         {
             InitializeComponent();
+            db = ConnectionDB.GetInstance(); // Use the Singleton instance
         }
 
         private void btnWeightliftingRecord_Click(object sender, EventArgs e)
@@ -93,6 +94,24 @@ namespace Fitness_Tracker.Views
             }
 
             intensity = cboIntensity.SelectedItem.ToString();
+
+            // Intensity-Based Validation
+            if (intensity == "Light" && (weightLifted > 50 || repetitions > 10 || setsCompleted > 3))
+            {
+                MessageBox.Show("For Light intensity, weight should be ≤ 50kg, repetitions ≤ 10, and sets ≤ 3. Adjust your inputs or intensity.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, weightLifted, repetitions, setsCompleted, intensity);
+            }
+            else if (intensity == "Moderate" && (weightLifted < 51 || weightLifted > 100 || repetitions > 15 || setsCompleted > 5))
+            {
+                MessageBox.Show("For Moderate intensity, weight should be between 51kg and 100kg, repetitions ≤ 15, and sets ≤ 5. Adjust your inputs or intensity.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, weightLifted, repetitions, setsCompleted, intensity);
+            }
+            else if (intensity == "Vigorous" && (weightLifted < 101 || repetitions > 20 || setsCompleted > 6))
+            {
+                MessageBox.Show("For Vigorous intensity, weight should be ≥ 101kg, repetitions ≤ 20, and sets ≤ 6. Adjust your inputs or intensity.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return (false, weightLifted, repetitions, setsCompleted, intensity);
+            }
+
             return (true, weightLifted, repetitions, setsCompleted, intensity);
         }
         private double CalculateBurnedCalories(Dictionary<int, double> metrics, Dictionary<int, double> calculationFactors, double metValue, double userWeight, double durationHours)
@@ -114,9 +133,6 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Step 1: Retrieve calculation factors and MET value
                 var calculationFactors = db.GetCalculationFactors(activityId);
                 double metValue = db.GetMetValue(activityId, intensity);
@@ -129,7 +145,7 @@ namespace Fitness_Tracker.Views
                 }
 
                 // Step 2: Retrieve user's weight and calculate duration
-                double userWeight = frmLogin.person.Weight;
+                double userWeight = frmLogin.user.Weight;
                 double durationHours = metrics[14] / 60; // Repetitions (assume each repetition takes 1 minutes)
 
                 // Step 3: Calculate calories burned
@@ -158,19 +174,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
         }
         private void LoadWeightliftingGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
+               
 
-                DataTable graphData = db.GetActivityGraphData(frmLogin.person.PersonID, 5); // 5 is Weightlifting Activity ID
+                DataTable graphData = db.GetActivityGraphData(frmLogin.user.PersonID, 5); // 5 is Weightlifting Activity ID
 
                 if (graphData != null && graphData.Rows.Count > 0)
                 {
@@ -201,20 +212,13 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading weightlifting graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
 
         private void LoadWeightliftingMetrics()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
-                DataTable metricData = db.GetWeightliftingMetricsOverTime(frmLogin.person.PersonID);
+                DataTable metricData = db.GetWeightliftingMetricsOverTime(frmLogin.user.PersonID);
 
                 chartWeightliftingMetrics.Datasets.Clear();
 
@@ -269,21 +273,16 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading weightlifting metrics: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+            
         }
 
         private void LoadWeightliftingSummary()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Fetch the summary data for weightlifting
-                DataTable summaryData = db.GetWeightliftingSummary(frmLogin.person.PersonID);
+                DataTable summaryData = db.GetWeightliftingSummary(frmLogin.user.PersonID);
 
                 if (summaryData != null && summaryData.Rows.Count > 0)
                 {
@@ -310,21 +309,14 @@ namespace Fitness_Tracker.Views
                 // Handle any errors
                 MessageBox.Show($"Error loading weightlifting summary: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                // Close database connection
-                db?.CloseConnection();
-            }
         }
 
         private void LoadRecentWeightliftingActivity()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
-                DataRow recentActivity = db.GetRecentWeightliftingActivity(frmLogin.person.PersonID);
+                DataRow recentActivity = db.GetRecentWeightliftingActivity(frmLogin.user.PersonID);
 
                 if (recentActivity != null)
                 {
@@ -352,10 +344,6 @@ namespace Fitness_Tracker.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading recent weightlifting activity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db.CloseConnection();
             }
         }
 
@@ -390,11 +378,8 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
                 // Get max calories burned for weightlifting
-                double maxCaloriesForWeightlifting = db.GetMaxCaloriesForActivity(frmLogin.person.PersonID, 5); // 5 is Weightlifting activity ID
+                double maxCaloriesForWeightlifting = db.GetMaxCaloriesForActivity(frmLogin.user.PersonID, 5); // 5 is Weightlifting activity ID
 
                 if (maxCaloriesForWeightlifting > 0)
                 {
@@ -409,19 +394,14 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading Weightlifting insights: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+            
         }
         private void LoadHistoricalComparisonGraph()
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
-
-                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.person.PersonID);
+                
+                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.user.PersonID);
 
                 chartHistoricalComparison.Datasets.Clear();
 
@@ -443,20 +423,15 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
+            
         }
         private void DisplayActivityScheduleReminder(int activityId, string activityName)
         {
             try
             {
-                db = new ConnectionDB();
-                db.OpenConnection();
 
                 // Ensure the query fetches schedules for today or later
-                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.person.PersonID, activityId);
+                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.user.PersonID, activityId);
 
                 if (scheduleData != null && scheduleData.Rows.Count > 0)
                 {
@@ -494,10 +469,7 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading {activityName} schedule reminder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db?.CloseConnection();
-            }
+            
         }
         private void frmWeightlifting_Load(object sender, EventArgs e)
         {

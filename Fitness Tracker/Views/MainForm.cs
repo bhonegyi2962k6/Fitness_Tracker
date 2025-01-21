@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fitness_Tracker.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -65,15 +66,14 @@ namespace Fitness_Tracker.Views
 
         private void frmMainForm_Load(object sender, EventArgs e)
         {
-            // Display welcome message with username
-            lblWelcomeUsername.Text = frmLogin.person.Username;
+            User currentUser = User.GetInstance();
+            lblWelcomeUsername.Text = currentUser.Username;
 
-            // Load the user's profile photo
-            if (!string.IsNullOrEmpty(frmLogin.person.PhotoPath) && File.Exists(frmLogin.person.PhotoPath))
+            if (!string.IsNullOrEmpty(currentUser.PhotoPath) && File.Exists(currentUser.PhotoPath))
             {
                 try
                 {
-                    picProfilePhoto.Image = Image.FromFile(frmLogin.person.PhotoPath);
+                    picProfilePhoto.Image = Image.FromFile(currentUser.PhotoPath);
                 }
                 catch (Exception ex)
                 {
@@ -111,7 +111,6 @@ namespace Fitness_Tracker.Views
             {
                 // Clear any sensitive data
                 ClearUserSession();
-
                 // Navigate back to the login form
                 this.Hide();
                 using (frmLogin loginForm = new frmLogin())
@@ -125,8 +124,9 @@ namespace Fitness_Tracker.Views
         private void ClearUserSession()
         {
             // Clear the logged-in user object
-            frmLogin.person = null;
-           
+            User.GetInstance().ClearUserData();
+            User.ResetInstance();
+
         }
 
         private void btnSwimming_Click(object sender, EventArgs e)

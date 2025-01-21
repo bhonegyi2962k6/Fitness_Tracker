@@ -15,11 +15,10 @@ namespace Fitness_Tracker.Entities
         private DateTime recordDate;
         private double burnedCalories;
         private string intesityLevel;
-        private MetValues metValues;
 
         public Record() { } 
 
-        public Record(int recordId, Person person, Activity activity, DateTime recordDate, double burnedCalories, string intesityLevel, MetValues metValues)
+        public Record(int recordId, Person person, Activity activity, DateTime recordDate, double burnedCalories, string intesityLevel)
         {
             this.recordId = recordId;
             this.person = person;
@@ -27,7 +26,6 @@ namespace Fitness_Tracker.Entities
             this.recordDate = recordDate;
             this.burnedCalories = burnedCalories;
             this.intesityLevel = intesityLevel;
-            this.metValues = metValues;
         }
 
         public int RecordId { get => recordId; set => recordId = value; }
@@ -36,6 +34,5 @@ namespace Fitness_Tracker.Entities
         public DateTime RecordDate { get => recordDate; set => recordDate = value; }
         public double BurnedCalories { get => burnedCalories; set => burnedCalories = value; }
         public string IntesityLevel { get => intesityLevel; set => intesityLevel = value; }
-        public MetValues MetValues { get => metValues; set => metValues = value; }
     }
 }
