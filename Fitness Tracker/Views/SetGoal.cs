@@ -1,4 +1,5 @@
 ﻿using Fitness_Tracker.dao;
+using Fitness_Tracker.Entities;
 using Guna.Charts.WinForms;
 using Guna.UI2.WinForms;
 using System;
@@ -20,11 +21,11 @@ namespace Fitness_Tracker.Views
         public frmSetGoal()
         {
             InitializeComponent();
+            db = ConnectionDB.GetInstance(); // Use the Singleton instance
             LoadCurrentGoal();
             dtpTargetDate.MinDate = DateTime.Today;
             dgvGoals.RowTemplate.Height = 45; // Adjust this value to your desired height
             dgvGoals.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
-            db = ConnectionDB.GetInstance(); // Use the Singleton instance
         }
         private void LoadGoalsToGrid()
         {
@@ -41,21 +42,41 @@ namespace Fitness_Tracker.Views
 
                     foreach (DataRow row in dt.Rows)
                     {
+                        // Create an Activity object
+                        Activity activity = new Activity
+                        {
+                            ActivityId = row["activity_name"] != DBNull.Value ? db.GetActivityIdByName(row["activity_name"].ToString()) : -1,
+                            ActivityName = row["activity_name"] != DBNull.Value ? row["activity_name"].ToString() : "N/A",
+                        };
+
+                        // Create a GoalTracking object
+                        GoalTracking goal = new GoalTracking
+                        {
+                            GoalId = Convert.ToInt32(row["goal_id"]),
+                            GoalType = row["goal_type"].ToString(),
+                            TargetWeight = Convert.ToDecimal(row["target_weight"]),
+                            DailyCaloriesTarget = Convert.ToDouble(row["daily_calories_target"]),
+                            IsAchieved = Convert.ToBoolean(row["is_achieved"]),
+                            CreatedAt = Convert.ToDateTime(row["created_at"]),
+                            TargetDate = Convert.ToDateTime(row["target_date"]),
+                            Activity = activity // Link the Activity object
+                        };
+
+                        // Add the goal to the DataGridView
                         int rowIndex = dgvGoals.Rows.Add(
                             $"{rowNumber++}",
-                            row["goal_id"],
-                            row["goal_type"],
-                            row["target_weight"],
-                            row["daily_calories_target"],
-                            Convert.ToDateTime(row["created_at"]).ToString("yyyy-MM-dd"),
-                            Convert.ToDateTime(row["target_date"]).ToString("yyyy-MM-dd"),
-                            Convert.ToBoolean(row["is_achieved"]) ? "Yes" : "No",
-                            row["activity_name"]
+                            goal.GoalId,
+                            goal.GoalType,
+                            goal.TargetWeight,
+                            goal.DailyCaloriesTarget,
+                            goal.CreatedAt.ToString("yyyy-MM-dd"),
+                            goal.TargetDate.ToString("yyyy-MM-dd"),
+                            goal.IsAchieved ? "Yes" : "No",
+                            goal.Activity.ActivityName
                         );
 
                         // Highlight row if the target date is within 3 days
-                        DateTime targetDate = Convert.ToDateTime(row["target_date"]);
-                        if (!Convert.ToBoolean(row["is_achieved"]) && (targetDate - DateTime.Now).TotalDays <= 3)
+                        if (!goal.IsAchieved && (goal.TargetDate - DateTime.Now).TotalDays <= 3)
                         {
                             dgvGoals.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Red;
                             dgvGoals.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.White;
@@ -68,6 +89,7 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading goals: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void LoadCurrentGoal()
         {
             try
@@ -80,6 +102,7 @@ namespace Fitness_Tracker.Views
 
                 lblUserWeight.Text = $"Your Current Weight: {frmLogin.user.Weight} kg";
 
+                // Fetch the current goal data
                 DataTable dt = db?.GetGoals(frmLogin.user.PersonID);
                 if (dt == null || dt.Rows.Count == 0)
                 {
@@ -87,16 +110,25 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
+                // Get the first goal row
                 DataRow goal = dt.Rows[0];
 
+                // Create Activity object from the goal data
+                Activity activity = new Activity
+                {
+                    ActivityName = goal["activity_name"].ToString()
+                };
+
+                // Populate UI with data from the query and Activity object
                 lblGoalType.Text = $"Goal Type: {goal["goal_type"]}";
                 lblTargetWeight.Text = $"Target Weight: {goal["target_weight"]} kg";
                 lblCaloriesTarget.Text = $"Calories Target: {goal["daily_calories_target"]} cal";
                 lblCreatedDate.Text = $"Created Date: {Convert.ToDateTime(goal["created_at"]).ToString("yyyy-MM-dd")}";
                 lblIsAchieved.Text = $"Is Achieved: {(Convert.ToBoolean(goal["is_achieved"]) ? "Yes" : "No")}";
                 lblTargetDate.Text = $"Target Date: {(goal["target_date"] != DBNull.Value ? Convert.ToDateTime(goal["target_date"]).ToString("yyyy-MM-dd") : "N/A")}";
-                lblActivity.Text = $"Activity: {goal["activity_name"]}";
+                lblActivity.Text = $"Activity: {activity.ActivityName}";
 
+                // Enable or disable the "Achieved" button
                 btnAchieved.Enabled = !Convert.ToBoolean(goal["is_achieved"]);
             }
             catch (Exception ex)
@@ -108,17 +140,33 @@ namespace Fitness_Tracker.Views
         {
             try
             {
+                // Create WeightTracking objects for each goal type
+                WeightTracking weightLossTracking = new WeightTracking
+                {
+                    Person = frmLogin.user, // Assign the logged-in user
+                };
+
+                WeightTracking weightGainTracking = new WeightTracking
+                {
+                    Person = frmLogin.user, // Assign the logged-in user
+                };
+
+                WeightTracking maintainWeightTracking = new WeightTracking
+                {
+                    Person = frmLogin.user, // Assign the logged-in user
+                };
+
                 // Fetch counts for each goal type
-                int weightLossAchieved = db.GetAchievedGoalsCountByType(frmLogin.user.PersonID, "Weight Loss");
-                int weightGainAchieved = db.GetAchievedGoalsCountByType(frmLogin.user.PersonID, "Weight Gain");
-                int maintainWeightAchieved = db.GetAchievedGoalsCountByType(frmLogin.user.PersonID, "Maintain Weight");
+                weightLossTracking.Weight = db.GetAchievedGoalsCountByType(frmLogin.user.PersonID, "Weight Loss");
+                weightGainTracking.Weight = db.GetAchievedGoalsCountByType(frmLogin.user.PersonID, "Weight Gain");
+                maintainWeightTracking.Weight = db.GetAchievedGoalsCountByType(frmLogin.user.PersonID, "Maintain Weight");
 
-                // Update labels
-                lblWeightLossAchieved.Text = $"Weight Loss Achieved: {weightLossAchieved}";
-                lblWeightGainedAchieved.Text = $"Weight Gain Achieved: {weightGainAchieved}";
-                lblMaintainWeightAchieved.Text = $"Maintain Weight Achieved: {maintainWeightAchieved}";
+                // Update labels using the WeightTracking objects
+                lblWeightLossAchieved.Text = $"Weight Loss Achieved: {weightLossTracking.Weight}";
+                lblWeightGainedAchieved.Text = $"Weight Gain Achieved: {weightGainTracking.Weight}";
+                lblMaintainWeightAchieved.Text = $"Maintain Weight Achieved: {maintainWeightTracking.Weight}";
 
-                int totalAchieved = weightLossAchieved + weightGainAchieved + maintainWeightAchieved;
+                int totalAchieved = (int)(weightLossTracking.Weight + weightGainTracking.Weight + maintainWeightTracking.Weight);
                 lblAchievedGoal.Text = $"Achieved Goals: {totalAchieved}";
             }
             catch (Exception ex)
@@ -212,24 +260,32 @@ namespace Fitness_Tracker.Views
                 progressBar.GradientMode = System.Drawing.Drawing2D.LinearGradientMode.Horizontal;
             }
         }
-
         private void LoadTargetActivityOptions()
         {
             try
             {
-
                 // Fetch activities as a dictionary
                 Dictionary<int, string> activities = db.GetActivities();
 
                 if (activities != null && activities.Count > 0)
                 {
                     cboTargetActivity.Items.Clear();
-                    foreach (var activity in activities)
+
+                    // Populate ComboBox using Activity objects
+                    foreach (var activityEntry in activities)
                     {
+                        // Create an Activity object for each entry
+                        Activity activity = new Activity
+                        {
+                            ActivityId = activityEntry.Key,
+                            ActivityName = activityEntry.Value
+                        };
+
+                        // Add the activity to the ComboBox as a ComboBoxItem
                         cboTargetActivity.Items.Add(new ComboBoxItem
                         {
-                            Text = activity.Value,
-                            Value = activity.Key
+                            Text = activity.ActivityName,
+                            Value = activity.ActivityId
                         });
                     }
                 }
@@ -239,7 +295,6 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading activities: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private class ComboBoxItem
         {
             public string Text { get; set; }
@@ -250,7 +305,6 @@ namespace Fitness_Tracker.Views
                 return Text;
             }
         }
-
 
         private void ClearGoalDisplay()
         {
@@ -265,7 +319,19 @@ namespace Fitness_Tracker.Views
 
             btnAchieved.Enabled = false;
         }
+        private void ClearGoalInputFields()
+        {
+            // Clear text boxes
+            txtTargetWeight.Clear();
+            txtCaloriesTarget.Clear();
 
+            // Reset combo boxes
+            cboGoalType.SelectedIndex = -1;
+            cboTargetActivity.SelectedIndex = -1;
+
+            // Reset date picker to today's date
+            dtpTargetDate.Value = DateTime.Now;
+        }
         private void btnSetGoal_Click(object sender, EventArgs e)
         {
             try
@@ -326,14 +392,44 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                if (db.InsertGoal(frmLogin.user.PersonID, goalType, targetWeight, dailyCaloriesTarget, dtpTargetDate.Value, activityId))
+                // Create the Activity object
+                Activity selectedActivity = new Activity
+                {
+                    ActivityId = activityId,
+                    ActivityName = activityName
+                };
+
+                // Create the GoalTracking object
+                GoalTracking goalTracking = new GoalTracking
+                {
+                    GoalType = goalType,
+                    TargetWeight = (decimal)targetWeight,
+                    DailyCaloriesTarget = dailyCaloriesTarget,
+                    TargetDate = dtpTargetDate.Value,
+                    CreatedAt = DateTime.Now,
+                    IsAchieved = false, // Default to not achieved when setting a new goal
+                    Person = frmLogin.user, // Assign the logged-in user
+                    Activity = selectedActivity
+                };
+
+                // Insert the goal into the database
+                if (db.InsertGoal(
+                    goalTracking.Person.PersonID,
+                    goalTracking.GoalType,
+                    (double)goalTracking.TargetWeight,
+                    goalTracking.DailyCaloriesTarget,
+                    goalTracking.TargetDate,
+                    goalTracking.Activity.ActivityId))
                 {
                     MessageBox.Show("Goal saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Refresh UI components
                     LoadGoalsToGrid();
                     LoadCurrentGoal();
                     UpdateProgressBar();
                     LoadGoalAchievementByMonthGraph();
                     LoadAchievedVsPendingGraph();
+                    ClearGoalInputFields();
                 }
                 else
                 {
@@ -344,13 +440,12 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error saving goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
         }
-
         private void btnEditGoal_Click(object sender, EventArgs e)
         {
             try
             {
+                // Validate inputs
                 if (cboGoalType.SelectedItem == null)
                 {
                     MessageBox.Show("Please select a goal type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -368,9 +463,6 @@ namespace Fitness_Tracker.Views
                     MessageBox.Show("Please select a goal to edit.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
-                string goalType = cboGoalType.SelectedItem.ToString();
-                string activityName = cboTargetActivity.SelectedItem.ToString();
 
                 if (!double.TryParse(txtTargetWeight.Text, out double targetWeight) || targetWeight <= 0)
                 {
@@ -390,20 +482,46 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
-                // Get activity_id from activity_name
-                int activityId = db.GetActivityIdByName(activityName);
+                // Create objects
+                var user = User.GetInstance();
+                string goalType = cboGoalType.SelectedItem.ToString();
+                string activityName = cboTargetActivity.SelectedItem.ToString();
 
+                // Get activity ID
+                int activityId = db.GetActivityIdByName(activityName);
                 if (activityId == -1)
                 {
                     MessageBox.Show("Invalid target activity.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
+                // Retrieve the selected goal ID from the grid
                 int goalId = Convert.ToInt32(dgvGoals.SelectedRows[0].Cells["colGoalId"].Value);
 
-                if (db.UpdateGoal(goalId, goalType, targetWeight, dailyCaloriesTarget, dtpTargetDate.Value, activityId))
+                // Create `Activity` and `GoalTracking` objects
+                var activity = new Activity
+                {
+                    ActivityId = activityId,
+                    ActivityName = activityName
+                };
+
+                var goal = new GoalTracking
+                {
+                    GoalId = goalId,
+                    Person = user,
+                    GoalType = goalType,
+                    TargetWeight = (decimal)targetWeight,
+                    DailyCaloriesTarget = dailyCaloriesTarget,
+                    TargetDate = dtpTargetDate.Value,
+                    Activity = activity
+                };
+
+                // Update the goal in the database
+                if (db.UpdateGoal(goal.GoalId, goal.GoalType, (double)goal.TargetWeight, goal.DailyCaloriesTarget, goal.TargetDate, goal.Activity.ActivityId))
                 {
                     MessageBox.Show("Goal updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Refresh UI
                     LoadGoalsToGrid();
                     LoadCurrentGoal();
                     UpdateProgressBar();
@@ -420,7 +538,6 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error updating goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void bntDeleteGoal_Click(object sender, EventArgs e)
         {
             try
@@ -430,26 +547,74 @@ namespace Fitness_Tracker.Views
                     // Get the selected goal ID
                     int goalId = Convert.ToInt32(dgvGoals.SelectedRows[0].Cells["colGoalId"].Value);
 
+                    // Get the "IsAchieved" value as a string
+                    string isAchievedValue = dgvGoals.SelectedRows[0].Cells["colIsAchieved"].Value.ToString().ToLower();
+                    bool isAchieved = false;
 
-                    // Delete the goal from the database
-                    if (db.DeleteGoal(goalId))
+                    // Convert string to boolean
+                    if (isAchievedValue == "true" || isAchievedValue == "yes" || isAchievedValue == "1")
                     {
-                        MessageBox.Show("Goal deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // Remove the selected row from the DataGridView
-                        dgvGoals.Rows.RemoveAt(dgvGoals.SelectedRows[0].Index);
-
-                        // Update the current goal display and progress
-                        LoadGoalsToGrid(); // Refresh the table to update numbering
-                        LoadCurrentGoal();
-                        LoadAchievedGoals();
-                        UpdateProgressBar();
-                        LoadGoalAchievementByMonthGraph();
-                        LoadAchievedVsPendingGraph();
+                        isAchieved = true;
+                    }
+                    else if (isAchievedValue == "false" || isAchievedValue == "no" || isAchievedValue == "0")
+                    {
+                        isAchieved = false;
                     }
                     else
                     {
-                        MessageBox.Show("Failed to delete the goal.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        throw new InvalidCastException($"Invalid value for IsAchieved: {isAchievedValue}");
+                    }
+
+                    // Create the Activity object for the selected goal
+                    Activity selectedActivity = new Activity
+                    {
+                        ActivityName = dgvGoals.SelectedRows[0].Cells["colActivity"].Value.ToString()
+                    };
+
+                    // Create the GoalTracking object
+                    GoalTracking selectedGoal = new GoalTracking
+                    {
+                        GoalId = goalId,
+                        Person = frmLogin.user, // Assuming the logged-in user is the person
+                        GoalType = dgvGoals.SelectedRows[0].Cells["colGoalType"].Value.ToString(),
+                        TargetWeight = Convert.ToDecimal(dgvGoals.SelectedRows[0].Cells["colTargetWeight"].Value),
+                        DailyCaloriesTarget = Convert.ToDouble(dgvGoals.SelectedRows[0].Cells["colDailyCaloriesTarget"].Value),
+                        IsAchieved = isAchieved,
+                        CreatedAt = Convert.ToDateTime(dgvGoals.SelectedRows[0].Cells["colCreatedAt"].Value),
+                        TargetDate = Convert.ToDateTime(dgvGoals.SelectedRows[0].Cells["colTargetDate"].Value),
+                        Activity = selectedActivity
+                    };
+
+                    // Confirm deletion
+                    DialogResult confirmResult = MessageBox.Show(
+                        "Are you sure you want to delete this goal?",
+                        "Confirm Delete",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                    );
+
+                    if (confirmResult == DialogResult.Yes)
+                    {
+                        // Delete the goal from the database
+                        if (db.DeleteGoal(goalId))
+                        {
+                            MessageBox.Show("Goal deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Remove the selected row from the DataGridView
+                            dgvGoals.Rows.RemoveAt(dgvGoals.SelectedRows[0].Index);
+
+                            // Update the current goal display and progress
+                            LoadGoalsToGrid(); // Refresh the table to update numbering
+                            LoadCurrentGoal();
+                            LoadAchievedGoals();
+                            UpdateProgressBar();
+                            LoadGoalAchievementByMonthGraph();
+                            LoadAchievedVsPendingGraph();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete the goal.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
                 else
@@ -461,7 +626,6 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error deleting goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
         }
 
 
@@ -471,28 +635,55 @@ namespace Fitness_Tracker.Views
             {
                 if (dgvGoals.SelectedRows.Count > 0)
                 {
+                    // Retrieve goal data from the selected row
                     int goalId = Convert.ToInt32(dgvGoals.SelectedRows[0].Cells["colGoalId"].Value);
                     double targetWeight = Convert.ToDouble(dgvGoals.SelectedRows[0].Cells["colTargetWeight"].Value);
 
-                    db.OpenConnection();
+                    // Create GoalTracking object
+                    var selectedGoal = new GoalTracking
+                    {
+                        GoalId = goalId,
+                        Person = frmLogin.user, // Reference the logged-in user
+                        GoalType = dgvGoals.SelectedRows[0].Cells["colGoalType"].Value.ToString(),
+                        TargetWeight = (decimal)targetWeight,
+                        Activity = new Activity
+                        {
+                            ActivityName = dgvGoals.SelectedRows[0].Cells["colActivity"].Value.ToString()
+                        },
+                        IsAchieved = false, // Will be updated below
+                        TargetDate = Convert.ToDateTime(dgvGoals.SelectedRows[0].Cells["colTargetDate"].Value)
+                    };
 
                     // 1. Update the goal as achieved
                     if (db.MarkGoalAsAchieved(goalId))
                     {
-                        // 2. Insert into weight_tracking
+                        selectedGoal.IsAchieved = true; // Update the status in the object
+                        selectedGoal.AchievedDate = DateTime.Now; // Mark achievement date
+
+                        // 2. Create WeightTracking object
+                        var weightTracking = new WeightTracking
+                        {
+                            Person = frmLogin.user,
+                            RecorededDate = DateTime.Now,
+                            Weight = targetWeight
+                        };
+
+                        // Insert into weight_tracking
                         if (db.InsertWeightTracking(frmLogin.user.PersonID, targetWeight))
                         {
                             // 3. Update the person's current weight
                             if (db.UpdateUserWeight(frmLogin.user.PersonID, targetWeight))
                             {
                                 frmLogin.user.Weight = targetWeight; // Update in-memory value
-                                MessageBox.Show("Goal marked as achieved, weight logged, and updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show("Goal marked as achieved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                                 // Refresh UI components
                                 LoadCurrentGoal();
                                 LoadGoalsToGrid();
                                 LoadAchievedGoals();
                                 UpdateProgressBar();
+                                LoadGoalAchievementByMonthGraph();
+                                LoadAchievedVsPendingGraph();
                             }
                             else
                             {
@@ -518,7 +709,6 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error marking goal as achieved: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
         }
 
         private void dgvGoals_SelectionChanged(object sender, EventArgs e)
@@ -580,12 +770,11 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error calculating goal advice: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void LoadGoalAchievementByMonthGraph()
         {
             try
             {
-                
+                // Fetch data from the database
                 DataTable dt = db.GetGoalAchievementByMonth();
 
                 if (dt != null && dt.Rows.Count > 0)
@@ -593,62 +782,97 @@ namespace Fitness_Tracker.Views
                     // Clear existing data points
                     gunaBarDataset1.DataPoints.Clear();
 
-                    // Populate the dataset with data
+                    // Iterate over the DataTable rows and populate the chart using GoalTracking objects
                     foreach (DataRow row in dt.Rows)
                     {
-                        string month = row["achievement_month"].ToString(); // Example: "January 2025"
-                        int count = Convert.ToInt32(row["achieved_count"]);
+                        // Create a GoalTracking object
+                        GoalTracking goalTracking = new GoalTracking
+                        {
+                            AchievedDate = DateTime.ParseExact(row["achievement_month"].ToString() + "-01", "yyyy-MM-dd", null),
+                            IsAchieved = true
+                        };
+
+                        // Extract the achieved count
+                        int achievedCount = Convert.ToInt32(row["achieved_count"]);
+
+                        // Use the formatted date string as the label (e.g., "January 2025")
+                        string monthLabel = goalTracking.AchievedDate.ToString("MMMM yyyy");
 
                         // Add data point to the dataset
-                        gunaBarDataset1.DataPoints.Add(month, count);
+                        gunaBarDataset1.DataPoints.Add(monthLabel, achievedCount);
                     }
 
-                    // Optionally customize the dataset's appearance
+                    // Customize the dataset's appearance
                     gunaBarDataset1.Label = "Goals Achieved";
-                }
 
-                // Add the dataset to the chart (if not already added)
-                if (!chartGoalAchievementByMonth.Datasets.Contains(gunaBarDataset1))
+                    // Add the dataset to the chart (if not already added)
+                    if (!chartGoalAchievementByMonth.Datasets.Contains(gunaBarDataset1))
+                    {
+                        chartGoalAchievementByMonth.Datasets.Add(gunaBarDataset1);
+                    }
+
+                    // Customize the chart's title
+                    chartGoalAchievementByMonth.Title.Text = "Goal Achievement by Month";
+                    chartGoalAchievementByMonth.Update(); // Refresh the chart
+                }
+                else
                 {
-                    chartGoalAchievementByMonth.Datasets.Add(gunaBarDataset1);
+                    // Handle the case where no data is returned
+                    MessageBox.Show("No data available for goal achievement by month.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-
-                // Optional: Customize the chart's title
-                chartGoalAchievementByMonth.Title.Text = "Goal Achievement by Month";
-                chartGoalAchievementByMonth.Update(); // Refresh the chart
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading goal achievement by month: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
-            
         }
-
         private void LoadAchievedVsPendingGraph()
         {
             try
             {
+                // Fetch the data from the database
                 DataTable dt = db.GetAchievedAndPendingGoals(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    // Create GoalTracking objects to represent achieved and pending goals
+                    var achievedGoals = new GoalTracking
+                    {
+                        IsAchieved = true,
+                        GoalType = "Achieved Goals",
+                        Person = frmLogin.user,
+                        TargetDate = DateTime.Today // Placeholder, if needed
+                    };
+
+                    var pendingGoals = new GoalTracking
+                    {
+                        IsAchieved = false,
+                        GoalType = "Pending Goals",
+                        Person = frmLogin.user,
+                        TargetDate = DateTime.Today // Placeholder, if needed
+                    };
+
                     // Fetch counts from the DataTable
-                    int achievedCount = Convert.ToInt32(dt.Rows[0]["achieved_count"]);
-                    int pendingCount = Convert.ToInt32(dt.Rows[0]["pending_count"]);
+                    achievedGoals.GoalId = Convert.ToInt32(dt.Rows[0]["achieved_count"]);
+                    pendingGoals.GoalId = Convert.ToInt32(dt.Rows[0]["pending_count"]);
 
                     // Clear existing data points
                     gunaPieDataset1.DataPoints.Clear();
 
-                    // Add data points
-                    gunaPieDataset1.DataPoints.Add("Achieved", achievedCount);
-                    gunaPieDataset1.DataPoints.Add("Pending", pendingCount);
+                    // Add data points to the chart
+                    gunaPieDataset1.DataPoints.Add(achievedGoals.GoalType, achievedGoals.GoalId);
+                    gunaPieDataset1.DataPoints.Add(pendingGoals.GoalType, pendingGoals.GoalId);
 
                     // Customize dataset
                     gunaPieDataset1.Label = "Goals";
 
                     // Optional: Customize chart title
                     chartAchievedVsPending.Title.Text = "Achieved vs Pending Goals";
+
+                    // Refresh the chart
+                    chartAchievedVsPending.Datasets.Clear();
+                    chartAchievedVsPending.Datasets.Add(gunaPieDataset1);
+                    chartAchievedVsPending.Update();
                 }
                 else
                 {
@@ -659,13 +883,12 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading Achieved vs Pending Goals chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
         }
-
         private void LoadWeightTrendGraph()
         {
             try
             {
+                // Fetch the weight tracking data from the database
                 DataTable dt = db.GetWeightTrackingData(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
@@ -673,12 +896,25 @@ namespace Fitness_Tracker.Views
                     // Clear existing datasets
                     gunaLineDataset1.DataPoints.Clear();
 
-                    // Add data points from the query result
+                    // Create a list to hold WeightTracking objects
+                    var weightTrackingList = new List<WeightTracking>();
+
+                    // Populate the WeightTracking objects and add data points
                     foreach (DataRow row in dt.Rows)
                     {
-                        string recordedDate = row["recorded_date"].ToString();
-                        double weight = Convert.ToDouble(row["weight"]);
-                        gunaLineDataset1.DataPoints.Add(recordedDate, weight);
+                        // Create a WeightTracking object
+                        var weightTracking = new WeightTracking
+                        {
+                            Person = frmLogin.user,
+                            RecorededDate = Convert.ToDateTime(row["recorded_date"]),
+                            Weight = Convert.ToDouble(row["weight"])
+                        };
+
+                        // Add the object to the list
+                        weightTrackingList.Add(weightTracking);
+
+                        // Add the data point to the dataset
+                        gunaLineDataset1.DataPoints.Add(weightTracking.RecorededDate.ToString("yyyy-MM-dd"), weightTracking.Weight);
                     }
 
                     // Configure dataset properties
@@ -692,6 +928,7 @@ namespace Fitness_Tracker.Views
 
                     // Set chart title
                     chartWeightTrend.Title.Text = "Weight Trends Over Time";
+                    chartWeightTrend.Update();
                 }
                 else
                 {
@@ -725,9 +962,9 @@ namespace Fitness_Tracker.Views
         // Define a dictionary for recommended activities based on goal types
         private readonly Dictionary<string, List<string>> activityRecommendations = new Dictionary<string, List<string>>
         {
-                { "Weight Loss", new List<string> {"Swimming", "Walking", "Cycling" ,"Rowing"} },
-                { "Weight Gain", new List<string> {"Walking","Hiking", "Weightlifting" } },
-                { "Maintain Weight", new List<string> { "Rowing", "Hiking" } }
+                { "Weight Loss", new List<string> {"Swimming", "Walking", "Cycling" ,"Rowing", "Hiking" } },
+                { "Weight Gain", new List<string> {"Weightlifting" } },
+                { "Maintain Weight", new List<string> { "Rowing", "Hiking", "Walking", "Cycling" } }
         };
 
         private void cboGoalType_SelectedIndexChanged(object sender, EventArgs e)

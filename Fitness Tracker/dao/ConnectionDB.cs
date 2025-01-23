@@ -238,35 +238,6 @@ namespace Fitness_Tracker.dao
 
             return calculationFactors;
         }
-        public string GetActivityNameById(int activityId)
-        {
-            string activityName = string.Empty;
-            try
-            {
-                OpenConnection();
-
-                string sql = "SELECT activity_name FROM activity WHERE activity_id = @activityId";
-                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@activityId", activityId);
-                    var result = cmd.ExecuteScalar();
-                    if (result != null)
-                    {
-                        activityName = result.ToString();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching activity name: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                CloseConnection();
-            }
-
-            return activityName;
-        }
 
         public int InsertRecords(double burnedCalories, int activityId, string intensityLevel)
         {
@@ -554,7 +525,6 @@ namespace Fitness_Tracker.dao
 
             return dt;
         }
-
 
         public bool DeleteRecord(int recordId)
         {
@@ -1378,139 +1348,76 @@ namespace Fitness_Tracker.dao
 
             return dt;
         }
-        public DataTable GetSwimmingMetricsOverTime(int personID)
+        public DataTable GetActivityMetricsOverTime(int personId, int activityId)
         {
-            DataTable dt = new DataTable();
-
             try
             {
-                OpenConnection(); // Open the database connection
+                OpenConnection();
 
-                sql = @"
-        SELECT 
-            r.record_date AS Date, 
-            MAX(CASE WHEN m.metric_name = 'Laps' THEN mv.value ELSE 0 END) AS Laps,
-            MAX(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken,
-            MAX(CASE WHEN m.metric_name = 'Average Heart Rate' THEN mv.value ELSE 0 END) AS AvgHeartRate
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        JOIN 
-            activity a ON r.activity_id = a.activity_id
-        WHERE 
-            r.person_id = @personID
-            AND a.activity_name = 'Swimming'
-        GROUP BY 
-            r.record_date
-        ORDER BY 
-            r.record_date";
+                string sql = @"
+            SELECT r.record_date AS Date, 
+                   mv.value AS Value, 
+                   m.metric_name AS MetricName
+            FROM record r
+            INNER JOIN metric_values mv ON r.record_id = mv.record_id
+            INNER JOIN metric m ON mv.metric_id = m.metric_id
+            WHERE r.person_id = @personId AND r.activity_id = @activityId
+            ORDER BY r.record_date;";
 
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error retrieving swimming metrics over time: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataTable GetSwimmingSummary(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            SUM(CASE WHEN m.metric_name = 'Laps' THEN mv.value ELSE 0 END) AS TotalLaps,
-            AVG(CASE WHEN m.metric_name = 'Average Heart Rate' THEN mv.value ELSE NULL END) AS AvgHeartRate,
-            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        WHERE 
-            r.person_id = @personId
-            AND r.activity_id = 1;"; // 1 represents Swimming activity
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personId", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving swimming summary: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataRow GetRecentSwimmingActivity(int personId)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            r.record_date AS `Date`,
-            SUM(CASE WHEN m.metric_name = 'Laps' THEN mv.value ELSE 0 END) AS `Laps`,
-            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS `TimeTaken`,
-            AVG(CASE WHEN m.metric_name = 'Average Heart Rate' THEN mv.value ELSE NULL END) AS `HeartRate`,
-            r.burned_calories AS `CaloriesBurned`
-        FROM 
-            record r
-        JOIN 
-            metric_values mv ON r.record_id = mv.record_id
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        WHERE 
-            r.person_id = @personId
-            AND r.activity_id = 1
-        GROUP BY 
-            r.record_id, r.record_date, r.burned_calories
-        ORDER BY 
-            r.record_date DESC
-        LIMIT 1;";
-
-                cmd = new MySqlCommand(sql, conn);
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personId);
+                cmd.Parameters.AddWithValue("@activityId", activityId);
 
                 MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
                 adapter.Fill(dt);
+
+                return dt;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error retrieving recent swimming activity: {ex.Message}");
+                MessageBox.Show($"Error fetching activity metrics: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection();
             }
+        }
+        public DataTable GetActivityMetrics(int personId, int activityId)
+        {
+            try
+            {
+                OpenConnection();
 
-            return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
+                string sql = @"
+            SELECT 
+                m.metric_name,
+                mv.value
+            FROM metric_values mv
+            INNER JOIN metric m ON mv.metric_id = m.metric_id
+            INNER JOIN record r ON mv.record_id = r.record_id
+            WHERE r.person_id = @personId AND r.activity_id = @activityId;";
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@personId", personId);
+                cmd.Parameters.AddWithValue("@activityId", activityId);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching activity metrics: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
         public double GetMaxCaloriesForActivity(int personID, int activityID)
         {
@@ -1582,681 +1489,6 @@ namespace Fitness_Tracker.dao
 
             return dt;
         }
-        public DataTable GetWalkingMetricsOverTime(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-         SELECT 
-            r.record_date AS Date, 
-            MAX(CASE WHEN m.metric_name = 'Steps' THEN mv.value ELSE 0 END) AS TotalSteps,
-            MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
-            MAX(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        JOIN 
-            activity a ON r.activity_id = a.activity_id
-        WHERE 
-            r.person_id = @personID
-            AND a.activity_name = 'Walking'
-        GROUP BY 
-            r.record_date
-        ORDER BY 
-            r.record_date;";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving walking metrics over time: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataTable GetWalkingSummary(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            SUM(CASE WHEN m.metric_name = 'Steps' THEN mv.value ELSE 0 END) AS TotalSteps,
-            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
-            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        WHERE 
-            r.person_id = @personId
-            AND r.activity_id = 2;"; // 2 represents Walking activity
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personId", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving walking summary: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataRow GetRecentWalkingActivity(int personID)
-        {
-            try
-            {
-                OpenConnection(); // Open the connection
-
-                sql = @"
-                    SELECT 
-                        r.record_date AS `Date`,
-                        SUM(CASE WHEN m.metric_name = 'Steps' THEN mv.value ELSE 0 END) AS `Steps`,
-                        SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS `Distance`,
-                        SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE NULL END) AS `TimeTaken`,
-                        r.burned_calories AS `CaloriesBurned`
-                    FROM 
-                        record r
-                    JOIN 
-                        metric_values mv ON r.record_id = mv.record_id
-                    JOIN 
-                        metric m ON mv.metric_id = m.metric_id
-                    WHERE 
-                        r.person_id = @personId
-                        AND r.activity_id = 2
-                    GROUP BY 
-                        r.record_id, r.record_date, r.burned_calories
-                    ORDER BY 
-                        r.record_date DESC
-                    LIMIT 1;";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personId", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving recent walking activity: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-        }
-        public DataTable GetCyclingMetricsOverTime(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the connection
-
-                string query = @"
-                SELECT 
-                    r.record_date AS Date, 
-                    MAX(CASE WHEN m.metric_name = 'Speed' THEN mv.value ELSE 0 END) AS Speed,
-                    MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
-                    MAX(CASE WHEN m.metric_name = 'Ride Duration' THEN mv.value ELSE 0 END) AS RideDuration
-                FROM 
-                    metric_values mv
-                JOIN 
-                    metric m ON mv.metric_id = m.metric_id
-                JOIN 
-                    record r ON mv.record_id = r.record_id
-                JOIN 
-                    activity a ON r.activity_id = a.activity_id
-                WHERE 
-                    r.person_id = @personID
-                    AND a.activity_name = 'Cycling'
-                GROUP BY 
-                    r.record_date
-                ORDER BY 
-                    r.record_date;";
-
-                cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving cycling metrics over time: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataRow GetRecentCyclingActivity(int personID)
-        {
-            try
-            {
-                OpenConnection(); // Open the connection
-
-                sql = @"
-                    SELECT 
-                        r.record_date AS `Date`,
-                        MAX(CASE WHEN m.metric_name = 'Speed' THEN mv.value ELSE 0 END) AS Speed,
-                        MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
-                        MAX(CASE WHEN m.metric_name = 'Ride Duration' THEN mv.value ELSE 0 END) AS RideDuration,
-                        r.burned_calories AS `CaloriesBurned`
-                    FROM 
-                        record r
-                    JOIN 
-                        metric_values mv ON r.record_id = mv.record_id
-                    JOIN 
-                        metric m ON mv.metric_id = m.metric_id
-                    JOIN 
-                        activity a ON r.activity_id = a.activity_id
-                    WHERE 
-                        r.person_id = @personId
-                        AND a.activity_name = 'Cycling'
-                    GROUP BY 
-                        r.record_id, r.record_date, r.burned_calories
-                    ORDER BY 
-                        r.record_date DESC
-                    LIMIT 1;";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personId", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving recent cycling activity: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-        }
-        public DataTable GetCyclingSummary(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the connection
-
-                sql = @"
-                SELECT 
-                    AVG(CASE WHEN m.metric_name = 'Speed' THEN mv.value ELSE 0 END) AS Speed,
-                    SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
-                    SUM(CASE WHEN m.metric_name = 'Ride Duration' THEN mv.value ELSE 0 END) AS RideDuration
-                FROM 
-                    metric_values mv
-                JOIN 
-                    metric m ON mv.metric_id = m.metric_id
-                JOIN 
-                    record r ON mv.record_id = r.record_id
-                WHERE 
-                    r.person_id = @personId
-                    AND r.activity_id = 3;"; // 3 represents Cycling activity
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personId", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving cycling summary: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataTable GetHikingMetricsOverTime(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            r.record_date AS Date, 
-            MAX(CASE WHEN m.metric_name = 'Elevation Gained' THEN mv.value ELSE 0 END) AS ElevationGained,
-            MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
-            MAX(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        JOIN 
-            activity a ON r.activity_id = a.activity_id
-        WHERE 
-            r.person_id = @personID
-            AND a.activity_name = 'Hiking'
-        GROUP BY 
-            r.record_date
-        ORDER BY 
-            r.record_date;
-        ";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving hiking metrics over time: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataTable GetHikingSummary(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-                SELECT 
-                    SUM(CASE WHEN m.metric_name = 'Elevation Gained' THEN mv.value ELSE 0 END) AS TotalElevation,
-                    SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
-                    SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
-                FROM 
-                    metric_values mv
-                JOIN 
-                    metric m ON mv.metric_id = m.metric_id
-                JOIN 
-                    record r ON mv.record_id = r.record_id
-                JOIN 
-                    activity a ON r.activity_id = a.activity_id
-                WHERE 
-                    r.person_id = @personID
-                    AND a.activity_name = 'Hiking';
-";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving hiking summary: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataRow GetRecentHikingActivity(int personID)
-        {
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-                SELECT 
-                    r.record_date AS `Date`,
-                    SUM(CASE WHEN m.metric_name = 'Elevation Gained' THEN mv.value ELSE 0 END) AS ElevationGained,
-                    SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
-                    SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken,
-                    r.burned_calories AS CaloriesBurned
-                FROM 
-                    record r
-                JOIN 
-                    metric_values mv ON r.record_id = mv.record_id
-                JOIN 
-                    metric m ON mv.metric_id = m.metric_id
-                JOIN 
-                    activity a ON r.activity_id = a.activity_id
-                WHERE 
-                    r.person_id = @personID
-                    AND a.activity_name = 'Hiking'
-                GROUP BY 
-                    r.record_id, r.record_date, r.burned_calories
-                ORDER BY 
-                    r.record_date DESC
-                LIMIT 1;
-                ";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving recent hiking activity: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-        }
-        public DataTable GetWeightliftingSummary(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            AVG(CASE WHEN m.metric_name = 'Weight Lifted' THEN mv.value ELSE 0 END) AS AvgWeight,
-            SUM(CASE WHEN m.metric_name = 'Repetitions' THEN mv.value ELSE 0 END) AS TotalRepetitions,
-            SUM(CASE WHEN m.metric_name = 'Sets Completed' THEN mv.value ELSE 0 END) AS TotalSets
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        WHERE 
-            r.person_id = @personId
-            AND r.activity_id = 5;"; // 5 represents Weightlifting Activity
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personId", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving weightlifting summary: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataRow GetRecentWeightliftingActivity(int personID)
-        {
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            r.record_date AS `Date`,
-            MAX(CASE WHEN m.metric_name = 'Weight Lifted' THEN mv.value ELSE 0 END) AS WeightLifted,
-            MAX(CASE WHEN m.metric_name = 'Repetitions' THEN mv.value ELSE 0 END) AS Repetitions,
-            MAX(CASE WHEN m.metric_name = 'Sets Completed' THEN mv.value ELSE 0 END) AS SetsCompleted,
-            r.burned_calories AS CaloriesBurned
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        WHERE 
-            r.person_id = @personID
-            AND r.activity_id = 5 -- Weightlifting Activity ID
-        GROUP BY 
-            r.record_id, r.record_date, r.burned_calories
-        ORDER BY 
-            r.record_date DESC
-        LIMIT 1;";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving recent weightlifting activity: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-        }
-
-        public DataTable GetWeightliftingMetricsOverTime(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            r.record_date AS Date, 
-            MAX(CASE WHEN m.metric_name = 'Weight Lifted' THEN mv.value ELSE 0 END) AS WeightLifted,
-            MAX(CASE WHEN m.metric_name = 'Repetitions' THEN mv.value ELSE 0 END) AS Repetitions,
-            MAX(CASE WHEN m.metric_name = 'Sets Completed' THEN mv.value ELSE 0 END) AS SetsCompleted
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        JOIN 
-            activity a ON r.activity_id = a.activity_id
-        WHERE 
-            r.person_id = @personID
-            AND a.activity_id = 5 -- 5 is Weightlifting Activity ID
-        GROUP BY 
-            r.record_date
-        ORDER BY 
-            r.record_date;";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving weightlifting metrics over time: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataTable GetRowingMetricsOverTime(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            r.record_date AS Date, 
-            MAX(CASE WHEN m.metric_name = 'Total Strokes' THEN mv.value ELSE 0 END) AS TotalStrokes,
-            MAX(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
-            MAX(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        JOIN 
-            activity a ON r.activity_id = a.activity_id
-        WHERE 
-            r.person_id = @personID
-            AND a.activity_name = 'Rowing'
-        GROUP BY 
-            r.record_date
-        ORDER BY 
-            r.record_date;";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving rowing metrics over time: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataTable GetRowingSummary(int personID)
-        {
-            DataTable dt = new DataTable();
-
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            SUM(CASE WHEN m.metric_name = 'Total Strokes' THEN mv.value ELSE 0 END) AS TotalStrokes,
-            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS TotalDistance,
-            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TotalTime
-        FROM 
-            metric_values mv
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        JOIN 
-            record r ON mv.record_id = r.record_id
-        WHERE 
-            r.person_id = @personID
-            AND r.activity_id = 6;"; // 6 represents Rowing Activity ID
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving rowing summary: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-
-            return dt;
-        }
-        public DataRow GetRecentRowingActivity(int personID)
-        {
-            try
-            {
-                OpenConnection(); // Open the database connection
-
-                sql = @"
-        SELECT 
-            r.record_date AS Date,
-            SUM(CASE WHEN m.metric_name = 'Total Strokes' THEN mv.value ELSE 0 END) AS TotalStrokes,
-            SUM(CASE WHEN m.metric_name = 'Distance' THEN mv.value ELSE 0 END) AS Distance,
-            SUM(CASE WHEN m.metric_name = 'Time Taken' THEN mv.value ELSE 0 END) AS TimeTaken,
-            r.burned_calories AS CaloriesBurned
-        FROM 
-            record r
-        JOIN 
-            metric_values mv ON r.record_id = mv.record_id
-        JOIN 
-            metric m ON mv.metric_id = m.metric_id
-        WHERE 
-            r.person_id = @personID
-            AND r.activity_id = 6 -- Rowing Activity ID
-        GROUP BY 
-            r.record_id, r.record_date, r.burned_calories
-        ORDER BY 
-            r.record_date DESC
-        LIMIT 1;";
-
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                return dt.Rows.Count > 0 ? dt.Rows[0] : null; // Return the first row or null if no data
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving recent rowing activity: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection(); // Ensure the connection is closed
-            }
-        }
         public DataTable GetUpcomingActivitySchedules(int personID, int activityID)
         {
             DataTable dt = new DataTable();
@@ -2297,6 +1529,115 @@ namespace Fitness_Tracker.dao
             }
 
             return dt;
+        }
+        public bool UpdateUserInfo(Person person)
+        {
+            try
+            {
+                OpenConnection();
+                string sql = @"
+            UPDATE person 
+            SET first_name = @firstname, 
+                last_name = @lastname, 
+                email = @email, 
+                date_of_birth = @dob, 
+                gender = @gender, 
+                mobile = @mobile, 
+                weight = @weight, 
+                height = @height, 
+                photo_path = @photo
+            WHERE person_id = @personId";
+
+                cmd = new MySqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@firstname", person.Firstname ?? string.Empty);
+                cmd.Parameters.AddWithValue("@lastname", person.Lastname ?? string.Empty);
+                cmd.Parameters.AddWithValue("@email", person.Email ?? string.Empty);
+                cmd.Parameters.AddWithValue("@dob", person.DateOfBirth);
+                cmd.Parameters.AddWithValue("@gender", person.Gender ?? string.Empty);
+                cmd.Parameters.AddWithValue("@mobile", person.Mobile ?? string.Empty);
+
+                // Handle weight
+                if (person.Weight > 0)
+                {
+                    cmd.Parameters.AddWithValue("@weight", person.Weight);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@weight", DBNull.Value);
+                }
+
+                // Handle height
+                if (person.Height > 0)
+                {
+                    cmd.Parameters.AddWithValue("@height", person.Height);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@height", DBNull.Value);
+                }
+
+                cmd.Parameters.AddWithValue("@photo", person.PhotoPath ?? string.Empty);
+                cmd.Parameters.AddWithValue("@personId", person.PersonID);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating user info: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        public bool UpdatePhotoPath(int personId, string photoPath)
+        {
+            try
+            {
+                OpenConnection();
+                string sql = "UPDATE person SET photo_path = @photoPath WHERE person_id = @personId";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@photoPath", photoPath);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating photo path: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+        public bool UpdatePassword(int personId, string newPassword)
+        {
+            try
+            {
+                OpenConnection();
+                string sql = "UPDATE person SET password = @password WHERE person_id = @personId";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@password", newPassword);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating password: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
 

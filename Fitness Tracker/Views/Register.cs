@@ -22,6 +22,7 @@ namespace Fitness_Tracker.Views
         public frmRegister()
         {
             InitializeComponent();
+            db = ConnectionDB.GetInstance();
             txtRegisterPassword.UseSystemPasswordChar = true;
             txtConfirmPassword.UseSystemPasswordChar = true;
             dtpBirthDate.MaxDate = DateTime.Today;
@@ -293,8 +294,6 @@ namespace Fitness_Tracker.Views
 
             try
             {
-                db = ConnectionDB.GetInstance();
-
 
                 if (db.IsUserExists(username, email))
                 {

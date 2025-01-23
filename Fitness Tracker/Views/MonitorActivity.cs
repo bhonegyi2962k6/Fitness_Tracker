@@ -1,4 +1,5 @@
 ﻿using Fitness_Tracker.dao;
+using Fitness_Tracker.Entities;
 using PdfSharp.Internal;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -33,6 +35,7 @@ namespace Fitness_Tracker.Views
                     return;
                 }
 
+                // Fetch records from the database
                 DataTable dt = db?.GetRecords(frmLogin.user.PersonID);
 
                 if (dt == null || dt.Rows.Count == 0)
@@ -48,23 +51,41 @@ namespace Fitness_Tracker.Views
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    int recordId = Convert.ToInt32(row["Record Id"]);
-                    string activityDetails = db?.GetActivityDetails(recordId) ?? "N/A";
+                    // Create an Activity object
+                    Activity activity = new Activity
+                    {
+                        ActivityName = row["Activity"].ToString(),
+                        ActivityId = db.GetActivityIdByName(row["Activity"].ToString()) // Use method to fetch ActivityId
+                    };
 
-                    dataGridViewRecord.Rows.Add(
-                        row["Record Id"],          // Hidden Record ID
-                        rowIndex++,                // Row number
-                        row["Activity"].ToString(),
-                        Convert.ToDateTime(row["Record Date"]).ToString("yyyy-MM-dd"),
-                        row["Burned Calories"],
-                        activityDetails,
-                        row["Activity Type"],
-                        "Delete"
+                    // Create a Record object
+                    Record record = new Record
+                    {
+                        RecordId = Convert.ToInt32(row["Record Id"]),
+                        Person = frmLogin.user, // Link the logged-in user
+                        Activity = activity,
+                        RecordDate = Convert.ToDateTime(row["Record Date"]),
+                        BurnedCalories = Convert.ToDouble(row["Burned Calories"]),
+                        IntesityLevel = row["Activity Type"].ToString()
+                    };
+
+                    // Add record to DataGridView
+                    int currentRowIndex = dataGridViewRecord.Rows.Add(
+                        record.RecordId,                 // Hidden Record ID
+                        rowIndex++,                      // Row number
+                        record.Activity.ActivityName,    // Activity name
+                        record.RecordDate.ToString("yyyy-MM-dd"), // Record date
+                        record.BurnedCalories,           // Burned calories
+                        db.GetActivityDetails(record.RecordId) ?? "N/A", // Additional activity details
+                        record.IntesityLevel,            // Intensity level
+                        "Delete"                         // Action column
                     );
 
-                    totalCalories += Convert.ToDouble(row["Burned Calories"]);
+                    // Add burned calories to total
+                    totalCalories += record.BurnedCalories;
                 }
 
+                // Update total calories label
                 lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)}";
             }
             catch (Exception ex)
@@ -72,6 +93,7 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading records: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void LoadDefaultDailyCaloriesGraph()
         {
             DateTime startDate = DateTime.Today.AddDays(-7); // Example: Last 7 days
@@ -96,13 +118,37 @@ namespace Fitness_Tracker.Views
                 {
                     try
                     {
+                        // Get record ID and activity name from the selected row
                         int recordId = Convert.ToInt32(dataGridViewRecord.Rows[e.RowIndex].Cells["colRecordId"].Value);
+                        string activityName = dataGridViewRecord.Rows[e.RowIndex].Cells["colActivity"].Value.ToString();
 
-                      
+                        // Create Activity object
+                        var activity = new Activity
+                        {
+                            ActivityName = activityName
+                        };
 
-                        if (db.DeleteRecord(recordId))
+                        // Create Record object
+                        var record = new Record
+                        {
+                            RecordId = recordId,
+                            Activity = activity,
+                            Person = User.GetInstance() // Get the current logged-in user
+                        };
+
+                        // Create UserRecord object
+                        var userRecord = new UserRecord
+                        {
+                            Person = record.Person,
+                            Record = record
+                        };
+
+                        // Delete the record from the database
+                        if (db.DeleteRecord(record.RecordId))
                         {
                             MessageBox.Show("Record deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Refresh the UI
                             DateTime startDate = DateTime.Today.AddDays(-7);
                             DateTime endDate = DateTime.Today;
                             LoadDailyCaloriesGraph(startDate, endDate);
@@ -126,7 +172,6 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-
                 // Fetch historical data for calories burned across all activities
                 DataTable comparisonData = db.GetHistoricalComparison(frmLogin.user.PersonID);
 
@@ -145,10 +190,22 @@ namespace Fitness_Tracker.Views
                 {
                     foreach (DataRow row in comparisonData.Rows)
                     {
-                        string activityName = row["ActivityName"].ToString();
-                        double caloriesBurned = Convert.ToDouble(row["CaloriesBurned"]);
+                        // Create Activity object
+                        var activity = new Activity
+                        {
+                            ActivityName = row["ActivityName"].ToString()
+                        };
 
-                        comparisonDataset.DataPoints.Add(activityName, caloriesBurned);
+                        // Create Record object
+                        var record = new Record
+                        {
+                            Activity = activity,
+                            BurnedCalories = Convert.ToDouble(row["CaloriesBurned"]),
+                            Person = User.GetInstance() // Link the logged-in user
+                        };
+
+                        // Add data point to the dataset
+                        comparisonDataset.DataPoints.Add(activity.ActivityName, record.BurnedCalories);
                     }
 
                     // Add the dataset to the chart
@@ -168,6 +225,7 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void frmMonitorActivity_Load(object sender, EventArgs e)
         {
             LoadDefaultDailyCaloriesGraph();
@@ -191,23 +249,69 @@ namespace Fitness_Tracker.Views
 
                     foreach (DataRow row in dt.Rows)
                     {
-                        int recordId = Convert.ToInt32(row["Record Id"]);
-                        string activityDetails = db.GetActivityDetails(recordId); // Fetch details for this record
+                        // Create Activity object
+                        var activity = new Activity
+                        {
+                            ActivityName = row["Activity"].ToString()
+                        };
 
+                        // Create Record object
+                        var record = new Record
+                        {
+                            RecordId = Convert.ToInt32(row["Record Id"]),
+                            Activity = activity,
+                            RecordDate = Convert.ToDateTime(row["Record Date"]),
+                            BurnedCalories = Convert.ToDouble(row["Burned Calories"]),
+                            IntesityLevel = row["Activity Type"].ToString(),
+                            Person = User.GetInstance()
+                        };
+
+                        // Get activity details and create Metric and MetricValues objects
+                        string activityDetailsString = db.GetActivityDetails(record.RecordId);
+                        var metricValuesList = new List<MetricValues>();
+
+                        if (!string.IsNullOrEmpty(activityDetailsString))
+                        {
+                            string[] details = activityDetailsString.Split(new string[] { ", " }, StringSplitOptions.None); // Correct way to split by ", "
+                            foreach (string detail in details)
+                            {
+                                string[] metricParts = detail.Split(':'); // Change to Split(':') for char
+                                if (metricParts.Length == 2)
+                                {
+                                    string metricName = metricParts[0].Trim();
+                                    double metricValue = Convert.ToDouble(metricParts[1].Trim());
+
+                                    var metric = new Metric
+                                    {
+                                        MetricName = metricName,
+                                        Activity = activity
+                                    };
+
+                                    var metricValueObj = new MetricValues
+                                    {
+                                        Metric = metric,
+                                        Record = record,
+                                        Value = metricValue
+                                    };
+
+                                    metricValuesList.Add(metricValueObj);
+                                }
+                            }
+                        }
                         // Add data to DataGridView
                         dataGridViewRecord.Rows.Add(
-                            row["Record Id"],          // Hidden Record ID
-                            rowIndex++,                // Row number
-                            row["Activity"].ToString(),
-                            Convert.ToDateTime(row["Record Date"]).ToString("yyyy-MM-dd"),
-                            row["Burned Calories"],    // Burned Calories
-                            activityDetails,           // Activity Details
-                            row["Activity Type"],      // Intensity Level (colActivityType)
-                            "Delete"                   // Delete button text
+                            record.RecordId,              // Hidden Record ID
+                            rowIndex++,                   // Row number
+                            record.Activity.ActivityName,
+                            record.RecordDate.ToString("yyyy-MM-dd"),
+                            record.BurnedCalories,        // Burned Calories
+                            activityDetailsString,        // Activity Details
+                            record.IntesityLevel,         // Intensity Level (colActivityType)
+                            "Delete"                      // Delete button text
                         );
 
                         // Add to total calories
-                        totalCalories += Convert.ToDouble(row["Burned Calories"]);
+                        totalCalories += record.BurnedCalories;
                     }
 
                     // Display total calories
@@ -293,39 +397,59 @@ namespace Fitness_Tracker.Views
                 }
                 else
                 {
-
                     // Get records for the selected activity
                     DataTable dt = db.GetRecordsByActivity(frmLogin.user.PersonID, selectedActivity);
 
                     if (dt != null && dt.Rows.Count > 0)
                     {
-                        dataGridViewRecord.Rows.Clear();
+                        dataGridViewRecord.Rows.Clear(); // Clear the DataGridView
                         int rowIndex = 1;
                         double totalCalories = 0;
 
                         foreach (DataRow row in dt.Rows)
                         {
-                            int recordId = Convert.ToInt32(row["Record Id"]);
-                            string activityDetails = db.GetActivityDetails(recordId);
+                            // Create Activity object
+                            var activity = new Activity
+                            {
+                                ActivityId = db.GetActivityIdByName(selectedActivity), // Assuming this method exists in your DB class
+                                ActivityName = row["Activity"].ToString()
+                            };
 
+                            // Create Record object
+                            var record = new Record
+                            {
+                                RecordId = Convert.ToInt32(row["Record Id"]),
+                                Activity = activity,
+                                RecordDate = Convert.ToDateTime(row["Record Date"]),
+                                BurnedCalories = Convert.ToDouble(row["Burned Calories"]),
+                                IntesityLevel = row["Activity Type"].ToString()
+                            };
+
+                            // Fetch activity details
+                            string activityDetails = db.GetActivityDetails(record.RecordId);
+
+                            // Add record to DataGridView
                             dataGridViewRecord.Rows.Add(
-                                row["Record Id"],
-                                rowIndex++,
-                                row["Activity"].ToString(),
-                                Convert.ToDateTime(row["Record Date"]).ToString("yyyy-MM-dd"),
-                                row["Burned Calories"],
-                                activityDetails,
-                                row["Activity Type"],
-                                "Delete"
+                                record.RecordId,                   // Hidden Record ID
+                                rowIndex++,                        // Row number
+                                record.Activity.ActivityName,      // Activity name
+                                record.RecordDate.ToString("yyyy-MM-dd"), // Record date
+                                record.BurnedCalories,             // Burned calories
+                                activityDetails,                   // Activity details
+                                record.IntesityLevel,              // Intensity level
+                                "Delete"                           // Delete button
                             );
 
-                            totalCalories += Convert.ToDouble(row["Burned Calories"]);
+                            // Update total calories
+                            totalCalories += record.BurnedCalories;
                         }
 
+                        // Display total calories
                         lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)}";
                     }
                     else
                     {
+                        // No records found
                         dataGridViewRecord.Rows.Clear();
                         lblTotalCalories.Text = "Total Calories: 0";
                     }
@@ -336,27 +460,54 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error sorting by activity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void PopulateActivitySort()
         {
             try
             {
+                // Fetch activities from the database
+                Dictionary<int, string> activityDictionary = db.GetActivities();
 
-                Dictionary<int, string> activities = db.GetActivities();
-
+                // Clear the ComboBox
                 cboActivitySort.Items.Clear();
                 cboActivitySort.Items.Add("All"); // Add "All" as the default option
 
-                foreach (var activity in activities)
+                // Create and store Activity objects
+                List<Activity> activities = new List<Activity>();
+
+                foreach (var entry in activityDictionary)
                 {
-                    cboActivitySort.Items.Add(activity.Value);
+                    var activity = new Activity
+                    {
+                        ActivityId = entry.Key,
+                        ActivityName = entry.Value
+                    };
+
+                    // Add to the ComboBox
+                    cboActivitySort.Items.Add(activity.ActivityName);
+
+                    // Store the Activity object (if needed elsewhere)
+                    activities.Add(activity);
                 }
 
-                cboActivitySort.SelectedIndex = 0; // Default to "All"
+                // Set the default selection to "All"
+                cboActivitySort.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error populating activities: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        public class DailyCalories
+        {
+            public string RecordDate { get; set; }
+            public double TotalCalories { get; set; }
+
+            public DailyCalories() { }
+
+            public DailyCalories(string recordDate, double totalCalories)
+            {
+                RecordDate = recordDate;
+                TotalCalories = totalCalories;
             }
         }
 
@@ -372,11 +523,24 @@ namespace Fitness_Tracker.Views
                     // Clear existing data points
                     gunaLineDataset1.DataPoints.Clear();
 
-                    // Populate the dataset with data
+                    // Create a list to store DailyCalories objects
+                    List<DailyCalories> dailyCaloriesList = new List<DailyCalories>();
+
+                    // Populate the dataset with data and create objects
                     foreach (DataRow row in dt.Rows)
                     {
                         string recordDate = Convert.ToDateTime(row["record_date"]).ToString("yyyy-MM-dd");
                         double totalCalories = Convert.ToDouble(row["total_calories"]);
+
+                        // Create DailyCalories object
+                        var dailyCalories = new DailyCalories
+                        {
+                            RecordDate = recordDate,
+                            TotalCalories = totalCalories
+                        };
+
+                        // Add to the list
+                        dailyCaloriesList.Add(dailyCalories);
 
                         // Add data point to the dataset
                         gunaLineDataset1.DataPoints.Add(recordDate, totalCalories);
@@ -396,11 +560,16 @@ namespace Fitness_Tracker.Views
                     chartDailyCalories.Title.Text = "Calories Burned Per Day";
                     chartDailyCalories.Update(); // Refresh the chart
                 }
+                else
+                {
+                    MessageBox.Show("No data available for the selected date range.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading daily calories graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

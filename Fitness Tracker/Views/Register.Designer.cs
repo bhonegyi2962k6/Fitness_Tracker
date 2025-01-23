@@ -38,13 +38,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.dtpBirthDate = new Guna.UI2.WinForms.Guna2DateTimePicker();
             this.label13 = new System.Windows.Forms.Label();
             this.cboRegisterGender = new Guna.UI2.WinForms.Guna2ComboBox();
@@ -174,16 +170,6 @@
             this.label5.TabIndex = 17;
             this.label5.Text = "Username:";
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.Color.Black;
-            this.label6.Location = new System.Drawing.Point(571, 527);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(0, 20);
-            this.label6.TabIndex = 18;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -216,36 +202,6 @@
             this.label9.Size = new System.Drawing.Size(70, 20);
             this.label9.TabIndex = 21;
             this.label9.Text = "Gender:";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.ForeColor = System.Drawing.Color.Black;
-            this.label10.Location = new System.Drawing.Point(777, 547);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(0, 20);
-            this.label10.TabIndex = 22;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.ForeColor = System.Drawing.Color.Black;
-            this.label11.Location = new System.Drawing.Point(615, 634);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(0, 20);
-            this.label11.TabIndex = 23;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.ForeColor = System.Drawing.Color.Black;
-            this.label12.Location = new System.Drawing.Point(741, 527);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(0, 20);
-            this.label12.TabIndex = 24;
             // 
             // dtpBirthDate
             // 
@@ -343,7 +299,7 @@
             this.linkLabelLogin.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabelLogin.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.linkLabelLogin.LinkColor = System.Drawing.Color.Black;
-            this.linkLabelLogin.Location = new System.Drawing.Point(413, 666);
+            this.linkLabelLogin.Location = new System.Drawing.Point(413, 663);
             this.linkLabelLogin.Name = "linkLabelLogin";
             this.linkLabelLogin.Size = new System.Drawing.Size(270, 20);
             this.linkLabelLogin.TabIndex = 43;
@@ -438,7 +394,7 @@
             this.txtRegisterMobile.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtRegisterMobile.IconLeft = global::Fitness_Tracker.Properties.Resources.viber;
             this.txtRegisterMobile.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtRegisterMobile.Location = new System.Drawing.Point(723, 505);
+            this.txtRegisterMobile.Location = new System.Drawing.Point(725, 505);
             this.txtRegisterMobile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtRegisterMobile.Name = "txtRegisterMobile";
             this.txtRegisterMobile.PasswordChar = '\0';
@@ -642,13 +598,9 @@
             this.Controls.Add(this.txtRegisterUsername);
             this.Controls.Add(this.txtRegisterLastName);
             this.Controls.Add(this.txtRegisterFirstName);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -675,13 +627,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
         private Guna.UI2.WinForms.Guna2TextBox txtRegisterFirstName;
         private Guna.UI2.WinForms.Guna2TextBox txtRegisterLastName;
         private Guna.UI2.WinForms.Guna2TextBox txtRegisterUsername;

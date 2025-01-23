@@ -84,39 +84,31 @@
             this.label5 = new System.Windows.Forms.Label();
             this.cboIntensity = new Guna.UI2.WinForms.Guna2ComboBox();
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.lblScheduleReminder = new System.Windows.Forms.Label();
+            this.lblTips = new System.Windows.Forms.Label();
+            this.lblUserSummary = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.chartHistoricalComparison = new Guna.Charts.WinForms.GunaChart();
             this.chartRowingMetrics = new Guna.Charts.WinForms.GunaChart();
             this.chartRowingProgress = new Guna.Charts.WinForms.GunaChart();
             this.gunaLineDataset1 = new Guna.Charts.WinForms.GunaLineDataset();
-            this.lblTips = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
-            this.lblRecentCalories = new System.Windows.Forms.Label();
-            this.lblRecentDate = new System.Windows.Forms.Label();
-            this.lblRecentStrokes = new System.Windows.Forms.Label();
-            this.lblRecentTime = new System.Windows.Forms.Label();
-            this.lblRecentDistance = new System.Windows.Forms.Label();
-            this.lblUserSummary = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
             this.lblMaxCalories = new System.Windows.Forms.Label();
             this.lblTotalStrokes = new System.Windows.Forms.Label();
             this.lblTotalDistance = new System.Windows.Forms.Label();
             this.lblTotalTime = new System.Windows.Forms.Label();
-            this.lblScheduleReminder = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.guna2Panel1.SuspendLayout();
-            this.guna2Panel3.SuspendLayout();
             this.guna2Panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::Fitness_Tracker.Properties.Resources.Rowing_man;
-            this.pictureBox1.Location = new System.Drawing.Point(18, 13);
+            this.pictureBox1.Location = new System.Drawing.Point(16, 4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(344, 339);
+            this.pictureBox1.Size = new System.Drawing.Size(315, 310);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 53;
             this.pictureBox1.TabStop = false;
@@ -131,7 +123,7 @@
             this.btnRowingRecord.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnRowingRecord.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRowingRecord.ForeColor = System.Drawing.Color.White;
-            this.btnRowingRecord.Location = new System.Drawing.Point(67, 460);
+            this.btnRowingRecord.Location = new System.Drawing.Point(509, 459);
             this.btnRowingRecord.Name = "btnRowingRecord";
             this.btnRowingRecord.Size = new System.Drawing.Size(321, 46);
             this.btnRowingRecord.TabIndex = 52;
@@ -142,27 +134,27 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(20, 230);
+            this.label4.Location = new System.Drawing.Point(462, 229);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(89, 21);
+            this.label4.Size = new System.Drawing.Size(125, 21);
             this.label4.TabIndex = 51;
-            this.label4.Text = "Distance:";
+            this.label4.Text = "Distance(km):";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(20, 337);
+            this.label3.Location = new System.Drawing.Point(462, 336);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(107, 21);
+            this.label3.Size = new System.Drawing.Size(149, 21);
             this.label3.TabIndex = 50;
-            this.label3.Text = "Time Taken:";
+            this.label3.Text = "Time Taken(mm):";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(20, 131);
+            this.label2.Location = new System.Drawing.Point(462, 130);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(119, 21);
             this.label2.TabIndex = 49;
@@ -184,7 +176,7 @@
             this.txtRowingTimeTaken.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtRowingTimeTaken.IconLeft = global::Fitness_Tracker.Properties.Resources.hourglass;
             this.txtRowingTimeTaken.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtRowingTimeTaken.Location = new System.Drawing.Point(24, 362);
+            this.txtRowingTimeTaken.Location = new System.Drawing.Point(466, 361);
             this.txtRowingTimeTaken.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtRowingTimeTaken.Name = "txtRowingTimeTaken";
             this.txtRowingTimeTaken.PasswordChar = '\0';
@@ -211,7 +203,7 @@
             this.txtRowingDistance.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtRowingDistance.IconLeft = global::Fitness_Tracker.Properties.Resources.distance;
             this.txtRowingDistance.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtRowingDistance.Location = new System.Drawing.Point(24, 255);
+            this.txtRowingDistance.Location = new System.Drawing.Point(466, 254);
             this.txtRowingDistance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtRowingDistance.Name = "txtRowingDistance";
             this.txtRowingDistance.PasswordChar = '\0';
@@ -238,7 +230,7 @@
             this.txtRowingStrokes.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtRowingStrokes.IconLeft = global::Fitness_Tracker.Properties.Resources.man_in_canoe;
             this.txtRowingStrokes.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtRowingStrokes.Location = new System.Drawing.Point(24, 156);
+            this.txtRowingStrokes.Location = new System.Drawing.Point(466, 155);
             this.txtRowingStrokes.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtRowingStrokes.Name = "txtRowingStrokes";
             this.txtRowingStrokes.PasswordChar = '\0';
@@ -253,7 +245,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(21, 33);
+            this.label5.Location = new System.Drawing.Point(463, 32);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(122, 21);
             this.label5.TabIndex = 59;
@@ -274,7 +266,7 @@
             "Light",
             "Moderate",
             "Vigorous"});
-            this.cboIntensity.Location = new System.Drawing.Point(25, 57);
+            this.cboIntensity.Location = new System.Drawing.Point(467, 56);
             this.cboIntensity.Name = "cboIntensity";
             this.cboIntensity.Size = new System.Drawing.Size(392, 36);
             this.cboIntensity.TabIndex = 58;
@@ -285,25 +277,55 @@
             this.guna2Panel1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.guna2Panel1.BorderRadius = 10;
             this.guna2Panel1.BorderThickness = 2;
+            this.guna2Panel1.Controls.Add(this.lblScheduleReminder);
             this.guna2Panel1.Controls.Add(this.label5);
             this.guna2Panel1.Controls.Add(this.cboIntensity);
+            this.guna2Panel1.Controls.Add(this.lblTips);
             this.guna2Panel1.Controls.Add(this.btnRowingRecord);
+            this.guna2Panel1.Controls.Add(this.lblUserSummary);
             this.guna2Panel1.Controls.Add(this.txtRowingStrokes);
             this.guna2Panel1.Controls.Add(this.txtRowingDistance);
             this.guna2Panel1.Controls.Add(this.txtRowingTimeTaken);
             this.guna2Panel1.Controls.Add(this.label4);
             this.guna2Panel1.Controls.Add(this.label2);
             this.guna2Panel1.Controls.Add(this.label3);
-            this.guna2Panel1.Location = new System.Drawing.Point(1188, 46);
+            this.guna2Panel1.Controls.Add(this.pictureBox1);
+            this.guna2Panel1.Location = new System.Drawing.Point(22, 33);
             this.guna2Panel1.Name = "guna2Panel1";
-            this.guna2Panel1.Size = new System.Drawing.Size(449, 548);
+            this.guna2Panel1.Size = new System.Drawing.Size(878, 548);
             this.guna2Panel1.TabIndex = 78;
+            // 
+            // lblScheduleReminder
+            // 
+            this.lblScheduleReminder.Font = new System.Drawing.Font("Century Gothic", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblScheduleReminder.ForeColor = System.Drawing.Color.DarkRed;
+            this.lblScheduleReminder.Location = new System.Drawing.Point(12, 459);
+            this.lblScheduleReminder.Name = "lblScheduleReminder";
+            this.lblScheduleReminder.Size = new System.Drawing.Size(398, 64);
+            this.lblScheduleReminder.TabIndex = 109;
+            this.lblScheduleReminder.Text = "No upcoming schedules.";
+            // 
+            // lblTips
+            // 
+            this.lblTips.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTips.Location = new System.Drawing.Point(12, 386);
+            this.lblTips.Name = "lblTips";
+            this.lblTips.Size = new System.Drawing.Size(398, 50);
+            this.lblTips.TabIndex = 108;
+            // 
+            // lblUserSummary
+            // 
+            this.lblUserSummary.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUserSummary.Location = new System.Drawing.Point(12, 319);
+            this.lblUserSummary.Name = "lblUserSummary";
+            this.lblUserSummary.Size = new System.Drawing.Size(398, 50);
+            this.lblUserSummary.TabIndex = 105;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(1185, 19);
+            this.label9.Location = new System.Drawing.Point(18, 11);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(283, 19);
             this.label9.TabIndex = 99;
@@ -313,9 +335,9 @@
             // 
             chartFont1.FontName = "Arial";
             this.chartHistoricalComparison.Legend.LabelFont = chartFont1;
-            this.chartHistoricalComparison.Location = new System.Drawing.Point(599, 308);
+            this.chartHistoricalComparison.Location = new System.Drawing.Point(488, 591);
             this.chartHistoricalComparison.Name = "chartHistoricalComparison";
-            this.chartHistoricalComparison.Size = new System.Drawing.Size(459, 286);
+            this.chartHistoricalComparison.Size = new System.Drawing.Size(414, 242);
             this.chartHistoricalComparison.TabIndex = 104;
             chartFont2.FontName = "Arial";
             chartFont2.Size = 12;
@@ -347,9 +369,9 @@
             // 
             chartFont9.FontName = "Arial";
             this.chartRowingMetrics.Legend.LabelFont = chartFont9;
-            this.chartRowingMetrics.Location = new System.Drawing.Point(599, 599);
+            this.chartRowingMetrics.Location = new System.Drawing.Point(1000, 463);
             this.chartRowingMetrics.Name = "chartRowingMetrics";
-            this.chartRowingMetrics.Size = new System.Drawing.Size(459, 286);
+            this.chartRowingMetrics.Size = new System.Drawing.Size(592, 370);
             this.chartRowingMetrics.TabIndex = 103;
             chartFont10.FontName = "Arial";
             chartFont10.Size = 12;
@@ -383,9 +405,9 @@
             this.gunaLineDataset1});
             chartFont17.FontName = "Arial";
             this.chartRowingProgress.Legend.LabelFont = chartFont17;
-            this.chartRowingProgress.Location = new System.Drawing.Point(599, 16);
+            this.chartRowingProgress.Location = new System.Drawing.Point(1000, 32);
             this.chartRowingProgress.Name = "chartRowingProgress";
-            this.chartRowingProgress.Size = new System.Drawing.Size(459, 286);
+            this.chartRowingProgress.Size = new System.Drawing.Size(592, 370);
             this.chartRowingProgress.TabIndex = 102;
             chartFont18.FontName = "Arial";
             chartFont18.Size = 12;
@@ -420,97 +442,11 @@
             this.gunaLineDataset1.Label = "Line1";
             this.gunaLineDataset1.TargetChart = this.chartRowingProgress;
             // 
-            // lblTips
-            // 
-            this.lblTips.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTips.Location = new System.Drawing.Point(19, 433);
-            this.lblTips.Name = "lblTips";
-            this.lblTips.Size = new System.Drawing.Size(398, 64);
-            this.lblTips.TabIndex = 108;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(19, 528);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(201, 19);
-            this.label6.TabIndex = 107;
-            this.label6.Text = "Recent Walking Activity";
-            // 
-            // guna2Panel3
-            // 
-            this.guna2Panel3.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.guna2Panel3.BorderRadius = 10;
-            this.guna2Panel3.BorderThickness = 2;
-            this.guna2Panel3.Controls.Add(this.lblRecentCalories);
-            this.guna2Panel3.Controls.Add(this.lblRecentDate);
-            this.guna2Panel3.Controls.Add(this.lblRecentStrokes);
-            this.guna2Panel3.Controls.Add(this.lblRecentTime);
-            this.guna2Panel3.Controls.Add(this.lblRecentDistance);
-            this.guna2Panel3.Location = new System.Drawing.Point(18, 560);
-            this.guna2Panel3.Name = "guna2Panel3";
-            this.guna2Panel3.Size = new System.Drawing.Size(449, 235);
-            this.guna2Panel3.TabIndex = 106;
-            // 
-            // lblRecentCalories
-            // 
-            this.lblRecentCalories.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentCalories.Location = new System.Drawing.Point(26, 188);
-            this.lblRecentCalories.Name = "lblRecentCalories";
-            this.lblRecentCalories.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentCalories.TabIndex = 69;
-            this.lblRecentCalories.Text = "Calories Burned:";
-            // 
-            // lblRecentDate
-            // 
-            this.lblRecentDate.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentDate.Location = new System.Drawing.Point(26, 20);
-            this.lblRecentDate.Name = "lblRecentDate";
-            this.lblRecentDate.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentDate.TabIndex = 65;
-            this.lblRecentDate.Text = "Date:";
-            // 
-            // lblRecentStrokes
-            // 
-            this.lblRecentStrokes.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentStrokes.Location = new System.Drawing.Point(26, 61);
-            this.lblRecentStrokes.Name = "lblRecentStrokes";
-            this.lblRecentStrokes.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentStrokes.TabIndex = 66;
-            this.lblRecentStrokes.Text = "Total Strokes:";
-            // 
-            // lblRecentTime
-            // 
-            this.lblRecentTime.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentTime.Location = new System.Drawing.Point(26, 104);
-            this.lblRecentTime.Name = "lblRecentTime";
-            this.lblRecentTime.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentTime.TabIndex = 67;
-            this.lblRecentTime.Text = "Time Taken:";
-            // 
-            // lblRecentDistance
-            // 
-            this.lblRecentDistance.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentDistance.Location = new System.Drawing.Point(26, 146);
-            this.lblRecentDistance.Name = "lblRecentDistance";
-            this.lblRecentDistance.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentDistance.TabIndex = 68;
-            this.lblRecentDistance.Text = "Distance:";
-            // 
-            // lblUserSummary
-            // 
-            this.lblUserSummary.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUserSummary.Location = new System.Drawing.Point(19, 357);
-            this.lblUserSummary.Name = "lblUserSummary";
-            this.lblUserSummary.Size = new System.Drawing.Size(398, 64);
-            this.lblUserSummary.TabIndex = 105;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(1185, 611);
+            this.label1.Location = new System.Drawing.Point(18, 610);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(151, 19);
             this.label1.TabIndex = 105;
@@ -525,7 +461,7 @@
             this.guna2Panel2.Controls.Add(this.lblTotalStrokes);
             this.guna2Panel2.Controls.Add(this.lblTotalDistance);
             this.guna2Panel2.Controls.Add(this.lblTotalTime);
-            this.guna2Panel2.Location = new System.Drawing.Point(1189, 637);
+            this.guna2Panel2.Location = new System.Drawing.Point(22, 636);
             this.guna2Panel2.Name = "guna2Panel2";
             this.guna2Panel2.Size = new System.Drawing.Size(449, 197);
             this.guna2Panel2.TabIndex = 104;
@@ -566,41 +502,24 @@
             this.lblTotalTime.TabIndex = 68;
             this.lblTotalTime.Text = "Total Time:";
             // 
-            // lblScheduleReminder
-            // 
-            this.lblScheduleReminder.Font = new System.Drawing.Font("Century Gothic", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblScheduleReminder.ForeColor = System.Drawing.Color.DarkRed;
-            this.lblScheduleReminder.Location = new System.Drawing.Point(19, 798);
-            this.lblScheduleReminder.Name = "lblScheduleReminder";
-            this.lblScheduleReminder.Size = new System.Drawing.Size(448, 64);
-            this.lblScheduleReminder.TabIndex = 109;
-            this.lblScheduleReminder.Text = "No upcoming schedules.";
-            // 
             // frmRowing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.lblScheduleReminder);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.lblTips);
             this.Controls.Add(this.guna2Panel2);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.guna2Panel3);
-            this.Controls.Add(this.lblUserSummary);
             this.Controls.Add(this.chartHistoricalComparison);
             this.Controls.Add(this.chartRowingMetrics);
             this.Controls.Add(this.chartRowingProgress);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.guna2Panel1);
-            this.Controls.Add(this.pictureBox1);
             this.Name = "frmRowing";
             this.Size = new System.Drawing.Size(1657, 900);
             this.Load += new System.EventHandler(this.frmRowing_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.guna2Panel1.ResumeLayout(false);
             this.guna2Panel1.PerformLayout();
-            this.guna2Panel3.ResumeLayout(false);
             this.guna2Panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -625,13 +544,6 @@
         private Guna.Charts.WinForms.GunaChart chartRowingMetrics;
         private Guna.Charts.WinForms.GunaChart chartRowingProgress;
         private System.Windows.Forms.Label lblTips;
-        private System.Windows.Forms.Label label6;
-        private Guna.UI2.WinForms.Guna2Panel guna2Panel3;
-        private System.Windows.Forms.Label lblRecentCalories;
-        private System.Windows.Forms.Label lblRecentDate;
-        private System.Windows.Forms.Label lblRecentStrokes;
-        private System.Windows.Forms.Label lblRecentTime;
-        private System.Windows.Forms.Label lblRecentDistance;
         private System.Windows.Forms.Label lblUserSummary;
         private System.Windows.Forms.Label label1;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel2;

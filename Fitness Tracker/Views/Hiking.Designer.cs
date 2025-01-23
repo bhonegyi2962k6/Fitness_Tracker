@@ -84,6 +84,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.cboIntensity = new Guna.UI2.WinForms.Guna2ComboBox();
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.lblScheduleReminder = new System.Windows.Forms.Label();
+            this.lblTips = new System.Windows.Forms.Label();
+            this.lblUserSummary = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
             this.lblMaxCalories = new System.Windows.Forms.Label();
@@ -94,21 +97,10 @@
             this.chartHikingMetrics = new Guna.Charts.WinForms.GunaChart();
             this.chartHikingProgress = new Guna.Charts.WinForms.GunaChart();
             this.gunaLineDataset1 = new Guna.Charts.WinForms.GunaLineDataset();
-            this.lblTips = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
-            this.lblRecentCalories = new System.Windows.Forms.Label();
-            this.lblRecentDate = new System.Windows.Forms.Label();
-            this.lblRecentElevation = new System.Windows.Forms.Label();
-            this.lblRecentTime = new System.Windows.Forms.Label();
-            this.lblRecentDistance = new System.Windows.Forms.Label();
-            this.lblUserSummary = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.lblScheduleReminder = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.guna2Panel1.SuspendLayout();
             this.guna2Panel2.SuspendLayout();
-            this.guna2Panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnHikingRecord
@@ -121,7 +113,7 @@
             this.btnHikingRecord.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.btnHikingRecord.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHikingRecord.ForeColor = System.Drawing.Color.White;
-            this.btnHikingRecord.Location = new System.Drawing.Point(78, 473);
+            this.btnHikingRecord.Location = new System.Drawing.Point(514, 463);
             this.btnHikingRecord.Name = "btnHikingRecord";
             this.btnHikingRecord.Size = new System.Drawing.Size(321, 46);
             this.btnHikingRecord.TabIndex = 43;
@@ -132,38 +124,38 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(26, 238);
+            this.label4.Location = new System.Drawing.Point(462, 228);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(89, 21);
+            this.label4.Size = new System.Drawing.Size(125, 21);
             this.label4.TabIndex = 42;
-            this.label4.Text = "Distance:";
+            this.label4.Text = "Distance(km):";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(26, 364);
+            this.label3.Location = new System.Drawing.Point(462, 354);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(107, 21);
+            this.label3.Size = new System.Drawing.Size(149, 21);
             this.label3.TabIndex = 41;
-            this.label3.Text = "Time Taken:";
+            this.label3.Text = "Time Taken(mm):";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(26, 125);
+            this.label2.Location = new System.Drawing.Point(462, 115);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(160, 21);
+            this.label2.Size = new System.Drawing.Size(187, 21);
             this.label2.TabIndex = 40;
-            this.label2.Text = "Elevation Gained:";
+            this.label2.Text = "Elevation Gained(m):";
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::Fitness_Tracker.Properties.Resources.f942290abd321328a1f6c013dfdbb94f;
-            this.pictureBox1.Location = new System.Drawing.Point(37, 3);
+            this.pictureBox1.Location = new System.Drawing.Point(31, 19);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(403, 328);
+            this.pictureBox1.Size = new System.Drawing.Size(342, 286);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 44;
             this.pictureBox1.TabStop = false;
@@ -184,7 +176,7 @@
             this.txtHikingTimeTaken.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtHikingTimeTaken.IconLeft = global::Fitness_Tracker.Properties.Resources.hourglass;
             this.txtHikingTimeTaken.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtHikingTimeTaken.Location = new System.Drawing.Point(30, 389);
+            this.txtHikingTimeTaken.Location = new System.Drawing.Point(466, 379);
             this.txtHikingTimeTaken.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtHikingTimeTaken.Name = "txtHikingTimeTaken";
             this.txtHikingTimeTaken.PasswordChar = '\0';
@@ -211,7 +203,7 @@
             this.txtHikingDistance.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtHikingDistance.IconLeft = global::Fitness_Tracker.Properties.Resources.distance;
             this.txtHikingDistance.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtHikingDistance.Location = new System.Drawing.Point(30, 263);
+            this.txtHikingDistance.Location = new System.Drawing.Point(466, 253);
             this.txtHikingDistance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtHikingDistance.Name = "txtHikingDistance";
             this.txtHikingDistance.PasswordChar = '\0';
@@ -238,7 +230,7 @@
             this.txtHikingElevation.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtHikingElevation.IconLeft = global::Fitness_Tracker.Properties.Resources.mountain;
             this.txtHikingElevation.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtHikingElevation.Location = new System.Drawing.Point(30, 150);
+            this.txtHikingElevation.Location = new System.Drawing.Point(466, 140);
             this.txtHikingElevation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtHikingElevation.Name = "txtHikingElevation";
             this.txtHikingElevation.PasswordChar = '\0';
@@ -253,7 +245,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(26, 39);
+            this.label5.Location = new System.Drawing.Point(462, 29);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(122, 21);
             this.label5.TabIndex = 59;
@@ -273,7 +265,7 @@
             this.cboIntensity.Items.AddRange(new object[] {
             "Moderate",
             "Vigorous"});
-            this.cboIntensity.Location = new System.Drawing.Point(30, 63);
+            this.cboIntensity.Location = new System.Drawing.Point(466, 53);
             this.cboIntensity.Name = "cboIntensity";
             this.cboIntensity.Size = new System.Drawing.Size(392, 36);
             this.cboIntensity.TabIndex = 58;
@@ -284,8 +276,11 @@
             this.guna2Panel1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
             this.guna2Panel1.BorderRadius = 10;
             this.guna2Panel1.BorderThickness = 2;
+            this.guna2Panel1.Controls.Add(this.lblScheduleReminder);
             this.guna2Panel1.Controls.Add(this.label5);
             this.guna2Panel1.Controls.Add(this.cboIntensity);
+            this.guna2Panel1.Controls.Add(this.lblTips);
+            this.guna2Panel1.Controls.Add(this.lblUserSummary);
             this.guna2Panel1.Controls.Add(this.btnHikingRecord);
             this.guna2Panel1.Controls.Add(this.txtHikingElevation);
             this.guna2Panel1.Controls.Add(this.txtHikingDistance);
@@ -293,16 +288,43 @@
             this.guna2Panel1.Controls.Add(this.label4);
             this.guna2Panel1.Controls.Add(this.label2);
             this.guna2Panel1.Controls.Add(this.label3);
-            this.guna2Panel1.Location = new System.Drawing.Point(1147, 32);
+            this.guna2Panel1.Controls.Add(this.pictureBox1);
+            this.guna2Panel1.Location = new System.Drawing.Point(28, 45);
             this.guna2Panel1.Name = "guna2Panel1";
-            this.guna2Panel1.Size = new System.Drawing.Size(449, 548);
+            this.guna2Panel1.Size = new System.Drawing.Size(878, 548);
             this.guna2Panel1.TabIndex = 78;
+            // 
+            // lblScheduleReminder
+            // 
+            this.lblScheduleReminder.Font = new System.Drawing.Font("Century Gothic", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblScheduleReminder.ForeColor = System.Drawing.Color.DarkRed;
+            this.lblScheduleReminder.Location = new System.Drawing.Point(27, 463);
+            this.lblScheduleReminder.Name = "lblScheduleReminder";
+            this.lblScheduleReminder.Size = new System.Drawing.Size(398, 64);
+            this.lblScheduleReminder.TabIndex = 97;
+            this.lblScheduleReminder.Text = "No upcoming schedules.";
+            // 
+            // lblTips
+            // 
+            this.lblTips.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTips.Location = new System.Drawing.Point(27, 379);
+            this.lblTips.Name = "lblTips";
+            this.lblTips.Size = new System.Drawing.Size(398, 48);
+            this.lblTips.TabIndex = 95;
+            // 
+            // lblUserSummary
+            // 
+            this.lblUserSummary.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUserSummary.Location = new System.Drawing.Point(27, 310);
+            this.lblUserSummary.Name = "lblUserSummary";
+            this.lblUserSummary.Size = new System.Drawing.Size(398, 48);
+            this.lblUserSummary.TabIndex = 92;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(1143, 595);
+            this.label1.Location = new System.Drawing.Point(24, 610);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(142, 19);
             this.label1.TabIndex = 85;
@@ -317,7 +339,7 @@
             this.guna2Panel2.Controls.Add(this.lblTotalElevation);
             this.guna2Panel2.Controls.Add(this.lblTotalDistance);
             this.guna2Panel2.Controls.Add(this.lblTotalTime);
-            this.guna2Panel2.Location = new System.Drawing.Point(1147, 621);
+            this.guna2Panel2.Location = new System.Drawing.Point(28, 636);
             this.guna2Panel2.Name = "guna2Panel2";
             this.guna2Panel2.Size = new System.Drawing.Size(449, 197);
             this.guna2Panel2.TabIndex = 84;
@@ -362,9 +384,9 @@
             // 
             chartFont1.FontName = "Arial";
             this.chartHistoricalComparison.Legend.LabelFont = chartFont1;
-            this.chartHistoricalComparison.Location = new System.Drawing.Point(599, 308);
+            this.chartHistoricalComparison.Location = new System.Drawing.Point(494, 599);
             this.chartHistoricalComparison.Name = "chartHistoricalComparison";
-            this.chartHistoricalComparison.Size = new System.Drawing.Size(459, 286);
+            this.chartHistoricalComparison.Size = new System.Drawing.Size(414, 242);
             this.chartHistoricalComparison.TabIndex = 90;
             chartFont2.FontName = "Arial";
             chartFont2.Size = 12;
@@ -396,9 +418,9 @@
             // 
             chartFont9.FontName = "Arial";
             this.chartHikingMetrics.Legend.LabelFont = chartFont9;
-            this.chartHikingMetrics.Location = new System.Drawing.Point(599, 599);
+            this.chartHikingMetrics.Location = new System.Drawing.Point(975, 463);
             this.chartHikingMetrics.Name = "chartHikingMetrics";
-            this.chartHikingMetrics.Size = new System.Drawing.Size(459, 286);
+            this.chartHikingMetrics.Size = new System.Drawing.Size(592, 370);
             this.chartHikingMetrics.TabIndex = 89;
             chartFont10.FontName = "Arial";
             chartFont10.Size = 12;
@@ -432,9 +454,9 @@
             this.gunaLineDataset1});
             chartFont17.FontName = "Arial";
             this.chartHikingProgress.Legend.LabelFont = chartFont17;
-            this.chartHikingProgress.Location = new System.Drawing.Point(599, 16);
+            this.chartHikingProgress.Location = new System.Drawing.Point(975, 45);
             this.chartHikingProgress.Name = "chartHikingProgress";
-            this.chartHikingProgress.Size = new System.Drawing.Size(459, 286);
+            this.chartHikingProgress.Size = new System.Drawing.Size(592, 370);
             this.chartHikingProgress.TabIndex = 88;
             chartFont18.FontName = "Arial";
             chartFont18.Size = 12;
@@ -469,130 +491,28 @@
             this.gunaLineDataset1.Label = "Line1";
             this.gunaLineDataset1.TargetChart = this.chartHikingProgress;
             // 
-            // lblTips
-            // 
-            this.lblTips.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTips.Location = new System.Drawing.Point(42, 421);
-            this.lblTips.Name = "lblTips";
-            this.lblTips.Size = new System.Drawing.Size(398, 64);
-            this.lblTips.TabIndex = 95;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(35, 497);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(187, 19);
-            this.label6.TabIndex = 94;
-            this.label6.Text = "Recent Hiking Activity";
-            // 
-            // guna2Panel3
-            // 
-            this.guna2Panel3.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.guna2Panel3.BorderRadius = 10;
-            this.guna2Panel3.BorderThickness = 2;
-            this.guna2Panel3.Controls.Add(this.lblRecentCalories);
-            this.guna2Panel3.Controls.Add(this.lblRecentDate);
-            this.guna2Panel3.Controls.Add(this.lblRecentElevation);
-            this.guna2Panel3.Controls.Add(this.lblRecentTime);
-            this.guna2Panel3.Controls.Add(this.lblRecentDistance);
-            this.guna2Panel3.Location = new System.Drawing.Point(34, 529);
-            this.guna2Panel3.Name = "guna2Panel3";
-            this.guna2Panel3.Size = new System.Drawing.Size(449, 235);
-            this.guna2Panel3.TabIndex = 93;
-            // 
-            // lblRecentCalories
-            // 
-            this.lblRecentCalories.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentCalories.Location = new System.Drawing.Point(26, 188);
-            this.lblRecentCalories.Name = "lblRecentCalories";
-            this.lblRecentCalories.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentCalories.TabIndex = 69;
-            this.lblRecentCalories.Text = "Calories Burned:";
-            // 
-            // lblRecentDate
-            // 
-            this.lblRecentDate.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentDate.Location = new System.Drawing.Point(26, 20);
-            this.lblRecentDate.Name = "lblRecentDate";
-            this.lblRecentDate.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentDate.TabIndex = 65;
-            this.lblRecentDate.Text = "Date:";
-            // 
-            // lblRecentElevation
-            // 
-            this.lblRecentElevation.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentElevation.Location = new System.Drawing.Point(26, 61);
-            this.lblRecentElevation.Name = "lblRecentElevation";
-            this.lblRecentElevation.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentElevation.TabIndex = 66;
-            this.lblRecentElevation.Text = "Elevation Gained:";
-            // 
-            // lblRecentTime
-            // 
-            this.lblRecentTime.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentTime.Location = new System.Drawing.Point(26, 104);
-            this.lblRecentTime.Name = "lblRecentTime";
-            this.lblRecentTime.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentTime.TabIndex = 67;
-            this.lblRecentTime.Text = "Time Taken";
-            // 
-            // lblRecentDistance
-            // 
-            this.lblRecentDistance.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentDistance.Location = new System.Drawing.Point(26, 146);
-            this.lblRecentDistance.Name = "lblRecentDistance";
-            this.lblRecentDistance.Size = new System.Drawing.Size(318, 21);
-            this.lblRecentDistance.TabIndex = 68;
-            this.lblRecentDistance.Text = "Distance:";
-            // 
-            // lblUserSummary
-            // 
-            this.lblUserSummary.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUserSummary.Location = new System.Drawing.Point(42, 334);
-            this.lblUserSummary.Name = "lblUserSummary";
-            this.lblUserSummary.Size = new System.Drawing.Size(398, 64);
-            this.lblUserSummary.TabIndex = 92;
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(1143, 10);
+            this.label9.Location = new System.Drawing.Point(24, 23);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(274, 19);
             this.label9.TabIndex = 96;
             this.label9.Text = "Record and Calculate For Hiking";
-            // 
-            // lblScheduleReminder
-            // 
-            this.lblScheduleReminder.Font = new System.Drawing.Font("Century Gothic", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblScheduleReminder.ForeColor = System.Drawing.Color.DarkRed;
-            this.lblScheduleReminder.Location = new System.Drawing.Point(30, 767);
-            this.lblScheduleReminder.Name = "lblScheduleReminder";
-            this.lblScheduleReminder.Size = new System.Drawing.Size(448, 64);
-            this.lblScheduleReminder.TabIndex = 97;
-            this.lblScheduleReminder.Text = "No upcoming schedules.";
             // 
             // frmHiking
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.lblScheduleReminder);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.lblTips);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.guna2Panel3);
-            this.Controls.Add(this.lblUserSummary);
             this.Controls.Add(this.chartHistoricalComparison);
             this.Controls.Add(this.chartHikingMetrics);
             this.Controls.Add(this.chartHikingProgress);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.guna2Panel2);
             this.Controls.Add(this.guna2Panel1);
-            this.Controls.Add(this.pictureBox1);
             this.Name = "frmHiking";
             this.Size = new System.Drawing.Size(1657, 900);
             this.Load += new System.EventHandler(this.frmHiking_Load);
@@ -600,7 +520,6 @@
             this.guna2Panel1.ResumeLayout(false);
             this.guna2Panel1.PerformLayout();
             this.guna2Panel2.ResumeLayout(false);
-            this.guna2Panel3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -629,13 +548,6 @@
         private Guna.Charts.WinForms.GunaChart chartHikingMetrics;
         private Guna.Charts.WinForms.GunaChart chartHikingProgress;
         private System.Windows.Forms.Label lblTips;
-        private System.Windows.Forms.Label label6;
-        private Guna.UI2.WinForms.Guna2Panel guna2Panel3;
-        private System.Windows.Forms.Label lblRecentCalories;
-        private System.Windows.Forms.Label lblRecentDate;
-        private System.Windows.Forms.Label lblRecentElevation;
-        private System.Windows.Forms.Label lblRecentTime;
-        private System.Windows.Forms.Label lblRecentDistance;
         private System.Windows.Forms.Label lblUserSummary;
         private Guna.Charts.WinForms.GunaLineDataset gunaLineDataset1;
         private System.Windows.Forms.Label label9;

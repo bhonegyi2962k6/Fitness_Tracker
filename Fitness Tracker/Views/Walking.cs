@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SkiaSharp;
 using Guna.Charts.WinForms;
+using Fitness_Tracker.Entities;
 
 
 
@@ -52,7 +53,6 @@ namespace Fitness_Tracker.Views
                 LoadWalkingGraph();
                 LoadWalkingMetrics();
                 LoadWalkingSummary();
-                LoadRecentWalkingActivity();
                 LoadHistoricalComparisonGraph();
 
                 HandleActivityRecord(2, metrics, intensity); // Walking Activity ID = 2
@@ -100,23 +100,6 @@ namespace Fitness_Tracker.Views
 
             intensity = cboIntensity.SelectedItem.ToString();
 
-            // Intensity-based validation
-            if (intensity == "Light" && (steps < 0 || steps > 5000 || distance > 3 || timeTaken > 30))
-            {
-                MessageBox.Show("For Light intensity, steps should be between 0 and 5000, distance ≤ 3 km, and time ≤ 30 minutes. Please adjust your inputs or activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return (false, steps, distance, timeTaken, intensity);
-            }
-            else if (intensity == "Moderate" && (steps < 5001 || steps > 10000 || distance > 7 || timeTaken > 60))
-            {
-                MessageBox.Show("For Moderate intensity, steps should be between 5001 and 10000, distance ≤ 7 km, and time ≤ 60 minutes. Please adjust your inputs or activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return (false, steps, distance, timeTaken, intensity);
-            }
-            else if (intensity == "Vigorous" && (steps < 10001 || distance > 15 || timeTaken > 120))
-            {
-                MessageBox.Show("For Vigorous intensity, steps should be > 10000, distance ≤ 15 km, and time ≤ 120 minutes. Please adjust your inputs or activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return (false, steps, distance, timeTaken, intensity);
-            }
-
             return (true, steps, distance, timeTaken, intensity);
         }
         private double CalculateBurnedCalories(Dictionary<int, double> metrics, Dictionary<int, double> calculationFactors, double metValue, double userWeight, double durationHours)
@@ -134,47 +117,100 @@ namespace Fitness_Tracker.Views
 
             return Math.Round(caloriesFromMet + caloriesFromFactors, 2); // Round to 2 decimal places
         }
-
-
         private void HandleActivityRecord(int activityId, Dictionary<int, double> metrics, string intensity)
         {
             try
             {
-                // Step 1: Retrieve calculation factors and MET value
+                // Step 1: Create objects
+                var user = User.GetInstance();
+
+                var activity = new Activity
+                {
+                    ActivityId = activityId
+                };
+
+                var record = new Record
+                {
+                    Person = user,
+                    Activity = activity,
+                    RecordDate = DateTime.Now,
+                    IntesityLevel = intensity
+                };
+
+                // Step 2: Retrieve calculation factors and MET value
                 var calculationFactors = db.GetCalculationFactors(activityId);
                 double metValue = db.GetMetValue(activityId, intensity);
 
-                // Validate MET value
                 if (metValue <= 0)
                 {
                     MessageBox.Show("Invalid MET value. Please check the selected intensity.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Step 2: Retrieve user's weight and calculate duration
-                double userWeight = frmLogin.user.Weight;
-                double durationHours = metrics[6] / 60; // Convert Time Taken (minutes) to hours
+                var metValues = new MetValues(0, activity, intensity, metValue);
 
-                // Step 3: Calculate calories burned
-                double burnedCalories = CalculateBurnedCalories(metrics, calculationFactors, metValue, userWeight, durationHours);
+                // Step 3: Retrieve user's weight and calculate calories burned
+                double userWeight = user.Weight;
 
-                // Step 4: Insert record into the database
-                int recordId = db.InsertRecords(burnedCalories, activityId, intensity);
+                // Ensure the metric key for "Time Taken" exists and is valid
+                if (!metrics.ContainsKey(6) || metrics[6] <= 0)
+                {
+                    MessageBox.Show("Time Taken must be greater than zero.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                double durationHours = metrics[6] / 60.0; // Convert Time Taken (minutes) to hours
+                record.BurnedCalories = CalculateBurnedCalories(metrics, calculationFactors, metValues.MetValue, userWeight, durationHours);
+
+                // Step 4: Insert the record into the database
+                int recordId = db.InsertRecords(record.BurnedCalories, activityId, intensity);
                 if (recordId <= 0)
                 {
                     MessageBox.Show("Failed to insert the record.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Step 5: Insert metrics
-                if (db.InsertMetricValues(activityId, recordId, metrics))
+                // Update the record with the generated recordId
+                record.RecordId = recordId;
+
+                // Step 5: Insert metric values into the database
+                foreach (var metric in metrics)
                 {
-                    MessageBox.Show("Walking record successfully inserted!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (calculationFactors.TryGetValue(metric.Key, out double factor))
+                    {
+                        var metricObj = new Metric
+                        {
+                            MetricId = metric.Key,
+                            Activity = activity,
+                            CalculationFactor = factor
+                        };
+
+                        var metricValueObj = new MetricValues
+                        {
+                            Activity = activity,
+                            Record = record,
+                            Metric = metricObj,
+                            Value = metric.Value
+                        };
+
+                        if (!db.InsertMetricValues(activityId, recordId, new Dictionary<int, double> { { metric.Key, metric.Value } }))
+                        {
+                            MessageBox.Show($"Failed to insert metric values for {metricObj.MetricName}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
                 }
-                else
+
+                MessageBox.Show($"{activity.ActivityName} record successfully inserted!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Optional: Create and associate a UserRecord object
+                var userRecord = new UserRecord
                 {
-                    MessageBox.Show("Failed to insert metric values.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                    Person = user,
+                    Record = record
+                };
+
+                // Further processing of UserRecord (if needed)
             }
             catch (Exception ex)
             {
@@ -182,186 +218,242 @@ namespace Fitness_Tracker.Views
             }
         }
 
-        private void LoadWalkingGraph()
+        private void LoadActivityGraph(int activityId, string activityName, Guna.Charts.WinForms.GunaChart chart)
         {
             try
             {
-
-                DataTable walkingGraphData = db.GetActivityGraphData(frmLogin.user.PersonID, 2); // 2 is Walking Activity ID
-
-                if (walkingGraphData != null && walkingGraphData.Rows.Count > 0)
+                // Step 1: Create objects
+                var user = User.GetInstance();
+                var activity = new Activity
                 {
-                    gunaLineDataset1.DataPoints.Clear();
+                    ActivityId = activityId,
+                    ActivityName = activityName
+                };
 
-                    foreach (DataRow row in walkingGraphData.Rows)
+                // Step 2: Retrieve data from the database
+                DataTable activityGraphData = db.GetActivityGraphData(user.PersonID, activity.ActivityId);
+
+                // Step 3: Process data and populate the chart
+                if (activityGraphData != null && activityGraphData.Rows.Count > 0)
+                {
+                    // Create a dataset for the activity
+                    var activityDataset = new GunaLineDataset
+                    {
+                        Label = $"{activity.ActivityName} - Calories Burned Over Time",
+                        BorderWidth = 2,
+                        PointRadius = 4,
+                    };
+
+                    foreach (DataRow row in activityGraphData.Rows)
                     {
                         string date = Convert.ToDateTime(row["Date"]).ToString("yyyy-MM-dd");
                         double calories = Convert.ToDouble(row["CaloriesBurned"]);
 
-                        gunaLineDataset1.DataPoints.Add(date, calories);
+                        // Create a Record object to represent the data
+                        var record = new Record
+                        {
+                            RecordDate = Convert.ToDateTime(row["Date"]),
+                            BurnedCalories = calories,
+                            Activity = activity,
+                            Person = user
+                        };
+
+                        // Add data to the dataset
+                        activityDataset.DataPoints.Add(record.RecordDate.ToString("yyyy-MM-dd"), record.BurnedCalories);
                     }
 
-                    gunaLineDataset1.Label = "Calories Burned Over Time";
-                    gunaLineDataset1.BorderWidth = 2;
-                    gunaLineDataset1.PointRadius = 4;
+                    // Clear existing datasets and add the new dataset
+                    chart.Datasets.Clear();
+                    chart.Datasets.Add(activityDataset);
 
-                    if (!chartWalkingProgress.Datasets.Contains(gunaLineDataset1))
-                    {
-                        chartWalkingProgress.Datasets.Add(gunaLineDataset1);
-                    }
-
-                    chartWalkingProgress.Title.Text = "Calories Burn From Walking";
-                    chartWalkingProgress.Update();
+                    // Customize the chart title
+                    chart.Title.Text = $"Calories Burned from {activity.ActivityName}";
+                    chart.Update();
+                }
+                else
+                {
+                    MessageBox.Show($"No data available for {activity.ActivityName} graph.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading walking graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading {activityName} graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void LoadWalkingMetrics()
+        private void LoadWalkingGraph()
+        {
+            LoadActivityGraph(2, "Walking", chartWalkingProgress); // Activity ID 1 is for Swimming
+        }
+        private void LoadActivityMetrics(int activityId, string activityName, Guna.Charts.WinForms.GunaChart chart)
         {
             try
             {
-                // Fetch the walking metrics data
-                DataTable metricData = db.GetWalkingMetricsOverTime(frmLogin.user.PersonID);
-
-                // Clear existing datasets
-                chartWalkingMetrics.Datasets.Clear();
-
-                // Create individual datasets for each metric
-                var stepsDataset = new Guna.Charts.WinForms.GunaLineDataset
+                // Step 1: Create objects
+                var user = User.GetInstance();
+                var activity = new Activity
                 {
-                    Label = "Steps",
-                    BorderWidth = 2,
-                    PointRadius = 4,
-                    BorderColor = Color.Blue
+                    ActivityId = activityId,
+                    ActivityName = activityName
                 };
 
-                var distanceDataset = new Guna.Charts.WinForms.GunaLineDataset
-                {
-                    Label = "Distance (km)",
-                    BorderWidth = 2,
-                    PointRadius = 4,
-                    BorderColor = Color.Green
-                };
+                // Step 2: Fetch metrics data from the database
+                DataTable metricData = db.GetActivityMetricsOverTime(user.PersonID, activity.ActivityId);
 
-                var timeDataset = new Guna.Charts.WinForms.GunaLineDataset
-                {
-                    Label = "Time Taken (minutes)",
-                    BorderWidth = 2,
-                    PointRadius = 4,
-                    BorderColor = Color.Red // Line color
-                };
+                // Step 3: Clear existing datasets from the chart
+                chart.Datasets.Clear();
 
-                // Populate datasets with data from the DataTable
+                // Dictionary to hold datasets for each metric
+                var datasets = new Dictionary<string, GunaLineDataset>();
+
+                // Step 4: Process the data and populate the chart
                 if (metricData != null && metricData.Rows.Count > 0)
                 {
                     foreach (DataRow row in metricData.Rows)
                     {
                         string date = Convert.ToDateTime(row["Date"]).ToString("yyyy-MM-dd");
+                        string metricName = row["MetricName"].ToString();
+                        double value = Convert.ToDouble(row["Value"]);
 
-                        // Parse metric values
-                        double steps = Convert.ToDouble(row["TotalSteps"]);
-                        double distance = Convert.ToDouble(row["TotalDistance"]);
-                        double timeTaken = Convert.ToDouble(row["TotalTime"]);
+                        // Create a Metric and MetricValue object for better representation
+                        var metric = new Metric
+                        {
+                            MetricName = metricName,
+                            Activity = activity
+                        };
 
-                        // Add data points to respective datasets
-                        stepsDataset.DataPoints.Add(date, steps);
-                        distanceDataset.DataPoints.Add(date, distance);
-                        timeDataset.DataPoints.Add(date, timeTaken);
+                        var metricValue = new MetricValues
+                        {
+                            Metric = metric,
+                            Value = value,
+                            Record = new Record
+                            {
+                                RecordDate = Convert.ToDateTime(row["Date"]),
+                                Person = user,
+                                Activity = activity
+                            }
+                        };
+
+                        // If the dataset for this metric doesn't exist, create it
+                        if (!datasets.ContainsKey(metricValue.Metric.MetricName))
+                        {
+                            datasets[metricValue.Metric.MetricName] = new GunaLineDataset
+                            {
+                                Label = metricValue.Metric.MetricName,
+                                BorderWidth = 2,
+                                PointRadius = 4,
+                                BorderColor = Color.FromArgb((datasets.Count * 40) % 255, (datasets.Count * 80) % 255, (datasets.Count * 120) % 255)
+                            };
+                        }
+
+                        // Add the data point to the dataset
+                        datasets[metricValue.Metric.MetricName].DataPoints.Add(metricValue.Record.RecordDate.ToString("yyyy-MM-dd"), metricValue.Value);
                     }
 
-                    // Add datasets to the chart
-                    chartWalkingMetrics.Datasets.Add(stepsDataset);
-                    chartWalkingMetrics.Datasets.Add(distanceDataset);
-                    chartWalkingMetrics.Datasets.Add(timeDataset);
+                    // Add all datasets to the chart
+                    foreach (var dataset in datasets.Values)
+                    {
+                        chart.Datasets.Add(dataset);
+                    }
 
-                    // Customize the chart title
-                    chartWalkingMetrics.Title.Text = "Walking Metrics Over Time (Line Chart)";
-                    chartWalkingMetrics.Update();
+                    // Step 5: Customize the chart title and update it
+                    chart.Title.Text = $"{activity.ActivityName} Metrics Over Time";
+                    chart.Update();
                 }
                 else
                 {
-                    MessageBox.Show("No data available for walking metrics chart.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"No data available for {activity.ActivityName} metrics chart.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading walking metrics chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading {activityName} metrics chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-
-        private void LoadWalkingSummary()
+        private void LoadWalkingMetrics()
+        {
+            LoadActivityMetrics(3, "Walking", chartWalkingMetrics); // Activity ID 1 is for Walking
+        }
+        private void LoadActivitySummary(int activityId, string activityName)
         {
             try
             {
+                // Fetch raw metrics data for the activity
+                DataTable metricsData = db.GetActivityMetrics(frmLogin.user.PersonID, activityId);
 
-                DataTable summaryData = db.GetWalkingSummary(frmLogin.user.PersonID);
-
-                if (summaryData != null && summaryData.Rows.Count > 0)
+                if (metricsData != null && metricsData.Rows.Count > 0)
                 {
-                    double totalSteps = summaryData.Rows[0]["TotalSteps"] != DBNull.Value ? Convert.ToDouble(summaryData.Rows[0]["TotalSteps"]) : 0.0;
-                    double totalDistance = summaryData.Rows[0]["TotalDistance"] != DBNull.Value ? Convert.ToDouble(summaryData.Rows[0]["TotalDistance"]) : 0.0;
-                    double totalTime = summaryData.Rows[0]["TotalTime"] != DBNull.Value ? Convert.ToDouble(summaryData.Rows[0]["TotalTime"]) : 0.0;
+                    // Create an activity object
+                    var activity = new Activity
+                    {
+                        ActivityId = activityId,
+                        ActivityName = activityName
+                    };
 
-                    lblTotalSteps.Text = $"Total Steps: {totalSteps}";
+                    // Initialize variables to hold metric sums
+                    double totalSteps = 0.0;
+                    double totalDistance = 0.0;
+                    double totalTime = 0.0;
+
+                    // Process each row and create MetricValues objects
+                    foreach (DataRow row in metricsData.Rows)
+                    {
+                        var metric = new Metric
+                        {
+                            MetricName = row["metric_name"].ToString()
+                        };
+
+                        double value = Convert.ToDouble(row["value"]);
+
+                        var metricValue = new MetricValues
+                        {
+                            Metric = metric,
+                            Value = value,
+                            Activity = activity
+                        };
+
+                        // Sum up values based on the metric name
+                        if (metricValue.Metric.MetricName == "Steps")
+                        {
+                            totalSteps += metricValue.Value;
+                        }
+                        else if (metricValue.Metric.MetricName == "Distance")
+                        {
+                            totalDistance += metricValue.Value;
+                        }
+                        else if (metricValue.Metric.MetricName == "Time Taken")
+                        {
+                            totalTime += metricValue.Value;
+                        }
+                    }
+
+                    // Update UI labels with the calculated values
+                    lblTotalSteps.Text = $"Total Steps: {Math.Round(totalSteps, 2)} steps";
                     lblTotalDistance.Text = $"Total Distance: {Math.Round(totalDistance, 2)} km";
                     lblTotalTime.Text = $"Total Time: {Math.Round(totalTime, 2)} minutes";
                 }
                 else
                 {
-                    lblTotalSteps.Text = "Total Steps: 0";
-                    lblTotalDistance.Text = "Total Distance: 0 km";
-                    lblTotalTime.Text = "Total Time: 0 minutes";
+                    // Set labels to zero if no data is available
+                    lblTotalSteps.Text = $"Total Steps: 0 steps";
+                    lblTotalDistance.Text = $"Total Distance: 0 km";
+                    lblTotalTime.Text = $"Total Time: 0 minutes";
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading walking summary: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                db?.CloseConnection();
+                MessageBox.Show($"Error loading {activityName} summary: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void LoadRecentWalkingActivity()
+        private void LoadWalkingSummary()
         {
-            try
-            {
-                DataRow recentActivity = db.GetRecentWalkingActivity(frmLogin.user.PersonID);
-
-                if (recentActivity != null)
-                {
-                    string date = Convert.ToDateTime(recentActivity["Date"]).ToString("yyyy-MM-dd");
-                    double steps = Convert.ToDouble(recentActivity["Steps"]);
-                    double distance = Convert.ToDouble(recentActivity["Distance"]);
-                    double timeTaken = Convert.ToDouble(recentActivity["TimeTaken"]);
-                    double caloriesBurned = Convert.ToDouble(recentActivity["CaloriesBurned"]);
-
-                    lblRecentDate.Text = $"Date: {date}";
-                    lblRecentSteps.Text = $"Steps: {steps} steps";
-                    lblRecentDistance.Text = $"Distance: {distance} km";
-                    lblRecentTime.Text = $"Time Taken: {timeTaken} minutes";
-                    lblRecentCalories.Text = $"Calories Burned: {caloriesBurned} kcal";
-                }
-                else
-                {
-                    lblRecentDate.Text = "Date: N/A";
-                    lblRecentSteps.Text = "Steps: N/A";
-                    lblRecentDistance.Text = "Distance: N/A";
-                    lblRecentTime.Text = "Time Taken: N/A";
-                    lblRecentCalories.Text = "Calories Burned: N/A";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading recent walking activity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-           
+            LoadActivitySummary(
+                2, // Activity ID for Walking
+                "Walking"
+            );
         }
+
         private void LoadWalkingTips()
         {
             string intensity = cboIntensity.SelectedItem?.ToString(); // Get selected intensity
@@ -389,18 +481,23 @@ namespace Fitness_Tracker.Views
                 }
             }
         }
-
-        private void LoadSwimmingInsights()
+        private void LoadWalkingInsights()
         {
             try
             {
-              
+                // Create objects
+                var user = User.GetInstance();
 
-                // Get max calories burned for swimming
-                double maxCaloriesForWalking = db.GetMaxCaloriesForActivity(frmLogin.user.PersonID, 2); // 2 is Walking activity ID
-                lblMaxCalories.Text = $"Maximum Calories Burned: {maxCaloriesForWalking} kcal";
+                var activity = new Activity
+                {
+                    ActivityId = 2, // Walking Activity ID
+                    ActivityName = "Walking",
+                };
 
+                // Retrieve maximum calories burned for the activity
+                double maxCaloriesForWalking = db.GetMaxCaloriesForActivity(user.PersonID, activity.ActivityId);
 
+                // Update UI
                 if (maxCaloriesForWalking > 0)
                 {
                     lblMaxCalories.Text = $"Maximum Calories Burned: {maxCaloriesForWalking} kcal";
@@ -412,15 +509,13 @@ namespace Fitness_Tracker.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading swimming insights: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading walking insights: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void LoadHistoricalComparisonGraph()
         {
             try
             {
-
                 // Fetch historical data for calories burned across all activities
                 DataTable comparisonData = db.GetHistoricalComparison(frmLogin.user.PersonID);
 
@@ -439,10 +534,22 @@ namespace Fitness_Tracker.Views
                 {
                     foreach (DataRow row in comparisonData.Rows)
                     {
-                        string activityName = row["ActivityName"].ToString();
-                        double caloriesBurned = Convert.ToDouble(row["CaloriesBurned"]);
+                        // Create Activity object
+                        var activity = new Activity
+                        {
+                            ActivityName = row["ActivityName"].ToString()
+                        };
 
-                        comparisonDataset.DataPoints.Add(activityName, caloriesBurned);
+                        // Create Record object
+                        var record = new Record
+                        {
+                            Activity = activity,
+                            BurnedCalories = Convert.ToDouble(row["CaloriesBurned"]),
+                            Person = User.GetInstance() // Link the logged-in user
+                        };
+
+                        // Add data point to the dataset
+                        comparisonDataset.DataPoints.Add(activity.ActivityName, record.BurnedCalories);
                     }
 
                     // Add the dataset to the chart
@@ -461,30 +568,46 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                db.CloseConnection();
-            }
         }
         private void DisplayActivityScheduleReminder(int activityId, string activityName)
         {
             try
             {
-                // Ensure the query fetches schedules for today or later
-                DataTable scheduleData = db.GetUpcomingActivitySchedules(frmLogin.user.PersonID, activityId);
+                // Create user and activity objects
+                var user = User.GetInstance();
+
+                var activity = new Activity
+                {
+                    ActivityId = activityId,
+                    ActivityName = activityName
+                };
+
+                // Fetch schedules from the database
+                DataTable scheduleData = db.GetUpcomingActivitySchedules(user.PersonID, activity.ActivityId);
 
                 if (scheduleData != null && scheduleData.Rows.Count > 0)
                 {
                     foreach (DataRow row in scheduleData.Rows)
                     {
-                        DateTime date = Convert.ToDateTime(row["Date"]);
-                        TimeSpan startTime = TimeSpan.Parse(row["StartTime"].ToString());
-                        int duration = Convert.ToInt32(row["Duration"]);
+                        // Create schedule object for each row
+                        var schedule = new Schedule
+                        {
+                            Person = user,
+                            ScheduledDate = Convert.ToDateTime(row["Date"])
+                        };
+
+                        var scheduleActivity = new ScheduleActivity
+                        {
+                            Schedule = schedule,
+                            Activity = activity,
+                            StartTime = TimeSpan.Parse(row["StartTime"].ToString()),
+                            DurationMinutes = Convert.ToInt32(row["Duration"])
+                        };
 
                         // Display today's schedule first
-                        if (date.Date == DateTime.Today)
+                        if (schedule.ScheduledDate.Date == DateTime.Today)
                         {
-                            lblScheduleReminder.Text = $"Today's {activityName} Schedule: {startTime:hh\\:mm} for {duration} minutes.";
+                            lblScheduleReminder.Text = $"Today's {activity.ActivityName} Schedule: {scheduleActivity.StartTime:hh\\:mm} for {scheduleActivity.DurationMinutes} minutes.";
                             lblScheduleReminder.ForeColor = Color.Green;
                             return;
                         }
@@ -492,16 +615,26 @@ namespace Fitness_Tracker.Views
 
                     // Display the next upcoming schedule
                     DataRow upcomingRow = scheduleData.Rows[0];
-                    DateTime upcomingDate = Convert.ToDateTime(upcomingRow["Date"]);
-                    TimeSpan upcomingStartTime = TimeSpan.Parse(upcomingRow["StartTime"].ToString());
-                    int upcomingDuration = Convert.ToInt32(upcomingRow["Duration"]);
+                    var nextSchedule = new Schedule
+                    {
+                        Person = user,
+                        ScheduledDate = Convert.ToDateTime(upcomingRow["Date"])
+                    };
 
-                    lblScheduleReminder.Text = $"Next {activityName} Schedule: {upcomingDate:yyyy-MM-dd} at {upcomingStartTime:hh\\:mm} for {upcomingDuration} minutes.";
+                    var nextScheduleActivity = new ScheduleActivity
+                    {
+                        Schedule = nextSchedule,
+                        Activity = activity,
+                        StartTime = TimeSpan.Parse(upcomingRow["StartTime"].ToString()),
+                        DurationMinutes = Convert.ToInt32(upcomingRow["Duration"])
+                    };
+
+                    lblScheduleReminder.Text = $"Next {activity.ActivityName} Schedule: {nextSchedule.ScheduledDate:yyyy-MM-dd} at {nextScheduleActivity.StartTime:hh\\:mm} for {nextScheduleActivity.DurationMinutes} minutes.";
                     lblScheduleReminder.ForeColor = Color.Blue;
                 }
                 else
                 {
-                    lblScheduleReminder.Text = $"No upcoming {activityName} schedules.";
+                    lblScheduleReminder.Text = $"No upcoming {activity.ActivityName} schedules.";
                     lblScheduleReminder.ForeColor = Color.DarkRed;
                 }
             }
@@ -510,14 +643,14 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading {activityName} schedule reminder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void frmWalking_Load(object sender, EventArgs e)
         {
             DisplayActivityScheduleReminder(2, "Walking"); // 2 = Walking Activity ID
             LoadWalkingGraph();
             LoadWalkingMetrics();
-            LoadRecentWalkingActivity();
             LoadWalkingSummary();
-            LoadSwimmingInsights();
+            LoadWalkingInsights();
             LoadWalkingTips();
             LoadHistoricalComparisonGraph();
         }

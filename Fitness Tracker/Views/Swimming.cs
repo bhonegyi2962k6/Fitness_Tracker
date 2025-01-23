@@ -27,25 +27,6 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                var user = User.GetInstance();
-
-
-                var activity = new Activity
-                {
-                    ActivityId = 1, // Swimming Activity ID
-                    ActivityName = "Swimming",
-                    Descriptions = "Swimming activity description."
-                };
-
-                var record = new Record
-                {
-                    RecordDate = DateTime.Now,
-                    Person = user,
-                    Activity = activity,
-                    BurnedCalories = 0, // Placeholder, calculated later
-                    IntesityLevel = cboIntensity.SelectedItem?.ToString()
-                };
-
                 // Validate inputs
                 var (isValid, laps, timeTaken, averageHeartRate, selectedIntensity) = ValidateInputs();
                 if (!isValid) return;
@@ -57,7 +38,6 @@ namespace Fitness_Tracker.Views
                     { 2, timeTaken },        // Metric ID 2: Time Taken (minutes)
                     { 3, averageHeartRate }  // Metric ID 3: Average Heart Rate
                 };
-
                 // Clear input fields after recording
                 txtSwimmingLaps.Clear();
                 txtSwimmingTime.Clear();
@@ -67,11 +47,10 @@ namespace Fitness_Tracker.Views
                 // Display summary
                 lblUserSummary.Text = $"You swam {laps} laps in {timeTaken} minutes with an average heart rate of {averageHeartRate} bpm.";
 
-                // Update the circular progress bar and handle record
+                // Update the circular progress bar
                 LoadSwimmingGraph();
                 LoadSwimmingMetrics();
                 LoadSwimmingSummary();
-                LoadRecentSwimmingActivity();
                 LoadHistoricalComparisonGraph();
                 HandleActivityRecord(1, metrics, selectedIntensity); // Swimming Activity ID = 1
             }
@@ -117,23 +96,6 @@ namespace Fitness_Tracker.Views
 
             selectedIntensity = cboIntensity.SelectedItem.ToString();
 
-            // Intensity-based validation for laps
-            if (selectedIntensity == "Light" && (laps < 0 || laps > 14))
-            {
-                MessageBox.Show("For Light intensity, laps should be between 0 and 14. Please adjust your laps or activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return (false, laps, timeTaken, averageHeartRate, selectedIntensity);
-            }
-            else if (selectedIntensity == "Moderate" && (laps < 15 || laps > 29))
-            {
-                MessageBox.Show("For Moderate intensity, laps should be between 15 and 29. Please adjust your laps or activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return (false, laps, timeTaken, averageHeartRate, selectedIntensity);
-            }
-            else if (selectedIntensity == "Vigorous" && laps < 30)
-            {
-                MessageBox.Show("For Vigorous intensity, laps should be 30 or more. Please adjust your laps or activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return (false, laps, timeTaken, averageHeartRate, selectedIntensity);
-            }
-
             return (true, laps, timeTaken, averageHeartRate, selectedIntensity);
         }
         private double CalculateBurnedCalories(Dictionary<int, double> metrics, Dictionary<int, double> calculationFactors, double metValue, double userWeight, double durationHours)
@@ -151,17 +113,17 @@ namespace Fitness_Tracker.Views
 
             return Math.Round(caloriesFromMet + caloriesFromFactors, 2); // Round to 2 decimal places
         }
+
         private void HandleActivityRecord(int activityId, Dictionary<int, double> metrics, string intensity)
         {
             try
             {
-                // Create and link objects
+                // Step 1: Create objects
                 var user = User.GetInstance();
 
                 var activity = new Activity
                 {
-                    ActivityId = activityId,
-                    ActivityName = db.GetActivityNameById(activityId), // Assuming this method exists in your DB class
+                    ActivityId = activityId
                 };
 
                 var record = new Record
@@ -172,182 +134,309 @@ namespace Fitness_Tracker.Views
                     IntesityLevel = intensity
                 };
 
-                // Calculate burned calories and update record
+                // Step 2: Retrieve calculation factors and MET value
                 var calculationFactors = db.GetCalculationFactors(activityId);
                 double metValue = db.GetMetValue(activityId, intensity);
-                double userWeight = frmLogin.user.Weight;
-                double durationHours = metrics[2] / 60; // Convert Time Taken (minutes) to hours
-                record.BurnedCalories = CalculateBurnedCalories(metrics, calculationFactors, metValue, userWeight, durationHours);
 
-                // Insert record and metrics into the database
-                int recordId = db.InsertRecords(
-                    record.BurnedCalories,
-                    record.Activity.ActivityId,
-                    record.IntesityLevel
-                );
+                if (metValue <= 0)
+                {
+                    MessageBox.Show("Invalid MET value. Please check the selected intensity.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
+                var metValues = new MetValues(0, activity, intensity, metValue);
+
+                // Step 3: Retrieve user's weight and calculate calories burned
+                double userWeight = user.Weight;
+                if (!metrics.ContainsKey(2) || metrics[2] <= 0) // Ensure "Time Taken" exists and is valid
+                {
+                    MessageBox.Show("Time Taken must be greater than zero.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                double durationHours = metrics[2] / 60.0; // Convert Time Taken (minutes) to hours
+                record.BurnedCalories = CalculateBurnedCalories(metrics, calculationFactors, metValues.MetValue, userWeight, durationHours);
+
+                // Step 4: Insert the record into the database
+                int recordId = db.InsertRecords(record.BurnedCalories, activityId, intensity);
                 if (recordId <= 0)
                 {
                     MessageBox.Show("Failed to insert the record.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                if (db.InsertMetricValues(activityId, recordId, metrics))
+                // Update the record with the generated recordId
+                record.RecordId = recordId;
+
+                // Step 5: Insert metric values into the database and create MetricValues objects
+                foreach (var metric in metrics)
                 {
-                    MessageBox.Show("Swimming record successfully inserted!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (calculationFactors.TryGetValue(metric.Key, out double factor))
+                    {
+                        var metricObj = new Metric
+                        {
+                            MetricId = metric.Key,
+                            Activity = activity,
+                            CalculationFactor = factor
+                        };
+
+                        var metricValueObj = new MetricValues
+                        {
+                            Activity = activity,
+                            Record = record,
+                            Metric = metricObj,
+                            Value = metric.Value
+                        };
+
+                        // Insert the metric value into the database
+                        if (!db.InsertMetricValues(activityId, recordId, new Dictionary<int, double> { { metric.Key, metric.Value } }))
+                        {
+                            MessageBox.Show($"Failed to insert metric values for {metricObj.MetricName}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
                 }
-                else
+
+                MessageBox.Show($"{activity.ActivityName} record successfully inserted!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Optional: Create and associate a UserRecord object
+                var userRecord = new UserRecord
                 {
-                    MessageBox.Show("Failed to insert metric values.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                    Person = user,
+                    Record = record
+                };
+
+                // Further processing of UserRecord (if needed)
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void LoadSwimmingGraph()
+
+        private void LoadActivityGraph(int activityId, string activityName, Guna.Charts.WinForms.GunaChart chart)
         {
             try
             {
-                // Create or fetch objects
+                // Step 1: Create objects
                 var user = User.GetInstance();
                 var activity = new Activity
                 {
-                    ActivityId = 1, // Swimming Activity ID
-                    ActivityName = db.GetActivityNameById(1)
+                    ActivityId = activityId,
+                    ActivityName = activityName
                 };
 
-                // Fetch graph data
-                DataTable swimmingGraphData = db.GetActivityGraphData(user.PersonID, activity.ActivityId);
+                // Step 2: Retrieve data from the database
+                DataTable activityGraphData = db.GetActivityGraphData(user.PersonID, activity.ActivityId);
 
-                // Clear and update chart
-                if (swimmingGraphData != null && swimmingGraphData.Rows.Count > 0)
+                // Step 3: Process data and populate the chart
+                if (activityGraphData != null && activityGraphData.Rows.Count > 0)
                 {
-                    gunaLineDataset1.DataPoints.Clear();
-                    foreach (DataRow row in swimmingGraphData.Rows)
+                    // Create a dataset for the activity
+                    var activityDataset = new GunaLineDataset
+                    {
+                        Label = $"{activity.ActivityName} - Calories Burned Over Time",
+                        BorderWidth = 2,
+                        PointRadius = 4,
+                    };
+
+                    foreach (DataRow row in activityGraphData.Rows)
                     {
                         string date = Convert.ToDateTime(row["Date"]).ToString("yyyy-MM-dd");
                         double calories = Convert.ToDouble(row["CaloriesBurned"]);
-                        gunaLineDataset1.DataPoints.Add(date, calories);
+
+                        // Create a Record object to represent the data
+                        var record = new Record
+                        {
+                            RecordDate = Convert.ToDateTime(row["Date"]),
+                            BurnedCalories = calories,
+                            Activity = activity,
+                            Person = user
+                        };
+
+                        // Add data to the dataset
+                        activityDataset.DataPoints.Add(record.RecordDate.ToString("yyyy-MM-dd"), record.BurnedCalories);
                     }
 
-                    gunaLineDataset1.Label = "Calories Burned Over Time";
-                    chartSwimmingProgress.Datasets.Add(gunaLineDataset1);
-                    chartSwimmingProgress.Update();
+                    // Clear existing datasets and add the new dataset
+                    chart.Datasets.Clear();
+                    chart.Datasets.Add(activityDataset);
+
+                    // Customize the chart title
+                    chart.Title.Text = $"Calories Burned from {activity.ActivityName}";
+                    chart.Update();
+                }
+                else
+                {
+                    MessageBox.Show($"No data available for {activity.ActivityName} graph.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading swimming graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading {activityName} graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void LoadSwimmingMetrics()
+        private void LoadSwimmingGraph()
+        {
+            LoadActivityGraph(1, "Swimming", chartSwimmingProgress); // Activity ID 1 is for Swimming
+        }
+        private void LoadActivityMetrics(int activityId, string activityName, Guna.Charts.WinForms.GunaChart chart)
         {
             try
             {
-                // Create or fetch objects
+                // Step 1: Create objects
                 var user = User.GetInstance();
                 var activity = new Activity
                 {
-                    ActivityId = 1, // Swimming Activity ID
-                    ActivityName = db.GetActivityNameById(1)
+                    ActivityId = activityId,
+                    ActivityName = activityName
                 };
 
-                // Fetch metrics data
-                DataTable metricData = db.GetSwimmingMetricsOverTime(user.PersonID);
+                // Step 2: Fetch metrics data from the database
+                DataTable metricData = db.GetActivityMetricsOverTime(user.PersonID, activity.ActivityId);
 
-                // Clear existing datasets
-                chartSwimmingMetrics.Datasets.Clear();
+                // Step 3: Clear existing datasets from the chart
+                chart.Datasets.Clear();
 
-                // Create individual datasets for each metric
-                var lapsDataset = new Guna.Charts.WinForms.GunaLineDataset
-                {
-                    Label = "Laps",
-                    BorderWidth = 2,
-                    PointRadius = 4,
-                    BorderColor = Color.Blue 
-                };
+                // Dictionary to hold datasets for each metric
+                var datasets = new Dictionary<string, GunaLineDataset>();
 
-                var timeDataset = new Guna.Charts.WinForms.GunaLineDataset
-                {
-                    Label = "Time Taken (minutes)",
-                    BorderWidth = 2,
-                    PointRadius = 4,
-                    BorderColor = Color.Green
-                };
-
-                var heartRateDataset = new Guna.Charts.WinForms.GunaLineDataset
-                {
-                    Label = "Average Heart Rate (bpm)",
-                    BorderWidth = 2,
-                    PointRadius = 4,
-                    BorderColor = Color.Red // Line color
-                    
-                };
-
-                // Populate datasets with data from the DataTable
+                // Step 4: Process the data and populate the chart
                 if (metricData != null && metricData.Rows.Count > 0)
                 {
                     foreach (DataRow row in metricData.Rows)
                     {
                         string date = Convert.ToDateTime(row["Date"]).ToString("yyyy-MM-dd");
+                        string metricName = row["MetricName"].ToString();
+                        double value = Convert.ToDouble(row["Value"]);
 
-                        // Parse metric values
-                        double laps = Convert.ToDouble(row["Laps"]);
-                        double timeTaken = Convert.ToDouble(row["TimeTaken"]);
-                        double avgHeartRate = Convert.ToDouble(row["AvgHeartRate"]);
+                        // Create a Metric and MetricValue object for better representation
+                        var metric = new Metric
+                        {
+                            MetricName = metricName,
+                            Activity = activity
+                        };
 
-                        // Add data points to respective datasets
-                        lapsDataset.DataPoints.Add(date, laps);
-                        timeDataset.DataPoints.Add(date, timeTaken);
-                        heartRateDataset.DataPoints.Add(date, avgHeartRate);
+                        var metricValue = new MetricValues
+                        {
+                            Metric = metric,
+                            Value = value,
+                            Record = new Record
+                            {
+                                RecordDate = Convert.ToDateTime(row["Date"]),
+                                Person = user,
+                                Activity = activity
+                            }
+                        };
+
+                        // If the dataset for this metric doesn't exist, create it
+                        if (!datasets.ContainsKey(metricValue.Metric.MetricName))
+                        {
+                            datasets[metricValue.Metric.MetricName] = new GunaLineDataset
+                            {
+                                Label = metricValue.Metric.MetricName,
+                                BorderWidth = 2,
+                                PointRadius = 4,
+                                BorderColor = Color.FromArgb((datasets.Count * 40) % 255, (datasets.Count * 80) % 255, (datasets.Count * 120) % 255)
+                            };
+                        }
+
+                        // Add the data point to the dataset
+                        datasets[metricValue.Metric.MetricName].DataPoints.Add(metricValue.Record.RecordDate.ToString("yyyy-MM-dd"), metricValue.Value);
                     }
 
-                    // Add datasets to the chart
-                    chartSwimmingMetrics.Datasets.Add(lapsDataset);
-                    chartSwimmingMetrics.Datasets.Add(timeDataset);
-                    chartSwimmingMetrics.Datasets.Add(heartRateDataset);
+                    // Add all datasets to the chart
+                    foreach (var dataset in datasets.Values)
+                    {
+                        chart.Datasets.Add(dataset);
+                    }
 
-                    // Customize the chart title
-                    chartSwimmingMetrics.Title.Text = "Swimming Metrics Over Time (Line Chart)";
-                    chartSwimmingMetrics.Update();
+                    // Step 5: Customize the chart title and update it
+                    chart.Title.Text = $"{activity.ActivityName} Metrics Over Time";
+                    chart.Update();
                 }
                 else
                 {
-                    MessageBox.Show("No data available for swimming metrics chart.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"No data available for {activity.ActivityName} metrics chart.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading swimming metrics chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading {activityName} metrics chart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void LoadSwimmingSummary()
+
+        private void LoadSwimmingMetrics()
+        {
+            LoadActivityMetrics(1, "Swimming", chartSwimmingMetrics); // Activity ID 1 is for Swimming
+        }
+
+        private void LoadActivitySummary(int activityId, string activityName)
         {
             try
             {
-                // Create or fetch objects
-                var user = User.GetInstance();
-                var activity = new Activity
-                {
-                    ActivityId = 1,
-                    ActivityName = db.GetActivityNameById(1)
-                };
+                // Fetch raw metrics data
+                DataTable metricsData = db.GetActivityMetrics(frmLogin.user.PersonID, activityId);
 
-                // Fetch summary data
-                DataTable summaryData = db.GetSwimmingSummary(user.PersonID);
-
-                // Update UI
-                if (summaryData != null && summaryData.Rows.Count > 0)
+                if (metricsData != null && metricsData.Rows.Count > 0)
                 {
-                    lblTotalLaps.Text = $"Total Laps: {summaryData.Rows[0]["TotalLaps"]}";
-                    lblTotalTime.Text = $"Total Time: {summaryData.Rows[0]["TotalTime"]} minutes";
-                    lblAvgHeartRate.Text = $"Average Heart Rate: {summaryData.Rows[0]["AvgHeartRate"]} bpm";
+                    // Create an activity object
+                    var activity = new Activity
+                    {
+                        ActivityId = activityId,
+                        ActivityName = activityName
+                    };
+
+                    // Initialize metric-related variables
+                    double totalLaps = 0.0;
+                    double totalTime = 0.0;
+                    double avgHeartRate = 0.0;
+                    int heartRateCount = 0;
+
+                    // Process each row and create objects for each metric
+                    foreach (DataRow row in metricsData.Rows)
+                    {
+                        var metric = new Metric
+                        {
+                            MetricName = row["metric_name"].ToString()
+                        };
+
+                        double value = Convert.ToDouble(row["value"]);
+                        var metricValue = new MetricValues
+                        {
+                            Metric = metric,
+                            Value = value,
+                            Activity = activity
+                        };
+
+                        // Sum up or calculate metrics based on the metric name
+                        if (metricValue.Metric.MetricName == "Laps")
+                        {
+                            totalLaps += metricValue.Value;
+                        }
+                        else if (metricValue.Metric.MetricName == "Time Taken")
+                        {
+                            totalTime += metricValue.Value;
+                        }
+                        else if (metricValue.Metric.MetricName == "Average Heart Rate")
+                        {
+                            avgHeartRate += metricValue.Value;
+                            heartRateCount++;
+                        }
+                    }
+
+                    // Calculate averages for heart rate
+                    avgHeartRate = heartRateCount > 0 ? avgHeartRate / heartRateCount : 0.0;
+
+                    // Update UI labels
+                    lblTotalLaps.Text = $"Total Laps: {Math.Round(totalLaps, 2)}";
+                    lblTotalTime.Text = $"Total Time: {Math.Round(totalTime, 2)} minutes";
+                    lblAvgHeartRate.Text = $"Average Heart Rate: {Math.Round(avgHeartRate, 2)} bpm";
                 }
                 else
                 {
+                    // No data available
                     lblTotalLaps.Text = "Total Laps: 0";
                     lblTotalTime.Text = "Total Time: 0 minutes";
                     lblAvgHeartRate.Text = "Average Heart Rate: N/A";
@@ -355,47 +444,16 @@ namespace Fitness_Tracker.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading swimming summary: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading {activityName} summary: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void LoadRecentSwimmingActivity()
+
+        private void LoadSwimmingSummary()
         {
-            try
-            {
-                // Fetch the most recent swimming activity
-                DataRow recentActivity = db.GetRecentSwimmingActivity(frmLogin.user.PersonID);
-
-
-                if (recentActivity != null)
-                {
-                    // Extract values from the DataRow
-                    string date = Convert.ToDateTime(recentActivity["Date"]).ToString("yyyy-MM-dd");
-                    double laps = Convert.ToDouble(recentActivity["Laps"]);
-                    double timeTaken = Convert.ToDouble(recentActivity["TimeTaken"]);
-                    double avgHeartRate = Convert.ToDouble(recentActivity["HeartRate"]);
-                    double caloriesBurned = Convert.ToDouble(recentActivity["CaloriesBurned"]);
-
-                    // Update labels with the data
-                    lblRecentDate.Text = $"Date: {date}";
-                    lblRecentLaps.Text = $"Laps: {laps}";
-                    lblRecentTime.Text = $"Time Taken: {timeTaken} minutes";
-                    lblRecentHeartRate.Text = $"Average Heart Rate: {Math.Round(avgHeartRate, 2)} bpm";
-                    lblRecentCalories.Text = $"Calories Burned: {caloriesBurned} kcal";
-                }
-                else
-                {
-                    // No recent activity found
-                    lblRecentDate.Text = "Date: N/A";
-                    lblRecentLaps.Text = "Laps: N/A";
-                    lblRecentTime.Text = "Time Taken: N/A";
-                    lblRecentHeartRate.Text = "Average Heart Rate: N/A";
-                    lblRecentCalories.Text = "Calories Burned: N/A";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading recent swimming activity: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            LoadActivitySummary(
+                1, // Activity ID for Swimming
+                "Swimming"
+            );
         }
         private void LoadSwimmingTips()
         {
@@ -428,18 +486,19 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-                // Create or fetch objects
+                // Create objects
                 var user = User.GetInstance();
+
                 var activity = new Activity
                 {
                     ActivityId = 1, // Swimming Activity ID
-                    ActivityName = db.GetActivityNameById(1) // Get activity name dynamically
+                    ActivityName = "Swimming",
                 };
 
-                // Fetch max calories burned for swimming
+                // Retrieve maximum calories burned for the activity
                 double maxCaloriesForSwimming = db.GetMaxCaloriesForActivity(user.PersonID, activity.ActivityId);
 
-                // Update the UI
+                // Update UI
                 if (maxCaloriesForSwimming > 0)
                 {
                     lblMaxCalories.Text = $"Maximum Calories Burned: {maxCaloriesForSwimming} kcal";
@@ -454,16 +513,12 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading swimming insights: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void LoadHistoricalComparisonGraph()
         {
             try
             {
-                // Create or fetch objects
-                var user = User.GetInstance();
-
-                // Fetch historical data
-                DataTable comparisonData = db.GetHistoricalComparison(user.PersonID);
+                // Fetch historical data for calories burned across all activities
+                DataTable comparisonData = db.GetHistoricalComparison(frmLogin.user.PersonID);
 
                 // Clear existing datasets
                 chartHistoricalComparison.Datasets.Clear();
@@ -480,10 +535,22 @@ namespace Fitness_Tracker.Views
                 {
                     foreach (DataRow row in comparisonData.Rows)
                     {
-                        string activityName = row["ActivityName"].ToString();
-                        double caloriesBurned = Convert.ToDouble(row["CaloriesBurned"]);
+                        // Create Activity object
+                        var activity = new Activity
+                        {
+                            ActivityName = row["ActivityName"].ToString()
+                        };
 
-                        comparisonDataset.DataPoints.Add(activityName, caloriesBurned);
+                        // Create Record object
+                        var record = new Record
+                        {
+                            Activity = activity,
+                            BurnedCalories = Convert.ToDouble(row["CaloriesBurned"]),
+                            Person = User.GetInstance() // Link the logged-in user
+                        };
+
+                        // Add data point to the dataset
+                        comparisonDataset.DataPoints.Add(activity.ActivityName, record.BurnedCalories);
                     }
 
                     // Add the dataset to the chart
@@ -503,33 +570,46 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void DisplayActivityScheduleReminder(int activityId, string activityName)
         {
             try
             {
-                // Create objects
-                var user = User.GetInstance(); // Fetch the singleton instance of the user
+                // Create user and activity objects
+                var user = User.GetInstance();
+
                 var activity = new Activity
                 {
                     ActivityId = activityId,
                     ActivityName = activityName
                 };
 
-                // Fetch schedules from the database for the user and activity
+                // Fetch schedules from the database
                 DataTable scheduleData = db.GetUpcomingActivitySchedules(user.PersonID, activity.ActivityId);
 
                 if (scheduleData != null && scheduleData.Rows.Count > 0)
                 {
                     foreach (DataRow row in scheduleData.Rows)
                     {
-                        DateTime date = Convert.ToDateTime(row["Date"]);
-                        TimeSpan startTime = TimeSpan.Parse(row["StartTime"].ToString());
-                        int duration = Convert.ToInt32(row["Duration"]);
+                        // Create schedule object for each row
+                        var schedule = new Schedule
+                        {
+                            Person = user,
+                            ScheduledDate = Convert.ToDateTime(row["Date"])
+                        };
+
+                        var scheduleActivity = new ScheduleActivity
+                        {
+                            Schedule = schedule,
+                            Activity = activity,
+                            StartTime = TimeSpan.Parse(row["StartTime"].ToString()),
+                            DurationMinutes = Convert.ToInt32(row["Duration"])
+                        };
 
                         // Display today's schedule first
-                        if (date.Date == DateTime.Today)
+                        if (schedule.ScheduledDate.Date == DateTime.Today)
                         {
-                            lblScheduleReminder.Text = $"Today's {activity.ActivityName} Schedule: {startTime:hh\\:mm} for {duration} minutes.";
+                            lblScheduleReminder.Text = $"Today's {activity.ActivityName} Schedule: {scheduleActivity.StartTime:hh\\:mm} for {scheduleActivity.DurationMinutes} minutes.";
                             lblScheduleReminder.ForeColor = Color.Green;
                             return;
                         }
@@ -537,11 +617,21 @@ namespace Fitness_Tracker.Views
 
                     // Display the next upcoming schedule
                     DataRow upcomingRow = scheduleData.Rows[0];
-                    DateTime upcomingDate = Convert.ToDateTime(upcomingRow["Date"]);
-                    TimeSpan upcomingStartTime = TimeSpan.Parse(upcomingRow["StartTime"].ToString());
-                    int upcomingDuration = Convert.ToInt32(upcomingRow["Duration"]);
+                    var nextSchedule = new Schedule
+                    {
+                        Person = user,
+                        ScheduledDate = Convert.ToDateTime(upcomingRow["Date"])
+                    };
 
-                    lblScheduleReminder.Text = $"Next {activity.ActivityName} Schedule: {upcomingDate:yyyy-MM-dd} at {upcomingStartTime:hh\\:mm} for {upcomingDuration} minutes.";
+                    var nextScheduleActivity = new ScheduleActivity
+                    {
+                        Schedule = nextSchedule,
+                        Activity = activity,
+                        StartTime = TimeSpan.Parse(upcomingRow["StartTime"].ToString()),
+                        DurationMinutes = Convert.ToInt32(upcomingRow["Duration"])
+                    };
+
+                    lblScheduleReminder.Text = $"Next {activity.ActivityName} Schedule: {nextSchedule.ScheduledDate:yyyy-MM-dd} at {nextScheduleActivity.StartTime:hh\\:mm} for {nextScheduleActivity.DurationMinutes} minutes.";
                     lblScheduleReminder.ForeColor = Color.Blue;
                 }
                 else
@@ -555,6 +645,8 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading {activityName} schedule reminder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
         private void frmSwimming_Load(object sender, EventArgs e)
         {
             DisplayActivityScheduleReminder(1, "Swimming"); // 1 = Swimming Activity ID
@@ -563,7 +655,6 @@ namespace Fitness_Tracker.Views
             LoadSwimmingGraph();
             LoadSwimmingMetrics();
             LoadSwimmingSummary();
-            LoadRecentSwimmingActivity();
             LoadHistoricalComparisonGraph();
         }
 

@@ -1,4 +1,5 @@
 ﻿using Fitness_Tracker.dao;
+using Fitness_Tracker.Entities;
 using Guna.Charts.WinForms;
 using MySql.Data.MySqlClient;
 using System;
@@ -50,16 +51,47 @@ namespace Fitness_Tracker.Views
                 {
                     dataGridViewSchedule.Rows.Clear(); // Clear existing rows
                     int rowIndex = 1;
+
+                    // List to hold Schedule and ScheduleActivity objects
+                    List<ScheduleActivity> scheduleActivityList = new List<ScheduleActivity>();
+
                     foreach (DataRow row in dt.Rows)
                     {
-                        dataGridViewSchedule.Rows.Add(row["Schedule Id"],
+                        // Create Schedule object
+                        var schedule = new Schedule
+                        {
+                            ScheduleId = Convert.ToInt32(row["Schedule Id"]),
+                            Person = User.GetInstance(), // Assuming logged-in user is the person
+                            ScheduledDate = Convert.ToDateTime(row["Date"])
+                        };
+
+                        // Create Activity object
+                        var activity = new Activity
+                        {
+                            ActivityName = row["Activity"].ToString()
+                        };
+
+                        // Create ScheduleActivity object
+                        var scheduleActivity = new ScheduleActivity
+                        {
+                            Schedule = schedule,
+                            Activity = activity,
+                            StartTime = TimeSpan.Parse(row["Start Time"].ToString()),
+                            DurationMinutes = Convert.ToInt32(row["Duration"])
+                        };
+
+                        // Add to the list
+                        scheduleActivityList.Add(scheduleActivity);
+
+                        // Populate DataGridView
+                        dataGridViewSchedule.Rows.Add(
+                            row["Schedule Id"],
                             rowIndex++, // Row number (for colNo)
-                            row["Activity"].ToString(),
-                            Convert.ToDateTime(row["Date"]).ToString("yyyy-MM-dd"),
-                            TimeSpan.Parse(row["Start Time"].ToString()).ToString(@"hh\:mm"),
-                            $"{row["Duration"]} minutes",
+                            scheduleActivity.Activity.ActivityName,
+                            scheduleActivity.Schedule.ScheduledDate.ToString("yyyy-MM-dd"),
+                            scheduleActivity.StartTime.ToString(@"hh\:mm"),
+                            $"{scheduleActivity.DurationMinutes} minutes",
                             "Delete" // Text for the delete button
-                             // Populate the hidden column
                         );
                     }
                 }
@@ -78,89 +110,129 @@ namespace Fitness_Tracker.Views
         {
             try
             {
+                // Fetch activities as a dictionary
                 Dictionary<int, string> activities = db.GetActivities();
 
-                cboActivity.DataSource = new BindingSource(activities, null);
-                cboActivity.DisplayMember = "Value";
-                cboActivity.ValueMember = "Key";
+                // Clear the combo box and set data source
+                cboActivity.Items.Clear();
+
+                foreach (var activity in activities)
+                {
+                    // Add KeyValuePair objects to the combo box
+                    cboActivity.Items.Add(new KeyValuePair<int, string>(activity.Key, activity.Value));
+                }
+
+                cboActivity.DisplayMember = "Value"; // Display the activity name
+                cboActivity.ValueMember = "Key";    // Use the activity ID as the value
+                cboActivity.SelectedIndex = 0;      // Default to the first activity
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading activities: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
         private void btnMakeSchedule_Click(object sender, EventArgs e)
         {
             try
             {
-                // Validate inputs
-                if (cboActivity.SelectedIndex < 0)
+                // Validate combo box selection
+                if (!(cboActivity.SelectedItem is KeyValuePair<int, string> selectedActivity))
                 {
-                    MessageBox.Show("Please select an activity.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Please select a valid activity.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
+
+                // Extract activity ID and name
+                int activityId = selectedActivity.Key;
+                string activityName = selectedActivity.Value;
+
+                // Create Activity object
+                Activity activity = new Activity
+                {
+                    ActivityId = activityId,
+                    ActivityName = activityName
+                };
 
                 // Validate and process Start Time
                 string startTimeInput = txtActivityStartTime.Text.Trim();
 
-                // Check if input is only an hour (like "6")
+                // Handle cases like "14" (convert to "14:00")
                 if (int.TryParse(startTimeInput, out int hour) && hour >= 0 && hour <= 23)
                 {
-                    // Convert "6" to "06:00" (6 AM)
                     startTimeInput = $"{hour:D2}:00";
                 }
 
                 // Try parsing the final input as TimeSpan
                 if (!TimeSpan.TryParse(startTimeInput, out TimeSpan startTime))
                 {
-                    MessageBox.Show("Invalid Start Time. Please enter a valid time (e.g., 6, 6:30, or 15:45).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Invalid Start Time. Please enter a valid time (e.g., 14:00 or 6:30).", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
+                // Validate duration
                 if (!int.TryParse(txtActivityDuration.Text, out int durationMinutes) || durationMinutes <= 0)
                 {
                     MessageBox.Show("Please enter a valid duration in minutes.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-              
-                // Check the number of schedules the user has for the selected date
+                // Check schedule limits
                 int scheduleCount = db.GetScheduleCountForDate(frmLogin.user.PersonID, dtpScheduleDate.Value);
-
                 if (scheduleCount >= 2)
                 {
                     MessageBox.Show("You can only have a maximum of 2 schedules per day.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
+                // Check for overlapping schedules
                 if (db.IsOverlappingSchedule(frmLogin.user.PersonID, dtpScheduleDate.Value, startTime, durationMinutes))
                 {
                     MessageBox.Show("This schedule overlaps with an existing one. Please select a different time.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Insert schedule
-                int scheduleId = db.InsertSchedule(frmLogin.user.PersonID, dtpScheduleDate.Value);
+                // Create Schedule object
+                Schedule schedule = new Schedule
+                {
+                    Person = frmLogin.user,
+                    ScheduledDate = dtpScheduleDate.Value
+                };
+
+                // Insert schedule into database
+                int scheduleId = db.InsertSchedule(frmLogin.user.PersonID, schedule.ScheduledDate);
                 if (scheduleId == -1)
                 {
                     MessageBox.Show("Failed to insert schedule.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Insert schedule activity
-                int activityId = ((KeyValuePair<int, string>)cboActivity.SelectedItem).Key;
-                bool success = db.InsertScheduleActivity(scheduleId, activityId, startTime, durationMinutes);
+                schedule.ScheduleId = scheduleId; // Assign the generated ID to the object
+
+                // Create ScheduleActivity object
+                ScheduleActivity scheduleActivity = new ScheduleActivity
+                {
+                    Schedule = schedule,
+                    Activity = activity,
+                    StartTime = startTime,
+                    DurationMinutes = durationMinutes
+                };
+
+                // Insert schedule activity into database
+                bool success = db.InsertScheduleActivity(scheduleActivity.Schedule.ScheduleId, scheduleActivity.Activity.ActivityId, scheduleActivity.StartTime, scheduleActivity.DurationMinutes);
 
                 if (success)
                 {
                     MessageBox.Show("Schedule successfully created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadSchedules(); // Refresh grid
                     LoadScheduleDistributionByTime();
+                    LoadSchedules();
 
                     // Clear input fields
                     txtActivityStartTime.Text = string.Empty;
                     txtActivityDuration.Text = string.Empty;
-                    cboActivity.SelectedIndex = -1; // Reset combo box selection
+                    cboActivity.SelectedIndex = 0; // Reset combo box selection
                     dtpScheduleDate.Value = DateTime.Today; // Reset to today's date
                 }
                 else
@@ -172,12 +244,9 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
         }
-
         private void dataGridViewSchedule_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            
             if (e.ColumnIndex == dataGridViewSchedule.Columns["colDelete"].Index && e.RowIndex >= 0)
             {
                 DialogResult confirmResult = MessageBox.Show(
@@ -186,6 +255,7 @@ namespace Fitness_Tracker.Views
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning
                 );
+
                 if (confirmResult == DialogResult.Yes)
                 {
                     try
@@ -193,12 +263,26 @@ namespace Fitness_Tracker.Views
                         // Get schedule_id from the hidden column
                         int scheduleId = Convert.ToInt32(dataGridViewSchedule.Rows[e.RowIndex].Cells["colScheduledId"].Value);
 
-                       
+                        // Create a Schedule object for deletion
+                        Schedule schedule = new Schedule
+                        {
+                            ScheduleId = scheduleId,
+                            Person = frmLogin.user // Use the current logged-in user
+                        };
 
-                        if (db.DeleteSchedule(scheduleId))
+                        // Delete the schedule from the database
+                        if (db.DeleteSchedule(schedule.ScheduleId))
                         {
                             MessageBox.Show("Schedule deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadSchedules(); // Refresh the table after deletion
+
+                            // Log the deletion with object creation
+                            var scheduleActivity = new ScheduleActivity
+                            {
+                                Schedule = schedule
+                            };
+
+                            // Refresh UI components
+                            LoadSchedules();
                             LoadSchedulesGraph();
                             LoadScheduleDistributionByTime();
                         }
@@ -214,12 +298,10 @@ namespace Fitness_Tracker.Views
                 }
             }
         }
-
         private void LoadSchedulesGraph()
         {
             try
             {
-               
                 // Fetch data for the graph
                 DataTable dt = db.GetSchedulesSummary(frmLogin.user.PersonID);
 
@@ -228,19 +310,46 @@ namespace Fitness_Tracker.Views
                     // Clear existing data points
                     gunaBarDataset1.DataPoints.Clear();
 
-                    // Populate the dataset with data
+                    // List to hold Schedule and ScheduleActivity objects
+                    List<ScheduleActivity> scheduleActivities = new List<ScheduleActivity>();
+
                     foreach (DataRow row in dt.Rows)
                     {
-                        string activity = row["Activity"].ToString();
+                        string activityName = row["Activity"].ToString();
                         int totalSchedules = Convert.ToInt32(row["TotalSchedules"]);
 
+                        // Create Activity object
+                        var activity = new Activity
+                        {
+                            ActivityName = activityName
+                        };
+
+                        // Create Schedule object (dummy schedule for visualization purposes)
+                        var schedule = new Schedule
+                        {
+                            Person = frmLogin.user,
+                            ScheduledDate = DateTime.Now // Set to the current date or a placeholder
+                        };
+
+                        // Create ScheduleActivity object
+                        var scheduleActivity = new ScheduleActivity
+                        {
+                            Schedule = schedule,
+                            Activity = activity,
+                            // StartTime and DurationMinutes are not relevant here, but can be added if needed
+                        };
+
+                        // Add to the list
+                        scheduleActivities.Add(scheduleActivity);
+
                         // Add data points to the dataset
-                        gunaBarDataset1.DataPoints.Add(activity, totalSchedules);
+                        gunaBarDataset1.DataPoints.Add(activityName, totalSchedules);
                     }
 
                     // Optionally customize the dataset's appearance
                     gunaBarDataset1.Label = "Number of Schedules";
                     gunaBarDataset1.BorderWidth = 1;
+
                 }
 
                 // Add the dataset to the chart (if not already added)
@@ -315,24 +424,58 @@ namespace Fitness_Tracker.Views
         {
             try
             {
-
                 DataTable dt = db.GetFilteredSchedules(frmLogin.user.PersonID, dateFilter, dateEnd);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     dataGridViewSchedule.Rows.Clear(); // Clear existing rows
                     int rowIndex = 1;
+
+                    // List to hold Schedule and ScheduleActivity objects
+                    List<ScheduleActivity> scheduleActivities = new List<ScheduleActivity>();
+
                     foreach (DataRow row in dt.Rows)
                     {
-                        dataGridViewSchedule.Rows.Add(row["Schedule Id"],
-                            rowIndex++,
-                            row["Activity"].ToString(),
-                            Convert.ToDateTime(row["Date"]).ToString("yyyy-MM-dd"),
-                            TimeSpan.Parse(row["Start Time"].ToString()).ToString(@"hh\:mm"),
-                            $"{row["Duration"]} minutes",
+                        // Create Schedule object
+                        var schedule = new Schedule
+                        {
+                            ScheduleId = Convert.ToInt32(row["Schedule Id"]),
+                            Person = frmLogin.user, // Assuming the logged-in user is the person
+                            ScheduledDate = Convert.ToDateTime(row["Date"])
+                        };
+
+                        // Create Activity object
+                        var activity = new Activity
+                        {
+                            ActivityName = row["Activity"].ToString()
+                        };
+
+                        // Create ScheduleActivity object
+                        var scheduleActivity = new ScheduleActivity
+                        {
+                            Schedule = schedule,
+                            Activity = activity,
+                            StartTime = TimeSpan.Parse(row["Start Time"].ToString()),
+                            DurationMinutes = Convert.ToInt32(row["Duration"])
+                        };
+
+                        // Add to the list for potential further use
+                        scheduleActivities.Add(scheduleActivity);
+
+                        // Populate DataGridView
+                        dataGridViewSchedule.Rows.Add(
+                            schedule.ScheduleId,
+                            rowIndex++, // Row number
+                            scheduleActivity.Activity.ActivityName,
+                            scheduleActivity.Schedule.ScheduledDate.ToString("yyyy-MM-dd"),
+                            scheduleActivity.StartTime.ToString(@"hh\:mm"),
+                            $"{scheduleActivity.DurationMinutes} minutes",
                             "Delete"
                         );
                     }
+
+                    // Debug or further process objects if needed
+                    Console.WriteLine($"Loaded {scheduleActivities.Count} schedules.");
                 }
                 else
                 {
@@ -343,73 +486,154 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading schedules: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
         }
-
         private void LoadSchedulesGraph(DateTime? dateFilter, DateTime? dateEnd)
         {
             try
             {
-                
-
                 DataTable dt = db.GetFilteredSchedules(frmLogin.user.PersonID, dateFilter, dateEnd);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    dataGridViewSchedule.Rows.Clear(); // Clear existing rows
-                    int rowIndex = 1;
+                    // Clear the existing data points in the graph
+                    gunaBarDataset1.DataPoints.Clear();
+
+                    // List to hold ScheduleActivity objects
+                    List<ScheduleActivity> scheduleActivityList = new List<ScheduleActivity>();
+
+                    // Dictionary to track the counts of schedules for each activity
+                    Dictionary<string, int> activityCounts = new Dictionary<string, int>();
+
                     foreach (DataRow row in dt.Rows)
                     {
-                        dataGridViewSchedule.Rows.Add(row["Schedule Id"],
-                            rowIndex++,
-                            row["Activity"].ToString(),
-                            Convert.ToDateTime(row["Date"]).ToString("yyyy-MM-dd"),
-                            TimeSpan.Parse(row["Start Time"].ToString()).ToString(@"hh\:mm"),
-                            $"{row["Duration"]} minutes",
-                            "Delete"
-                        );
+                        // Create Schedule object
+                        Schedule schedule = new Schedule
+                        {
+                            ScheduleId = Convert.ToInt32(row["Schedule Id"]),
+                            Person = frmLogin.user,
+                            ScheduledDate = Convert.ToDateTime(row["Date"])
+                        };
+
+                        // Create Activity object
+                        Activity activity = new Activity
+                        {
+                            ActivityName = row["Activity"].ToString()
+                        };
+
+                        // Create ScheduleActivity object
+                        ScheduleActivity scheduleActivity = new ScheduleActivity
+                        {
+                            Schedule = schedule,
+                            Activity = activity,
+                            StartTime = TimeSpan.Parse(row["Start Time"].ToString()),
+                            DurationMinutes = Convert.ToInt32(row["Duration"])
+                        };
+
+                        // Add ScheduleActivity object to the list
+                        scheduleActivityList.Add(scheduleActivity);
+
+                        // Increment count for the activity
+                        if (activityCounts.ContainsKey(scheduleActivity.Activity.ActivityName))
+                        {
+                            activityCounts[scheduleActivity.Activity.ActivityName]++;
+                        }
+                        else
+                        {
+                            activityCounts[scheduleActivity.Activity.ActivityName] = 1;
+                        }
                     }
+
+                    // Populate the dataset with the accumulated counts
+                    foreach (var entry in activityCounts)
+                    {
+                        gunaBarDataset1.DataPoints.Add(entry.Key, entry.Value);
+                    }
+
+                    // Customize dataset appearance
+                    gunaBarDataset1.Label = "Number of Schedules";
+                    gunaBarDataset1.BorderWidth = 1;
+
+                    // Add the dataset to the chart if not already added
+                    if (!chartSchedules.Datasets.Contains(gunaBarDataset1))
+                    {
+                        chartSchedules.Datasets.Add(gunaBarDataset1);
+                    }
+
+                    // Customize chart title and update
+                    chartSchedules.Title.Text = "Schedules by Activity";
+                    chartSchedules.Update();
                 }
                 else
                 {
-                    dataGridViewSchedule.Rows.Clear(); // No data, ensure the grid is empty
+                    // Clear the dataset if no data is returned
+                    gunaBarDataset1.DataPoints.Clear();
+                    chartSchedules.Update();
+
+                    MessageBox.Show("No data available for the selected date range.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading schedules: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading schedules graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void LoadScheduleDistributionByTime()
         {
             try
             {
-                
-
+                // Fetch data from the database
                 DataTable dt = db.GetScheduleDistributionByTime(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    // Clear existing data points
                     gunaAreaDataset1.DataPoints.Clear();
+
+                    // List to store ScheduleActivity objects
+                    List<ScheduleActivity> scheduleActivityList = new List<ScheduleActivity>();
 
                     foreach (DataRow row in dt.Rows)
                     {
-                        string hour = $"{Convert.ToInt32(row["Hour"]):D2}:00";
-                        int count = Convert.ToInt32(row["Count"]);
+                        // Create Schedule object
+                        Schedule schedule = new Schedule
+                        {
+                            Person = frmLogin.user // Assuming the current user is the person associated with the schedule
+                        };
 
-                        gunaAreaDataset1.DataPoints.Add(hour, count);
+                        // Create a dummy Activity object (since the query doesn't provide activity details)
+                        Activity activity = new Activity();
+
+                        // Create ScheduleActivity object
+                        ScheduleActivity scheduleActivity = new ScheduleActivity
+                        {
+                            Schedule = schedule,
+                            Activity = activity,
+                            StartTime = TimeSpan.FromHours(Convert.ToInt32(row["Hour"])),
+                            DurationMinutes = 0 // Duration is not relevant in this context
+                        };
+
+                        // Add the ScheduleActivity object to the list
+                        scheduleActivityList.Add(scheduleActivity);
+
+                        // Add data points to the chart
+                        string hourLabel = $"{Convert.ToInt32(row["Hour"]):D2}:00"; // Format hour as "HH:00"
+                        int count = Convert.ToInt32(row["Count"]);
+                        gunaAreaDataset1.DataPoints.Add(hourLabel, count);
                     }
 
+                    // Customize dataset appearance
                     gunaAreaDataset1.Label = "Schedules by Time";
                     gunaAreaDataset1.BorderWidth = 1;
                     gunaAreaDataset1.BorderColor = Color.Blue;
                 }
 
+                // Add the dataset to the chart if not already added
                 if (!chartScheduleByTime.Datasets.Contains(gunaAreaDataset1))
                 {
                     chartScheduleByTime.Datasets.Add(gunaAreaDataset1);
                 }
 
+                // Customize chart title and update
                 chartScheduleByTime.Title.Text = "Schedule Distribution by Time";
                 chartScheduleByTime.Update();
             }
@@ -417,7 +641,6 @@ namespace Fitness_Tracker.Views
             {
                 MessageBox.Show($"Error loading schedule distribution graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-          
         }
 
         private void dataGridViewSchedule_SelectionChanged(object sender, EventArgs e)

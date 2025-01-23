@@ -56,7 +56,7 @@ namespace Fitness_Tracker.Entities
             Lastname = lastname;
             Email = email;
             DateOfBirth = dateOfBirth;
-            Gender = gender;
+            Gender = gender; 
             Mobile = mobile;
             Weight = weight;
             Height = height;
