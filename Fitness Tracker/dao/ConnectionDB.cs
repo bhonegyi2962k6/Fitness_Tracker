@@ -1600,7 +1600,7 @@ namespace Fitness_Tracker.dao
             try
             {
                 OpenConnection();
-                string sql = "UPDATE person SET photo_path = @photoPath WHERE person_id = @personId";
+                sql = "UPDATE person SET photo_path = @photoPath WHERE person_id = @personId";
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@photoPath", photoPath);
                 cmd.Parameters.AddWithValue("@personId", personId);
@@ -1622,7 +1622,7 @@ namespace Fitness_Tracker.dao
             try
             {
                 OpenConnection();
-                string sql = "UPDATE person SET password = @password WHERE person_id = @personId";
+                sql = "UPDATE person SET password = @password WHERE person_id = @personId";
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@password", newPassword);
                 cmd.Parameters.AddWithValue("@personId", personId);
@@ -1639,7 +1639,450 @@ namespace Fitness_Tracker.dao
                 CloseConnection();
             }
         }
+        public List<Record> GetAllRecordsForUser(int personId)
+        {
+            var records = new List<Record>();
 
+            try
+            {
+                OpenConnection();
+
+                sql = "SELECT * FROM record WHERE person_id = @personId";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        // Safely retrieve data
+                        double burnedCalories = reader["burned_calories"] != DBNull.Value
+                            ? reader.GetDouble("burned_calories")
+                            : 0;
+
+                        DateTime recordDate = reader["record_date"] != DBNull.Value
+                            ? reader.GetDateTime("record_date")
+                            : DateTime.MinValue;
+
+                        string intensityLevel = reader["intensity_level"] != DBNull.Value
+                            ? reader.GetString("intensity_level")
+                            : "Unknown";
+
+                        // Create Person object
+                        var person = User.GetInstance();
+
+                        // Create Activity object
+                        var activity = new Activity
+                        {
+                            ActivityId = reader["activity_id"] != DBNull.Value ? reader.GetInt32("activity_id") : 0
+                        };
+
+                        // Create Record object
+                        var record = new Record
+                        {
+                            RecordId = reader.GetInt32("record_id"),
+                            Person = person,
+                            Activity = activity,
+                            RecordDate = recordDate,
+                            BurnedCalories = burnedCalories,
+                            IntensityLevel = intensityLevel
+                        };
+
+                        records.Add(record);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving records: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return records;
+        }
+
+        // Method to fetch the last activity
+        public Record GetLastActivityForUser(int personId)
+        {
+            Record lastActivity = null;
+            try
+            {
+                OpenConnection();
+                sql = @"
+                    SELECT r.*, a.activity_name, p.first_name, p.last_name 
+                    FROM record r 
+                    JOIN activity a ON r.activity_id = a.activity_id 
+                    JOIN person p ON r.person_id = p.person_id 
+                    WHERE r.person_id = @personId 
+                    ORDER BY r.record_date DESC LIMIT 1";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        // Create Person object
+                        User person = User.GetInstance();
+                        person.PersonID = reader.GetInt32("person_id");
+                        person.Firstname = reader.GetString("first_name");
+                        person.Lastname = reader.GetString("last_name");
+
+                        // Create Activity object
+                        Activity activity = new Activity
+                        {
+                            ActivityId = reader.GetInt32("activity_id"),
+                            ActivityName = reader.GetString("activity_name")
+                        };
+
+                        // Create Record object
+                        lastActivity = new Record
+                        {
+                            RecordId = reader.GetInt32("record_id"),
+                            Person = person,
+                            Activity = activity,
+                            RecordDate = reader.GetDateTime("record_date"),
+                            BurnedCalories = reader.GetDouble("burned_calories"),
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving last activity: {ex.Message}");
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            return lastActivity;
+        }
+        public GoalTracking GetNextUpcomingGoalForUser(int personId)
+        {
+            try
+            {
+                OpenConnection();
+
+                string sql = @"
+            SELECT gt.goal_id, gt.goal_type, gt.target_weight, gt.daily_calories_target, 
+                   gt.is_achieved, gt.created_at, gt.target_date, gt.achieved_date, 
+                   a.activity_id, a.activity_name
+            FROM goal_tracking gt
+            LEFT JOIN activity a ON gt.activity_id = a.activity_id
+            WHERE gt.person_id = @personId AND gt.is_achieved = 0 AND gt.target_date > CURDATE()
+            ORDER BY gt.target_date ASC
+            LIMIT 1;";
+
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    // Create Person object (assume the logged-in user)
+                    Person person = User.GetInstance();
+
+                    // Create Activity object if applicable
+                    Activity activity = null;
+                    if (!reader.IsDBNull(reader.GetOrdinal("activity_id")))
+                    {
+                        activity = new Activity
+                        {
+                            ActivityId = reader.GetInt32("activity_id"),
+                            ActivityName = reader.GetString("activity_name")
+                        };
+                    }
+
+                    // Create and return GoalTracking object
+                    return new GoalTracking
+                    {
+                        GoalId = reader.GetInt32("goal_id"),
+                        Person = person,
+                        GoalType = reader.GetString("goal_type"),
+                        TargetWeight = reader.GetDecimal("target_weight"),
+                        DailyCaloriesTarget = reader.GetDouble("daily_calories_target"),
+                        IsAchieved = reader.GetBoolean("is_achieved"),
+                        CreatedAt = reader.GetDateTime("created_at"),
+                        TargetDate = reader.GetDateTime("target_date"),
+                        Activity = activity,
+                        AchievedDate = !reader.IsDBNull(reader.GetOrdinal("achieved_date"))
+                            ? reader.GetDateTime("achieved_date")
+                            : default(DateTime)
+                    };
+                }
+
+                return null; // No upcoming goal found
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving upcoming goal: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            finally
+            {
+                reader?.Close();
+                CloseConnection();
+            }
+        }
+        public Schedule GetNextScheduleForUser(int personId)
+        {
+            try
+            {
+                OpenConnection();
+
+                string sql = @"
+            SELECT schedule_id, scheduled_date 
+            FROM schedule
+            WHERE person_id = @person_id AND scheduled_date >= CURDATE()
+            ORDER BY scheduled_date ASC
+            LIMIT 1";
+
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@person_id", personId);
+
+                reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return new Schedule
+                    {
+                        ScheduleId = reader.GetInt32("schedule_id"),
+                        ScheduledDate = reader.GetDateTime("scheduled_date"),
+                        Person = User.GetInstance()
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving schedule: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return null;
+        }
+        public ScheduleActivity GetFirstActivityForSchedule(int scheduleId)
+        {
+            try
+            {
+                OpenConnection();
+
+                string sql = @"
+            SELECT sa.activity_id, sa.start_time, sa.duration_minutes, a.activity_name
+            FROM schedule_activity sa
+            INNER JOIN activity a ON sa.activity_id = a.activity_id
+            WHERE sa.schedule_id = @schedule_id
+            ORDER BY sa.start_time ASC
+            LIMIT 1";
+
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@schedule_id", scheduleId);
+
+                reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return new ScheduleActivity
+                    {
+                        Schedule = new Schedule { ScheduleId = scheduleId }, // Reference the schedule
+                        Activity = new Activity
+                        {
+                            ActivityId = reader.GetInt32("activity_id"),
+                            ActivityName = reader.GetString("activity_name")
+                        },
+                        StartTime = reader.GetTimeSpan("start_time"),
+                        DurationMinutes = reader.GetInt32("duration_minutes")
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving schedule activity: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return null;
+        }
+        public List<Record> GetUserActivityRecords(int personId)
+        {
+            List<Record> records = new List<Record>();
+
+            try
+            {
+                OpenConnection();
+
+                sql = @"SELECT r.record_id, r.record_date, r.burned_calories, r.intensity_level,
+                       a.activity_id, a.activity_name,
+                       p.person_id, p.first_name, p.last_name, p.username
+                FROM record r
+                INNER JOIN activity a ON r.activity_id = a.activity_id
+                INNER JOIN person p ON r.person_id = p.person_id
+                WHERE r.person_id = @personId
+                ORDER BY r.record_date DESC";
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        // Create Person object
+                        var person = User.GetInstance();
+
+                        // Create Activity object
+                        Activity activity = new Activity
+                        {
+                            ActivityId = reader.GetInt32("activity_id"),
+                            ActivityName = reader.IsDBNull(reader.GetOrdinal("activity_name"))
+                                ? "Unknown Activity"
+                                : reader.GetString("activity_name")
+                        };
+
+                        // Create Record object
+                        Record record = new Record
+                        {
+                            RecordId = reader.GetInt32("record_id"),
+                            Person = person,
+                            Activity = activity,
+                            RecordDate = reader.IsDBNull(reader.GetOrdinal("record_date"))
+                                ? DateTime.MinValue
+                                : reader.GetDateTime("record_date"),
+                            BurnedCalories = reader.IsDBNull(reader.GetOrdinal("burned_calories"))
+                                ? 0
+                                : reader.GetDouble("burned_calories"),
+                            IntensityLevel = reader.IsDBNull(reader.GetOrdinal("intensity_level"))
+                                ? "Unknown"
+                                : reader.GetString("intensity_level")
+                        };
+
+                        records.Add(record);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving records: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return records;
+        }
+
+        public List<GoalTracking> GetGoalsForUser(int personId)
+        {
+            List<GoalTracking> goals = new List<GoalTracking>();
+
+            try
+            {
+                OpenConnection();
+
+                string query = @"SELECT g.goal_id, g.goal_type, g.target_weight, g.daily_calories_target, g.is_achieved,
+                                g.created_at, g.target_date, g.achieved_date,
+                                a.activity_id, a.activity_name,
+                                p.person_id, p.first_name, p.last_name, p.username
+                         FROM goal_tracking g
+                         INNER JOIN person p ON g.person_id = p.person_id
+                         LEFT JOIN activity a ON g.activity_id = a.activity_id
+                         WHERE g.person_id = @personId";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        // Create Person object
+                        var person = User.GetInstance();
+
+
+                        // Create Activity object (optional, may be null)
+                        Activity activity = null;
+                        if (!reader.IsDBNull(reader.GetOrdinal("activity_id")))
+                        {
+                            activity = new Activity
+                            {
+                                ActivityId = reader.GetInt32("activity_id"),
+                                ActivityName = reader.GetString("activity_name")
+                            };
+                        }
+
+                        GoalTracking goal = new GoalTracking
+                        {
+                            GoalId = reader.GetInt32("goal_id"),
+                            Person = person,
+                            GoalType = reader.GetString("goal_type"),
+                            TargetWeight = reader.GetDecimal("target_weight"),
+                            DailyCaloriesTarget = reader.GetDouble("daily_calories_target"),
+                            IsAchieved = reader.GetBoolean("is_achieved"),
+                            CreatedAt = reader.GetDateTime("created_at"),
+                            TargetDate = reader.GetDateTime("target_date"),
+                            AchievedDate = reader.IsDBNull(reader.GetOrdinal("achieved_date"))
+                            ? DateTime.MinValue // Default value if NULL
+                            : reader.GetDateTime("achieved_date"),
+                            Activity = activity
+                        };
+
+                        goals.Add(goal);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving goals: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return goals;
+        }
+        public double GetTotalBurnedCalories(int personId)
+        {
+            double totalBurnedCalories = 0;
+
+            try
+            {
+                OpenConnection();
+
+                string sql = @"SELECT SUM(burned_calories) AS TotalCalories
+                       FROM record
+                       WHERE person_id = @personId";
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@personId", personId);
+
+                var result = cmd.ExecuteScalar();
+                if (result != DBNull.Value && result != null)
+                {
+                    totalBurnedCalories = Convert.ToDouble(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching total burned calories: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+
+            return totalBurnedCalories;
+        }
 
     }
 }

@@ -527,6 +527,7 @@ namespace Fitness_Tracker.Views
                     UpdateProgressBar();
                     LoadGoalAchievementByMonthGraph();
                     LoadAchievedVsPendingGraph();
+                    LoadWeightTrendGraph();
                 }
                 else
                 {
@@ -610,6 +611,7 @@ namespace Fitness_Tracker.Views
                             UpdateProgressBar();
                             LoadGoalAchievementByMonthGraph();
                             LoadAchievedVsPendingGraph();
+                            LoadWeightTrendGraph();
                         }
                         else
                         {
@@ -684,6 +686,7 @@ namespace Fitness_Tracker.Views
                                 UpdateProgressBar();
                                 LoadGoalAchievementByMonthGraph();
                                 LoadAchievedVsPendingGraph();
+                                LoadWeightTrendGraph();
                             }
                             else
                             {

@@ -134,7 +134,7 @@ namespace Fitness_Tracker.Views
                     Person = user,
                     Activity = activity,
                     RecordDate = DateTime.Now,
-                    IntesityLevel = intensity
+                    IntensityLevel = intensity
                 };
 
                 // Step 2: Retrieve calculation factors and MET value

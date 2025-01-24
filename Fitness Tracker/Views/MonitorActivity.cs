@@ -66,7 +66,7 @@ namespace Fitness_Tracker.Views
                         Activity = activity,
                         RecordDate = Convert.ToDateTime(row["Record Date"]),
                         BurnedCalories = Convert.ToDouble(row["Burned Calories"]),
-                        IntesityLevel = row["Activity Type"].ToString()
+                        IntensityLevel = row["Activity Type"].ToString()
                     };
 
                     // Add record to DataGridView
@@ -77,7 +77,7 @@ namespace Fitness_Tracker.Views
                         record.RecordDate.ToString("yyyy-MM-dd"), // Record date
                         record.BurnedCalories,           // Burned calories
                         db.GetActivityDetails(record.RecordId) ?? "N/A", // Additional activity details
-                        record.IntesityLevel,            // Intensity level
+                        record.IntensityLevel,            // Intensity level
                         "Delete"                         // Action column
                     );
 
@@ -225,7 +225,7 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading historical comparison graph: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+ 
         private void frmMonitorActivity_Load(object sender, EventArgs e)
         {
             LoadDefaultDailyCaloriesGraph();
@@ -262,7 +262,7 @@ namespace Fitness_Tracker.Views
                             Activity = activity,
                             RecordDate = Convert.ToDateTime(row["Record Date"]),
                             BurnedCalories = Convert.ToDouble(row["Burned Calories"]),
-                            IntesityLevel = row["Activity Type"].ToString(),
+                            IntensityLevel = row["Activity Type"].ToString(),
                             Person = User.GetInstance()
                         };
 
@@ -306,7 +306,7 @@ namespace Fitness_Tracker.Views
                             record.RecordDate.ToString("yyyy-MM-dd"),
                             record.BurnedCalories,        // Burned Calories
                             activityDetailsString,        // Activity Details
-                            record.IntesityLevel,         // Intensity Level (colActivityType)
+                            record.IntensityLevel,         // Intensity Level (colActivityType)
                             "Delete"                      // Delete button text
                         );
 
@@ -422,7 +422,7 @@ namespace Fitness_Tracker.Views
                                 Activity = activity,
                                 RecordDate = Convert.ToDateTime(row["Record Date"]),
                                 BurnedCalories = Convert.ToDouble(row["Burned Calories"]),
-                                IntesityLevel = row["Activity Type"].ToString()
+                                IntensityLevel = row["Activity Type"].ToString()
                             };
 
                             // Fetch activity details
@@ -436,7 +436,7 @@ namespace Fitness_Tracker.Views
                                 record.RecordDate.ToString("yyyy-MM-dd"), // Record date
                                 record.BurnedCalories,             // Burned calories
                                 activityDetails,                   // Activity details
-                                record.IntesityLevel,              // Intensity level
+                                record.IntensityLevel,              // Intensity level
                                 "Delete"                           // Delete button
                             );
 

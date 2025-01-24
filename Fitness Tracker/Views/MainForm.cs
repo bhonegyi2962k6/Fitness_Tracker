@@ -18,7 +18,18 @@ namespace Fitness_Tracker.Views
         public frmMainForm()
         {
             InitializeComponent();
+            InitializeMotivationalQuoteTimer();
         }
+
+        private Timer motivationalQuoteTimer; // Timer for updating quotes
+        private readonly string[] quotes = {
+            "Quotes: The journey of a thousand miles begins with a single step.",
+            "Quotes: Your health is an investment, not an expense.",
+            "Quotes: Wake up with determination. Go to bed with satisfaction.",
+            "Quotes: Push yourself because no one else will do it for you.",
+            "Quotes: Your body can stand almost anything. It’s your mind that you have to convince.",
+            "Quotes: Don’t limit your challenges, challenge your limits."
+        };
 
         private void sideMenuTimer_Tick(object sender, EventArgs e)
         {
@@ -69,6 +80,10 @@ namespace Fitness_Tracker.Views
             User currentUser = User.GetInstance();
             lblWelcomeUsername.Text = currentUser.Username;
 
+            ClearUpperPanelForHome();
+            panelMain.Controls.Clear();
+            panelMain.Controls.Add(new frmHome());
+
             if (!string.IsNullOrEmpty(currentUser.PhotoPath) && File.Exists(currentUser.PhotoPath))
             {
                 try
@@ -80,6 +95,26 @@ namespace Fitness_Tracker.Views
                     MessageBox.Show($"Failed to load profile photo: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+            DisplayMotivationalQuote();
+        }
+        private void InitializeMotivationalQuoteTimer()
+        {
+            motivationalQuoteTimer = new Timer
+            {
+                Interval = 10000 // 10 seconds
+            };
+            motivationalQuoteTimer.Tick += MotivationalQuoteTimer_Tick;
+            motivationalQuoteTimer.Start();
+        }
+
+        private void MotivationalQuoteTimer_Tick(object sender, EventArgs e)
+        {
+            DisplayMotivationalQuote();
+        }
+        private void DisplayMotivationalQuote()
+        {
+            Random rnd = new Random();
+            lblMotivationalQuote.Text = quotes[rnd.Next(quotes.Length)];
         }
 
         private void btnMenuBar_Click(object sender, EventArgs e)
@@ -126,72 +161,128 @@ namespace Fitness_Tracker.Views
             // Clear the logged-in user object
             User.GetInstance().ClearUserData();
             User.ResetInstance();
-
         }
-
         private void btnSwimming_Click(object sender, EventArgs e)
         {
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmSwimming());
         }
 
         private void btnWalking_Click(object sender, EventArgs e)
         {
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmWalking());
         }
 
         private void btnCycling_Click(object sender, EventArgs e)
         {
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmCycling());
         }
 
         private void btnHiking_Click(object sender, EventArgs e)
         {
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmHiking());
         }
 
         private void btnWeightlifiting_Click(object sender, EventArgs e)
         {
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmWeightlifting());
         }
 
         private void btnRowing_Click(object sender, EventArgs e)
         {
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmRowing());
         }
 
         private void btnSchedule_Click(object sender, EventArgs e)
         {
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmSchedule());
         }
 
         private void btnRecords_Click(object sender, EventArgs e)
         {
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmMonitorActivity());
         }
 
         private void btnSetGoal_Click(object sender, EventArgs e)
         {
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmSetGoal());
         }
 
         private void btnHome_Click(object sender, EventArgs e)
         {
-
+            DisplayMotivationalQuote();
+            ClearUpperPanelForHome();
+            panelMain.Controls.Clear();
+            panelMain.Controls.Add(new frmHome());
         }
+        private void ClearUpperPanelForHome()
+        {
+            foreach (Control control in panelUserSide.Controls)
+            {
+                // Keep only the control box and logout button visible
+                if (control.Name == "panelUserSide")
+                {
+                    control.Visible = true;
+                }
+                else
+                {
+                    control.Visible = false; // Hide other controls
+                }
+            }
+        }
+
+        private void RestoreUpperPanel()
+        {
+            foreach (Control control in panelUserSide.Controls)
+            {
+                // Make all controls visible again
+                control.Visible = true;
+            }
+        }
+
 
         private void btnSetting_Click(object sender, EventArgs e)
         {
+            frmSetting settingsForm = new frmSetting();
+
+            // Subscribe to the OnPhotoUpdated event
+            settingsForm.OnPhotoUpdated += UpdateProfilePhotoInMainForm;
+            RestoreUpperPanel();
             panelMain.Controls.Clear();
-            panelMain.Controls.Add(new frmSetting());
+            panelMain.Controls.Add(settingsForm);
         }
+        private void UpdateProfilePhotoInMainForm(string newPhotoPath)
+        {
+            if (!string.IsNullOrEmpty(newPhotoPath) && File.Exists(newPhotoPath))
+            {
+                try
+                {
+                    picProfilePhoto.Image = Image.FromFile(newPhotoPath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to update profile photo in main form: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+       
+
     }
 }

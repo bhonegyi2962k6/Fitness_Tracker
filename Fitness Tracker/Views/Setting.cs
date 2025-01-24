@@ -18,10 +18,14 @@ namespace Fitness_Tracker.Views
     public partial class frmSetting : UserControl
     {
         private readonly ConnectionDB db;
+        // Define an event for photo updates
+        public event Action<string> OnPhotoUpdated;
         public frmSetting()
         {
             InitializeComponent();
             db = ConnectionDB.GetInstance(); // Use the Singleton instance
+            txtCurrentPassword.UseSystemPasswordChar = true;
+            txtNewPassword.UseSystemPasswordChar = true;
         }
 
         private void frmSetting_Load(object sender, EventArgs e)
@@ -203,6 +207,9 @@ namespace Fitness_Tracker.Views
                 if (db.UpdatePhotoPath(user.PersonID, photoPath))
                 {
                     MessageBox.Show("Profile photo updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Trigger the OnPhotoUpdated event
+                    OnPhotoUpdated?.Invoke(photoPath);
                 }
                 else
                 {
@@ -306,6 +313,11 @@ namespace Fitness_Tracker.Views
         private void txtCurrentPassword_IconRightClick(object sender, EventArgs e)
         {
             PasswordVisibility(txtCurrentPassword, !txtCurrentPassword.UseSystemPasswordChar);
+        }
+
+        private void txtNewPassword_IconRightClick(object sender, EventArgs e)
+        {
+            PasswordVisibility(txtNewPassword, !txtNewPassword.UseSystemPasswordChar);
         }
     }
 }

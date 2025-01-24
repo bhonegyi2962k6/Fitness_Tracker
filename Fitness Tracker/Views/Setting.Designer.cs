@@ -37,20 +37,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtNewPassword = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtCurrentPassword = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtEmail = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtUsername = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtLastName = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtFirstName = new Guna.UI2.WinForms.Guna2TextBox();
             this.btnUploadPhoto = new Guna.UI2.WinForms.Guna2Button();
-            this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
-            this.txtHeight = new Guna.UI2.WinForms.Guna2TextBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.txtWeight = new Guna.UI2.WinForms.Guna2TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtMobile = new Guna.UI2.WinForms.Guna2TextBox();
             this.cboGender = new Guna.UI2.WinForms.Guna2ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.btnChange = new Guna.UI2.WinForms.Guna2Button();
@@ -61,10 +51,20 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).BeginInit();
+            this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
+            this.txtNewPassword = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtCurrentPassword = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtLastName = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtHeight = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtFirstName = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtWeight = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtUsername = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtMobile = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtEmail = new Guna.UI2.WinForms.Guna2TextBox();
             this.guna2Panel1.SuspendLayout();
             this.guna2Panel2.SuspendLayout();
             this.guna2Panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).BeginInit();
             this.SuspendLayout();
             // 
             // label14
@@ -159,173 +159,6 @@
             this.label2.TabIndex = 42;
             this.label2.Text = "First Name:";
             // 
-            // txtNewPassword
-            // 
-            this.txtNewPassword.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtNewPassword.BorderThickness = 2;
-            this.txtNewPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtNewPassword.DefaultText = "";
-            this.txtNewPassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtNewPassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtNewPassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtNewPassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtNewPassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtNewPassword.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNewPassword.ForeColor = System.Drawing.Color.Black;
-            this.txtNewPassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtNewPassword.IconLeft = global::Fitness_Tracker.Properties.Resources.padlock;
-            this.txtNewPassword.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtNewPassword.IconRight = ((System.Drawing.Image)(resources.GetObject("txtNewPassword.IconRight")));
-            this.txtNewPassword.IconRightSize = new System.Drawing.Size(25, 25);
-            this.txtNewPassword.Location = new System.Drawing.Point(52, 130);
-            this.txtNewPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtNewPassword.Name = "txtNewPassword";
-            this.txtNewPassword.PasswordChar = '\0';
-            this.txtNewPassword.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtNewPassword.PlaceholderText = "Enter Your New Password";
-            this.txtNewPassword.SelectedText = "";
-            this.txtNewPassword.Size = new System.Drawing.Size(438, 48);
-            this.txtNewPassword.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtNewPassword.TabIndex = 59;
-            // 
-            // txtCurrentPassword
-            // 
-            this.txtCurrentPassword.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtCurrentPassword.BorderThickness = 2;
-            this.txtCurrentPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtCurrentPassword.DefaultText = "";
-            this.txtCurrentPassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtCurrentPassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtCurrentPassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtCurrentPassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtCurrentPassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtCurrentPassword.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCurrentPassword.ForeColor = System.Drawing.Color.Black;
-            this.txtCurrentPassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtCurrentPassword.IconLeft = global::Fitness_Tracker.Properties.Resources.padlock;
-            this.txtCurrentPassword.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtCurrentPassword.IconRight = ((System.Drawing.Image)(resources.GetObject("txtCurrentPassword.IconRight")));
-            this.txtCurrentPassword.IconRightSize = new System.Drawing.Size(25, 25);
-            this.txtCurrentPassword.Location = new System.Drawing.Point(52, 40);
-            this.txtCurrentPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtCurrentPassword.Name = "txtCurrentPassword";
-            this.txtCurrentPassword.PasswordChar = '\0';
-            this.txtCurrentPassword.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtCurrentPassword.PlaceholderText = "Enter Your Current Password";
-            this.txtCurrentPassword.SelectedText = "";
-            this.txtCurrentPassword.Size = new System.Drawing.Size(438, 48);
-            this.txtCurrentPassword.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtCurrentPassword.TabIndex = 58;
-            this.txtCurrentPassword.IconRightClick += new System.EventHandler(this.txtCurrentPassword_IconRightClick);
-            // 
-            // txtEmail
-            // 
-            this.txtEmail.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtEmail.BorderThickness = 2;
-            this.txtEmail.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtEmail.DefaultText = "";
-            this.txtEmail.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtEmail.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtEmail.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtEmail.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtEmail.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtEmail.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.ForeColor = System.Drawing.Color.Black;
-            this.txtEmail.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtEmail.IconLeft = global::Fitness_Tracker.Properties.Resources.mail;
-            this.txtEmail.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtEmail.Location = new System.Drawing.Point(40, 257);
-            this.txtEmail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.PasswordChar = '\0';
-            this.txtEmail.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtEmail.PlaceholderText = "Enter Your Email";
-            this.txtEmail.SelectedText = "";
-            this.txtEmail.Size = new System.Drawing.Size(586, 48);
-            this.txtEmail.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtEmail.TabIndex = 57;
-            // 
-            // txtUsername
-            // 
-            this.txtUsername.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtUsername.BorderThickness = 2;
-            this.txtUsername.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtUsername.DefaultText = "";
-            this.txtUsername.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtUsername.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtUsername.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtUsername.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtUsername.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtUsername.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUsername.ForeColor = System.Drawing.Color.Black;
-            this.txtUsername.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtUsername.IconLeft = global::Fitness_Tracker.Properties.Resources.user;
-            this.txtUsername.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtUsername.Location = new System.Drawing.Point(40, 159);
-            this.txtUsername.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtUsername.Name = "txtUsername";
-            this.txtUsername.PasswordChar = '\0';
-            this.txtUsername.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtUsername.PlaceholderText = "Enter Your Username";
-            this.txtUsername.SelectedText = "";
-            this.txtUsername.Size = new System.Drawing.Size(280, 48);
-            this.txtUsername.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtUsername.TabIndex = 54;
-            // 
-            // txtLastName
-            // 
-            this.txtLastName.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtLastName.BorderThickness = 2;
-            this.txtLastName.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtLastName.DefaultText = "";
-            this.txtLastName.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtLastName.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtLastName.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtLastName.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtLastName.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtLastName.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLastName.ForeColor = System.Drawing.Color.Black;
-            this.txtLastName.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtLastName.IconLeft = global::Fitness_Tracker.Properties.Resources.id_card;
-            this.txtLastName.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtLastName.Location = new System.Drawing.Point(346, 65);
-            this.txtLastName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtLastName.Name = "txtLastName";
-            this.txtLastName.PasswordChar = '\0';
-            this.txtLastName.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtLastName.PlaceholderText = "Enter Your Last Name";
-            this.txtLastName.SelectedText = "";
-            this.txtLastName.Size = new System.Drawing.Size(280, 48);
-            this.txtLastName.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtLastName.TabIndex = 53;
-            // 
-            // txtFirstName
-            // 
-            this.txtFirstName.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtFirstName.BorderThickness = 2;
-            this.txtFirstName.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtFirstName.DefaultText = "";
-            this.txtFirstName.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtFirstName.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtFirstName.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtFirstName.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtFirstName.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtFirstName.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFirstName.ForeColor = System.Drawing.Color.Black;
-            this.txtFirstName.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtFirstName.IconLeft = global::Fitness_Tracker.Properties.Resources.id_card;
-            this.txtFirstName.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtFirstName.Location = new System.Drawing.Point(40, 65);
-            this.txtFirstName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtFirstName.Name = "txtFirstName";
-            this.txtFirstName.PasswordChar = '\0';
-            this.txtFirstName.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtFirstName.PlaceholderText = "Enter Your First Name";
-            this.txtFirstName.SelectedText = "";
-            this.txtFirstName.Size = new System.Drawing.Size(280, 48);
-            this.txtFirstName.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtFirstName.TabIndex = 52;
-            // 
             // btnUploadPhoto
             // 
             this.btnUploadPhoto.BorderRadius = 5;
@@ -343,45 +176,6 @@
             this.btnUploadPhoto.Text = "Upload";
             this.btnUploadPhoto.Click += new System.EventHandler(this.btnUploadPhoto_Click);
             // 
-            // picProfilePhoto
-            // 
-            this.picProfilePhoto.Image = global::Fitness_Tracker.Properties.Resources.user_icon_1024x1024_dtzturco;
-            this.picProfilePhoto.ImageRotate = 0F;
-            this.picProfilePhoto.Location = new System.Drawing.Point(148, 19);
-            this.picProfilePhoto.Name = "picProfilePhoto";
-            this.picProfilePhoto.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            this.picProfilePhoto.Size = new System.Drawing.Size(250, 250);
-            this.picProfilePhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picProfilePhoto.TabIndex = 68;
-            this.picProfilePhoto.TabStop = false;
-            // 
-            // txtHeight
-            // 
-            this.txtHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtHeight.BorderThickness = 2;
-            this.txtHeight.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtHeight.DefaultText = "";
-            this.txtHeight.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtHeight.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtHeight.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtHeight.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtHeight.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtHeight.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtHeight.ForeColor = System.Drawing.Color.Black;
-            this.txtHeight.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtHeight.IconLeft = global::Fitness_Tracker.Properties.Resources.height;
-            this.txtHeight.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtHeight.Location = new System.Drawing.Point(348, 458);
-            this.txtHeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtHeight.Name = "txtHeight";
-            this.txtHeight.PasswordChar = '\0';
-            this.txtHeight.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtHeight.PlaceholderText = "Enter Your Height";
-            this.txtHeight.SelectedText = "";
-            this.txtHeight.Size = new System.Drawing.Size(280, 48);
-            this.txtHeight.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtHeight.TabIndex = 77;
-            // 
             // label16
             // 
             this.label16.AutoSize = true;
@@ -392,33 +186,6 @@
             this.label16.Size = new System.Drawing.Size(60, 20);
             this.label16.TabIndex = 76;
             this.label16.Text = "Height:";
-            // 
-            // txtWeight
-            // 
-            this.txtWeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtWeight.BorderThickness = 2;
-            this.txtWeight.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtWeight.DefaultText = "";
-            this.txtWeight.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtWeight.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtWeight.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtWeight.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtWeight.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtWeight.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtWeight.ForeColor = System.Drawing.Color.Black;
-            this.txtWeight.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtWeight.IconLeft = global::Fitness_Tracker.Properties.Resources.weight;
-            this.txtWeight.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtWeight.Location = new System.Drawing.Point(42, 458);
-            this.txtWeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtWeight.Name = "txtWeight";
-            this.txtWeight.PasswordChar = '\0';
-            this.txtWeight.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtWeight.PlaceholderText = "Enter Your Weight";
-            this.txtWeight.SelectedText = "";
-            this.txtWeight.Size = new System.Drawing.Size(280, 48);
-            this.txtWeight.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtWeight.TabIndex = 75;
             // 
             // label15
             // 
@@ -441,33 +208,6 @@
             this.label4.Size = new System.Drawing.Size(64, 20);
             this.label4.TabIndex = 73;
             this.label4.Text = "Mobile:";
-            // 
-            // txtMobile
-            // 
-            this.txtMobile.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtMobile.BorderThickness = 2;
-            this.txtMobile.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtMobile.DefaultText = "";
-            this.txtMobile.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtMobile.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtMobile.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtMobile.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtMobile.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtMobile.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtMobile.ForeColor = System.Drawing.Color.Black;
-            this.txtMobile.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtMobile.IconLeft = global::Fitness_Tracker.Properties.Resources.viber;
-            this.txtMobile.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtMobile.Location = new System.Drawing.Point(350, 362);
-            this.txtMobile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtMobile.Name = "txtMobile";
-            this.txtMobile.PasswordChar = '\0';
-            this.txtMobile.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtMobile.PlaceholderText = "Enter Your Mobile";
-            this.txtMobile.SelectedText = "";
-            this.txtMobile.Size = new System.Drawing.Size(280, 48);
-            this.txtMobile.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtMobile.TabIndex = 72;
             // 
             // cboGender
             // 
@@ -620,6 +360,267 @@
             this.label10.TabIndex = 84;
             this.label10.Text = "Change Password";
             // 
+            // picProfilePhoto
+            // 
+            this.picProfilePhoto.Image = global::Fitness_Tracker.Properties.Resources.user_icon_1024x1024_dtzturco;
+            this.picProfilePhoto.ImageRotate = 0F;
+            this.picProfilePhoto.Location = new System.Drawing.Point(148, 19);
+            this.picProfilePhoto.Name = "picProfilePhoto";
+            this.picProfilePhoto.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
+            this.picProfilePhoto.Size = new System.Drawing.Size(250, 250);
+            this.picProfilePhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picProfilePhoto.TabIndex = 68;
+            this.picProfilePhoto.TabStop = false;
+            // 
+            // txtNewPassword
+            // 
+            this.txtNewPassword.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtNewPassword.BorderThickness = 2;
+            this.txtNewPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtNewPassword.DefaultText = "";
+            this.txtNewPassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtNewPassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtNewPassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtNewPassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtNewPassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtNewPassword.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNewPassword.ForeColor = System.Drawing.Color.Black;
+            this.txtNewPassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtNewPassword.IconLeft = global::Fitness_Tracker.Properties.Resources.padlock;
+            this.txtNewPassword.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtNewPassword.IconRight = ((System.Drawing.Image)(resources.GetObject("txtNewPassword.IconRight")));
+            this.txtNewPassword.IconRightSize = new System.Drawing.Size(25, 25);
+            this.txtNewPassword.Location = new System.Drawing.Point(52, 130);
+            this.txtNewPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtNewPassword.Name = "txtNewPassword";
+            this.txtNewPassword.PasswordChar = '\0';
+            this.txtNewPassword.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtNewPassword.PlaceholderText = "Enter Your New Password";
+            this.txtNewPassword.SelectedText = "";
+            this.txtNewPassword.Size = new System.Drawing.Size(438, 48);
+            this.txtNewPassword.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtNewPassword.TabIndex = 59;
+            this.txtNewPassword.IconRightClick += new System.EventHandler(this.txtNewPassword_IconRightClick);
+            // 
+            // txtCurrentPassword
+            // 
+            this.txtCurrentPassword.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtCurrentPassword.BorderThickness = 2;
+            this.txtCurrentPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtCurrentPassword.DefaultText = "";
+            this.txtCurrentPassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtCurrentPassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtCurrentPassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtCurrentPassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtCurrentPassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtCurrentPassword.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCurrentPassword.ForeColor = System.Drawing.Color.Black;
+            this.txtCurrentPassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtCurrentPassword.IconLeft = global::Fitness_Tracker.Properties.Resources.padlock;
+            this.txtCurrentPassword.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtCurrentPassword.IconRight = ((System.Drawing.Image)(resources.GetObject("txtCurrentPassword.IconRight")));
+            this.txtCurrentPassword.IconRightSize = new System.Drawing.Size(25, 25);
+            this.txtCurrentPassword.Location = new System.Drawing.Point(52, 40);
+            this.txtCurrentPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtCurrentPassword.Name = "txtCurrentPassword";
+            this.txtCurrentPassword.PasswordChar = '\0';
+            this.txtCurrentPassword.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtCurrentPassword.PlaceholderText = "Enter Your Current Password";
+            this.txtCurrentPassword.SelectedText = "";
+            this.txtCurrentPassword.Size = new System.Drawing.Size(438, 48);
+            this.txtCurrentPassword.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtCurrentPassword.TabIndex = 58;
+            this.txtCurrentPassword.IconRightClick += new System.EventHandler(this.txtCurrentPassword_IconRightClick);
+            // 
+            // txtLastName
+            // 
+            this.txtLastName.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtLastName.BorderThickness = 2;
+            this.txtLastName.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtLastName.DefaultText = "";
+            this.txtLastName.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtLastName.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtLastName.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtLastName.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtLastName.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtLastName.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLastName.ForeColor = System.Drawing.Color.Black;
+            this.txtLastName.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtLastName.IconLeft = global::Fitness_Tracker.Properties.Resources.id_card;
+            this.txtLastName.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtLastName.Location = new System.Drawing.Point(346, 65);
+            this.txtLastName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtLastName.Name = "txtLastName";
+            this.txtLastName.PasswordChar = '\0';
+            this.txtLastName.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtLastName.PlaceholderText = "Enter Your Last Name";
+            this.txtLastName.SelectedText = "";
+            this.txtLastName.Size = new System.Drawing.Size(280, 48);
+            this.txtLastName.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtLastName.TabIndex = 53;
+            // 
+            // txtHeight
+            // 
+            this.txtHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtHeight.BorderThickness = 2;
+            this.txtHeight.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtHeight.DefaultText = "";
+            this.txtHeight.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtHeight.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtHeight.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtHeight.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtHeight.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtHeight.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtHeight.ForeColor = System.Drawing.Color.Black;
+            this.txtHeight.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtHeight.IconLeft = global::Fitness_Tracker.Properties.Resources.height;
+            this.txtHeight.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtHeight.Location = new System.Drawing.Point(348, 458);
+            this.txtHeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtHeight.Name = "txtHeight";
+            this.txtHeight.PasswordChar = '\0';
+            this.txtHeight.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtHeight.PlaceholderText = "Enter Your Height";
+            this.txtHeight.SelectedText = "";
+            this.txtHeight.Size = new System.Drawing.Size(280, 48);
+            this.txtHeight.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtHeight.TabIndex = 77;
+            // 
+            // txtFirstName
+            // 
+            this.txtFirstName.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtFirstName.BorderThickness = 2;
+            this.txtFirstName.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtFirstName.DefaultText = "";
+            this.txtFirstName.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtFirstName.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtFirstName.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtFirstName.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtFirstName.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtFirstName.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFirstName.ForeColor = System.Drawing.Color.Black;
+            this.txtFirstName.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtFirstName.IconLeft = global::Fitness_Tracker.Properties.Resources.id_card;
+            this.txtFirstName.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtFirstName.Location = new System.Drawing.Point(40, 65);
+            this.txtFirstName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtFirstName.Name = "txtFirstName";
+            this.txtFirstName.PasswordChar = '\0';
+            this.txtFirstName.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtFirstName.PlaceholderText = "Enter Your First Name";
+            this.txtFirstName.SelectedText = "";
+            this.txtFirstName.Size = new System.Drawing.Size(280, 48);
+            this.txtFirstName.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtFirstName.TabIndex = 52;
+            // 
+            // txtWeight
+            // 
+            this.txtWeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtWeight.BorderThickness = 2;
+            this.txtWeight.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtWeight.DefaultText = "";
+            this.txtWeight.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtWeight.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtWeight.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtWeight.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtWeight.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtWeight.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtWeight.ForeColor = System.Drawing.Color.Black;
+            this.txtWeight.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtWeight.IconLeft = global::Fitness_Tracker.Properties.Resources.weight;
+            this.txtWeight.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtWeight.Location = new System.Drawing.Point(42, 458);
+            this.txtWeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtWeight.Name = "txtWeight";
+            this.txtWeight.PasswordChar = '\0';
+            this.txtWeight.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtWeight.PlaceholderText = "Enter Your Weight";
+            this.txtWeight.SelectedText = "";
+            this.txtWeight.Size = new System.Drawing.Size(280, 48);
+            this.txtWeight.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtWeight.TabIndex = 75;
+            // 
+            // txtUsername
+            // 
+            this.txtUsername.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtUsername.BorderThickness = 2;
+            this.txtUsername.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtUsername.DefaultText = "";
+            this.txtUsername.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtUsername.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtUsername.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtUsername.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtUsername.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtUsername.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUsername.ForeColor = System.Drawing.Color.Black;
+            this.txtUsername.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtUsername.IconLeft = global::Fitness_Tracker.Properties.Resources.user;
+            this.txtUsername.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtUsername.Location = new System.Drawing.Point(40, 159);
+            this.txtUsername.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.PasswordChar = '\0';
+            this.txtUsername.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtUsername.PlaceholderText = "Enter Your Username";
+            this.txtUsername.SelectedText = "";
+            this.txtUsername.Size = new System.Drawing.Size(280, 48);
+            this.txtUsername.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtUsername.TabIndex = 54;
+            // 
+            // txtMobile
+            // 
+            this.txtMobile.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtMobile.BorderThickness = 2;
+            this.txtMobile.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtMobile.DefaultText = "";
+            this.txtMobile.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtMobile.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtMobile.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtMobile.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtMobile.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtMobile.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMobile.ForeColor = System.Drawing.Color.Black;
+            this.txtMobile.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtMobile.IconLeft = global::Fitness_Tracker.Properties.Resources.viber;
+            this.txtMobile.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtMobile.Location = new System.Drawing.Point(350, 362);
+            this.txtMobile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtMobile.Name = "txtMobile";
+            this.txtMobile.PasswordChar = '\0';
+            this.txtMobile.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtMobile.PlaceholderText = "Enter Your Mobile";
+            this.txtMobile.SelectedText = "";
+            this.txtMobile.Size = new System.Drawing.Size(280, 48);
+            this.txtMobile.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtMobile.TabIndex = 72;
+            // 
+            // txtEmail
+            // 
+            this.txtEmail.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtEmail.BorderThickness = 2;
+            this.txtEmail.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtEmail.DefaultText = "";
+            this.txtEmail.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtEmail.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtEmail.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtEmail.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtEmail.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtEmail.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmail.ForeColor = System.Drawing.Color.Black;
+            this.txtEmail.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtEmail.IconLeft = global::Fitness_Tracker.Properties.Resources.mail;
+            this.txtEmail.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtEmail.Location = new System.Drawing.Point(40, 257);
+            this.txtEmail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtEmail.Name = "txtEmail";
+            this.txtEmail.PasswordChar = '\0';
+            this.txtEmail.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtEmail.PlaceholderText = "Enter Your Email";
+            this.txtEmail.SelectedText = "";
+            this.txtEmail.Size = new System.Drawing.Size(586, 48);
+            this.txtEmail.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtEmail.TabIndex = 57;
+            // 
             // frmSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -634,12 +635,12 @@
             this.Name = "frmSetting";
             this.Size = new System.Drawing.Size(1657, 900);
             this.Load += new System.EventHandler(this.frmSetting_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).EndInit();
             this.guna2Panel1.ResumeLayout(false);
             this.guna2Panel1.PerformLayout();
             this.guna2Panel2.ResumeLayout(false);
             this.guna2Panel2.PerformLayout();
             this.guna2Panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

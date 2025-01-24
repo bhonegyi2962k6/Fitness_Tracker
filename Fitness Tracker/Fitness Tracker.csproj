@@ -195,6 +195,12 @@
     <Compile Include="Views\Hiking.Designer.cs">
       <DependentUpon>Hiking.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Home.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Home.Designer.cs">
+      <DependentUpon>Home.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,6 +255,12 @@
     <Compile Include="Views\Swimming.Designer.cs">
       <DependentUpon>Swimming.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ToastForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ToastForm.Designer.cs">
+      <DependentUpon>ToastForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Walking.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -278,6 +290,9 @@
     <EmbeddedResource Include="Views\Hiking.resx">
       <DependentUpon>Hiking.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Home.resx">
+      <DependentUpon>Home.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
@@ -304,6 +319,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Swimming.resx">
       <DependentUpon>Swimming.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ToastForm.resx">
+      <DependentUpon>ToastForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Walking.resx">
       <DependentUpon>Walking.cs</DependentUpon>
@@ -442,6 +460,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\profile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\report.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\schedule.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\check%281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\achieve.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\HarfBuzzSharp.NativeAssets.macOS.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.macOS.targets" Condition="Exists('..\packages\HarfBuzzSharp.NativeAssets.macOS.7.3.0.3\build\net462\HarfBuzzSharp.NativeAssets.macOS.targets')" />

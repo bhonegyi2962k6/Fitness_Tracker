@@ -14,7 +14,7 @@ namespace Fitness_Tracker.Entities
         private Activity activity;
         private DateTime recordDate;
         private double burnedCalories;
-        private string intesityLevel;
+        private string intensityLevel;
 
         public Record() { } 
 
@@ -25,7 +25,7 @@ namespace Fitness_Tracker.Entities
             this.activity = activity;
             this.recordDate = recordDate;
             this.burnedCalories = burnedCalories;
-            this.intesityLevel = intesityLevel;
+            this.intensityLevel = intesityLevel;
         }
 
         public int RecordId { get => recordId; set => recordId = value; }
@@ -33,6 +33,6 @@ namespace Fitness_Tracker.Entities
         public Activity Activity { get => activity; set => activity = value; }
         public DateTime RecordDate { get => recordDate; set => recordDate = value; }
         public double BurnedCalories { get => burnedCalories; set => burnedCalories = value; }
-        public string IntesityLevel { get => intesityLevel; set => intesityLevel = value; }
+        public string IntensityLevel { get => intensityLevel; set => intensityLevel = value; }
     }
 }
