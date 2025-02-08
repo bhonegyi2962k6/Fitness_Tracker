@@ -45,15 +45,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.btnChange = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
-            this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
-            this.btnUpdatePassword = new Guna.UI2.WinForms.Guna2Button();
-            this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
-            this.txtNewPassword = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtCurrentPassword = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtLastName = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtHeight = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtFirstName = new Guna.UI2.WinForms.Guna2TextBox();
@@ -61,6 +52,15 @@
             this.txtUsername = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtMobile = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtEmail = new Guna.UI2.WinForms.Guna2TextBox();
+            this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnUpdatePassword = new Guna.UI2.WinForms.Guna2Button();
+            this.txtNewPassword = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtCurrentPassword = new Guna.UI2.WinForms.Guna2TextBox();
+            this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
+            this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.guna2Panel1.SuspendLayout();
             this.guna2Panel2.SuspendLayout();
             this.guna2Panel3.SuspendLayout();
@@ -183,9 +183,9 @@
             this.label16.ForeColor = System.Drawing.Color.Black;
             this.label16.Location = new System.Drawing.Point(344, 434);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(60, 20);
+            this.label16.Size = new System.Drawing.Size(93, 20);
             this.label16.TabIndex = 76;
-            this.label16.Text = "Height:";
+            this.label16.Text = "Height(cm):";
             // 
             // label15
             // 
@@ -194,9 +194,9 @@
             this.label15.ForeColor = System.Drawing.Color.Black;
             this.label15.Location = new System.Drawing.Point(38, 434);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 20);
+            this.label15.Size = new System.Drawing.Size(93, 20);
             this.label15.TabIndex = 74;
-            this.label15.Text = "Weight:";
+            this.label15.Text = "Weight(kg):";
             // 
             // label4
             // 
@@ -285,152 +285,6 @@
             this.guna2Panel1.Name = "guna2Panel1";
             this.guna2Panel1.Size = new System.Drawing.Size(673, 749);
             this.guna2Panel1.TabIndex = 79;
-            // 
-            // guna2Panel2
-            // 
-            this.guna2Panel2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.guna2Panel2.BorderRadius = 10;
-            this.guna2Panel2.BorderThickness = 2;
-            this.guna2Panel2.Controls.Add(this.btnUpdatePassword);
-            this.guna2Panel2.Controls.Add(this.txtNewPassword);
-            this.guna2Panel2.Controls.Add(this.label8);
-            this.guna2Panel2.Controls.Add(this.txtCurrentPassword);
-            this.guna2Panel2.Controls.Add(this.label14);
-            this.guna2Panel2.Location = new System.Drawing.Point(879, 515);
-            this.guna2Panel2.Name = "guna2Panel2";
-            this.guna2Panel2.Size = new System.Drawing.Size(543, 291);
-            this.guna2Panel2.TabIndex = 80;
-            // 
-            // btnUpdatePassword
-            // 
-            this.btnUpdatePassword.BorderRadius = 5;
-            this.btnUpdatePassword.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnUpdatePassword.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnUpdatePassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnUpdatePassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnUpdatePassword.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.btnUpdatePassword.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdatePassword.ForeColor = System.Drawing.Color.White;
-            this.btnUpdatePassword.Location = new System.Drawing.Point(188, 212);
-            this.btnUpdatePassword.Name = "btnUpdatePassword";
-            this.btnUpdatePassword.Size = new System.Drawing.Size(210, 58);
-            this.btnUpdatePassword.TabIndex = 79;
-            this.btnUpdatePassword.Text = "Change Password";
-            this.btnUpdatePassword.Click += new System.EventHandler(this.btnUpdatePassword_Click);
-            // 
-            // guna2Panel3
-            // 
-            this.guna2Panel3.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.guna2Panel3.BorderRadius = 10;
-            this.guna2Panel3.BorderThickness = 2;
-            this.guna2Panel3.Controls.Add(this.btnUploadPhoto);
-            this.guna2Panel3.Controls.Add(this.picProfilePhoto);
-            this.guna2Panel3.Location = new System.Drawing.Point(879, 57);
-            this.guna2Panel3.Name = "guna2Panel3";
-            this.guna2Panel3.Size = new System.Drawing.Size(543, 424);
-            this.guna2Panel3.TabIndex = 81;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(116, 35);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(247, 19);
-            this.label1.TabIndex = 82;
-            this.label1.Text = "Change Personal Information";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(875, 35);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(190, 19);
-            this.label6.TabIndex = 83;
-            this.label6.Text = "Change Profile Picture";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(875, 491);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(158, 19);
-            this.label10.TabIndex = 84;
-            this.label10.Text = "Change Password";
-            // 
-            // picProfilePhoto
-            // 
-            this.picProfilePhoto.Image = global::Fitness_Tracker.Properties.Resources.user_icon_1024x1024_dtzturco;
-            this.picProfilePhoto.ImageRotate = 0F;
-            this.picProfilePhoto.Location = new System.Drawing.Point(148, 19);
-            this.picProfilePhoto.Name = "picProfilePhoto";
-            this.picProfilePhoto.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            this.picProfilePhoto.Size = new System.Drawing.Size(250, 250);
-            this.picProfilePhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picProfilePhoto.TabIndex = 68;
-            this.picProfilePhoto.TabStop = false;
-            // 
-            // txtNewPassword
-            // 
-            this.txtNewPassword.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtNewPassword.BorderThickness = 2;
-            this.txtNewPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtNewPassword.DefaultText = "";
-            this.txtNewPassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtNewPassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtNewPassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtNewPassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtNewPassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtNewPassword.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNewPassword.ForeColor = System.Drawing.Color.Black;
-            this.txtNewPassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtNewPassword.IconLeft = global::Fitness_Tracker.Properties.Resources.padlock;
-            this.txtNewPassword.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtNewPassword.IconRight = ((System.Drawing.Image)(resources.GetObject("txtNewPassword.IconRight")));
-            this.txtNewPassword.IconRightSize = new System.Drawing.Size(25, 25);
-            this.txtNewPassword.Location = new System.Drawing.Point(52, 130);
-            this.txtNewPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtNewPassword.Name = "txtNewPassword";
-            this.txtNewPassword.PasswordChar = '\0';
-            this.txtNewPassword.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtNewPassword.PlaceholderText = "Enter Your New Password";
-            this.txtNewPassword.SelectedText = "";
-            this.txtNewPassword.Size = new System.Drawing.Size(438, 48);
-            this.txtNewPassword.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtNewPassword.TabIndex = 59;
-            this.txtNewPassword.IconRightClick += new System.EventHandler(this.txtNewPassword_IconRightClick);
-            // 
-            // txtCurrentPassword
-            // 
-            this.txtCurrentPassword.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
-            this.txtCurrentPassword.BorderThickness = 2;
-            this.txtCurrentPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtCurrentPassword.DefaultText = "";
-            this.txtCurrentPassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtCurrentPassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtCurrentPassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtCurrentPassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtCurrentPassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtCurrentPassword.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCurrentPassword.ForeColor = System.Drawing.Color.Black;
-            this.txtCurrentPassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtCurrentPassword.IconLeft = global::Fitness_Tracker.Properties.Resources.padlock;
-            this.txtCurrentPassword.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtCurrentPassword.IconRight = ((System.Drawing.Image)(resources.GetObject("txtCurrentPassword.IconRight")));
-            this.txtCurrentPassword.IconRightSize = new System.Drawing.Size(25, 25);
-            this.txtCurrentPassword.Location = new System.Drawing.Point(52, 40);
-            this.txtCurrentPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtCurrentPassword.Name = "txtCurrentPassword";
-            this.txtCurrentPassword.PasswordChar = '\0';
-            this.txtCurrentPassword.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtCurrentPassword.PlaceholderText = "Enter Your Current Password";
-            this.txtCurrentPassword.SelectedText = "";
-            this.txtCurrentPassword.Size = new System.Drawing.Size(438, 48);
-            this.txtCurrentPassword.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.txtCurrentPassword.TabIndex = 58;
-            this.txtCurrentPassword.IconRightClick += new System.EventHandler(this.txtCurrentPassword_IconRightClick);
             // 
             // txtLastName
             // 
@@ -620,6 +474,152 @@
             this.txtEmail.Size = new System.Drawing.Size(586, 48);
             this.txtEmail.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.txtEmail.TabIndex = 57;
+            // 
+            // guna2Panel2
+            // 
+            this.guna2Panel2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.guna2Panel2.BorderRadius = 10;
+            this.guna2Panel2.BorderThickness = 2;
+            this.guna2Panel2.Controls.Add(this.btnUpdatePassword);
+            this.guna2Panel2.Controls.Add(this.txtNewPassword);
+            this.guna2Panel2.Controls.Add(this.label8);
+            this.guna2Panel2.Controls.Add(this.txtCurrentPassword);
+            this.guna2Panel2.Controls.Add(this.label14);
+            this.guna2Panel2.Location = new System.Drawing.Point(879, 515);
+            this.guna2Panel2.Name = "guna2Panel2";
+            this.guna2Panel2.Size = new System.Drawing.Size(543, 291);
+            this.guna2Panel2.TabIndex = 80;
+            // 
+            // btnUpdatePassword
+            // 
+            this.btnUpdatePassword.BorderRadius = 5;
+            this.btnUpdatePassword.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnUpdatePassword.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnUpdatePassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnUpdatePassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnUpdatePassword.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.btnUpdatePassword.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdatePassword.ForeColor = System.Drawing.Color.White;
+            this.btnUpdatePassword.Location = new System.Drawing.Point(188, 212);
+            this.btnUpdatePassword.Name = "btnUpdatePassword";
+            this.btnUpdatePassword.Size = new System.Drawing.Size(210, 58);
+            this.btnUpdatePassword.TabIndex = 79;
+            this.btnUpdatePassword.Text = "Change Password";
+            this.btnUpdatePassword.Click += new System.EventHandler(this.btnUpdatePassword_Click);
+            // 
+            // txtNewPassword
+            // 
+            this.txtNewPassword.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtNewPassword.BorderThickness = 2;
+            this.txtNewPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtNewPassword.DefaultText = "";
+            this.txtNewPassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtNewPassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtNewPassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtNewPassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtNewPassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtNewPassword.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNewPassword.ForeColor = System.Drawing.Color.Black;
+            this.txtNewPassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtNewPassword.IconLeft = global::Fitness_Tracker.Properties.Resources.padlock;
+            this.txtNewPassword.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtNewPassword.IconRight = ((System.Drawing.Image)(resources.GetObject("txtNewPassword.IconRight")));
+            this.txtNewPassword.IconRightSize = new System.Drawing.Size(25, 25);
+            this.txtNewPassword.Location = new System.Drawing.Point(52, 130);
+            this.txtNewPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtNewPassword.Name = "txtNewPassword";
+            this.txtNewPassword.PasswordChar = '\0';
+            this.txtNewPassword.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtNewPassword.PlaceholderText = "Enter Your New Password";
+            this.txtNewPassword.SelectedText = "";
+            this.txtNewPassword.Size = new System.Drawing.Size(438, 48);
+            this.txtNewPassword.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtNewPassword.TabIndex = 59;
+            this.txtNewPassword.IconRightClick += new System.EventHandler(this.txtNewPassword_IconRightClick);
+            // 
+            // txtCurrentPassword
+            // 
+            this.txtCurrentPassword.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.txtCurrentPassword.BorderThickness = 2;
+            this.txtCurrentPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtCurrentPassword.DefaultText = "";
+            this.txtCurrentPassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtCurrentPassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtCurrentPassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtCurrentPassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtCurrentPassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtCurrentPassword.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCurrentPassword.ForeColor = System.Drawing.Color.Black;
+            this.txtCurrentPassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtCurrentPassword.IconLeft = global::Fitness_Tracker.Properties.Resources.padlock;
+            this.txtCurrentPassword.IconLeftSize = new System.Drawing.Size(25, 25);
+            this.txtCurrentPassword.IconRight = ((System.Drawing.Image)(resources.GetObject("txtCurrentPassword.IconRight")));
+            this.txtCurrentPassword.IconRightSize = new System.Drawing.Size(25, 25);
+            this.txtCurrentPassword.Location = new System.Drawing.Point(52, 40);
+            this.txtCurrentPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtCurrentPassword.Name = "txtCurrentPassword";
+            this.txtCurrentPassword.PasswordChar = '\0';
+            this.txtCurrentPassword.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtCurrentPassword.PlaceholderText = "Enter Your Current Password";
+            this.txtCurrentPassword.SelectedText = "";
+            this.txtCurrentPassword.Size = new System.Drawing.Size(438, 48);
+            this.txtCurrentPassword.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.txtCurrentPassword.TabIndex = 58;
+            this.txtCurrentPassword.IconRightClick += new System.EventHandler(this.txtCurrentPassword_IconRightClick);
+            // 
+            // guna2Panel3
+            // 
+            this.guna2Panel3.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
+            this.guna2Panel3.BorderRadius = 10;
+            this.guna2Panel3.BorderThickness = 2;
+            this.guna2Panel3.Controls.Add(this.btnUploadPhoto);
+            this.guna2Panel3.Controls.Add(this.picProfilePhoto);
+            this.guna2Panel3.Location = new System.Drawing.Point(879, 57);
+            this.guna2Panel3.Name = "guna2Panel3";
+            this.guna2Panel3.Size = new System.Drawing.Size(543, 424);
+            this.guna2Panel3.TabIndex = 81;
+            // 
+            // picProfilePhoto
+            // 
+            this.picProfilePhoto.Image = global::Fitness_Tracker.Properties.Resources.user_icon_1024x1024_dtzturco;
+            this.picProfilePhoto.ImageRotate = 0F;
+            this.picProfilePhoto.Location = new System.Drawing.Point(148, 19);
+            this.picProfilePhoto.Name = "picProfilePhoto";
+            this.picProfilePhoto.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
+            this.picProfilePhoto.Size = new System.Drawing.Size(250, 250);
+            this.picProfilePhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picProfilePhoto.TabIndex = 68;
+            this.picProfilePhoto.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(116, 35);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(247, 19);
+            this.label1.TabIndex = 82;
+            this.label1.Text = "Change Personal Information";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(875, 35);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(190, 19);
+            this.label6.TabIndex = 83;
+            this.label6.Text = "Change Profile Picture";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(875, 491);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(158, 19);
+            this.label10.TabIndex = 84;
+            this.label10.Text = "Change Password";
             // 
             // frmSetting
             // 

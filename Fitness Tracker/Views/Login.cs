@@ -19,38 +19,79 @@ namespace Fitness_Tracker.Views
         private readonly ConnectionDB db;
         public static User user;
 
-        private int maxAttempts = 4;
-        private int lockoutDuration = 30;
-        private int remainingAttempts;
-        private int lockoutTimeRemaining;
-        private bool isLockedOut;
+        private const int maxAttempts = 4;
+        private const int lockoutDuration = 30;
+
+        private static int remainingAttempts = maxAttempts;
+        private static DateTime? lockoutEndTime = null;
+        private static bool isLockedOut = false;
+        private static bool lockoutMessageShown = false; // Prevent multiple message boxes
+
         public frmLogin()
         {
             InitializeComponent();
-            txtPassword.UseSystemPasswordChar = true; 
+            txtPassword.UseSystemPasswordChar = true;
             db = ConnectionDB.GetInstance();
-            remainingAttempts = maxAttempts;
-            lockoutTimeRemaining = lockoutDuration;
-            lblLockOutMessage.Visible = false;
-            loginAttemptTimer.Stop();
+
+            if (isLockedOut && lockoutEndTime.HasValue)
+            {
+                int secondsLeft = (int)(lockoutEndTime.Value - DateTime.Now).TotalSeconds;
+                if (secondsLeft > 0)
+                {
+                    StartLockout(secondsLeft);
+                }
+                else
+                {
+                    EndLockout();
+                }
+            }
+            else
+            {
+                remainingAttempts = maxAttempts;
+                isLockedOut = false;
+                lblLockOutMessage.Visible = false;
+                loginAttemptTimer.Stop();
+            }
         }
-        private void StartLockout()
+        private void StartLockout(int secondsRemaining)
         {
             isLockedOut = true;
-            remainingAttempts = 1; // Allow only one retry after lockout
+            lockoutEndTime = DateTime.Now.AddSeconds(secondsRemaining);
             btnLogIn.Enabled = false;
 
-            lockoutTimeRemaining = lockoutDuration;
-            lblLockOutMessage.Text = $"Please wait {lockoutTimeRemaining} seconds before trying again.";
+            lblLockOutMessage.Text = $"Please wait {secondsRemaining} seconds before trying again.";
             lblLockOutMessage.Visible = true;
 
-            MessageBox.Show($"Maximum login attempts reached. Please try again in {lockoutDuration} seconds.",
-                            "Login Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (!lockoutMessageShown)
+            {
+                MessageBox.Show($"Maximum login attempts reached. Please try again in {secondsRemaining} seconds.",
+                                "Login Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                lockoutMessageShown = true;
+            }
 
-            loginAttemptTimer.Interval = 1000;
+            loginAttemptTimer.Interval = 1000; // Timer updates every second
             loginAttemptTimer.Start();
         }
+        private void EndLockout()
+        {
+            loginAttemptTimer.Stop();
+            isLockedOut = false;
+            btnLogIn.Enabled = true;
+            lockoutEndTime = null;
 
+            // Reset remaining attempts to 1
+            remainingAttempts = 1;
+
+            // Update the label to reflect the new attempt count
+            lblLockOutMessage.Text = "The lockout period has ended. You have 1 attempt to log in.";
+            lblLockOutMessage.Visible = true;
+
+            // Show the message box
+            MessageBox.Show("The lockout period has ended. You have 1 attempt to log in.",
+                            "Lockout Ended", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            lockoutMessageShown = false; // Reset flag so it can show again next time
+        }
         private void SuccessfulLogin(Person user)
         {
             remainingAttempts = maxAttempts;
@@ -59,13 +100,17 @@ namespace Fitness_Tracker.Views
 
             string fullName = $"{user.Firstname.Trim()} {user.Lastname.Trim()}";
             MessageBox.Show($"Welcome, {fullName}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+            // Show the splash screen
+            using (frmLoading splash = new frmLoading())
+            {
+                this.Hide();
+                splash.ShowDialog(); // Block further execution until splash screen is closed
+            }
             frmMainForm mainForm = new frmMainForm();
             this.Hide();
             mainForm.ShowDialog();
             this.Close();
         }
-
         private void FailedLogin()
         {
             remainingAttempts--;
@@ -77,7 +122,8 @@ namespace Fitness_Tracker.Views
             }
             else
             {
-                StartLockout();
+                // If the user fails their 1 attempt, restart the lockout cycle
+                StartLockout(lockoutDuration);
             }
         }
         private void linkLabelRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -99,13 +145,29 @@ namespace Fitness_Tracker.Views
 
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            // Check if both fields are empty
+            if (string.IsNullOrWhiteSpace(username) && string.IsNullOrWhiteSpace(password))
             {
                 MessageBox.Show("Please enter both username and password.", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtUsername.Focus();
                 return;
             }
 
+            // Check if username is empty
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                MessageBox.Show("Please enter your username.", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtUsername.Focus();
+                return;
+            }
+
+            // Check if password is empty
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Please enter your password.", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPassword.Focus();
+                return;
+            }
             try
             {
                 
@@ -134,22 +196,17 @@ namespace Fitness_Tracker.Views
         }
         private void loginAttemptTimer_Tick(object sender, EventArgs e)
         {
-            lockoutTimeRemaining--;
+            if (!lockoutEndTime.HasValue) return;
 
-            if (lockoutTimeRemaining > 0)
+            int secondsLeft = (int)(lockoutEndTime.Value - DateTime.Now).TotalSeconds;
+
+            if (secondsLeft > 0)
             {
-                lblLockOutMessage.Text = $"Please wait {lockoutTimeRemaining} seconds before trying again.";
+                lblLockOutMessage.Text = $"Please wait {secondsLeft} seconds before trying again.";
             }
             else
             {
-                loginAttemptTimer.Stop();
-                isLockedOut = false;
-                btnLogIn.Enabled = true;
-                lblLockOutMessage.Text = "You have 1 last attempt to log in again.";
-                lblLockOutMessage.Visible = true;
-
-                MessageBox.Show("The lockout period has ended. You can try logging in again.",
-                                "Lockout Ended", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                EndLockout(); // Reset lockout and give 1 attempt
             }
         }
 

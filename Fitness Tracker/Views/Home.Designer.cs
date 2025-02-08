@@ -28,97 +28,97 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.Charts.WinForms.ChartFont chartFont1 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont2 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont3 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont4 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid1 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.Tick tick1 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont5 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid2 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.Tick tick2 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont6 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid3 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.PointLabel pointLabel1 = new Guna.Charts.WinForms.PointLabel();
-            Guna.Charts.WinForms.ChartFont chartFont7 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Tick tick3 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont8 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont9 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont10 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont11 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont12 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid4 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.Tick tick4 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont13 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid5 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.Tick tick5 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont14 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid6 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.PointLabel pointLabel2 = new Guna.Charts.WinForms.PointLabel();
-            Guna.Charts.WinForms.ChartFont chartFont15 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Tick tick6 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont16 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont17 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont18 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont19 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont20 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid7 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.Tick tick7 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont21 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid8 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.Tick tick8 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont22 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid9 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.PointLabel pointLabel3 = new Guna.Charts.WinForms.PointLabel();
-            Guna.Charts.WinForms.ChartFont chartFont23 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Tick tick9 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont24 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont25 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont26 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont27 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.ChartFont chartFont28 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid10 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.Tick tick10 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont29 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid11 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.Tick tick11 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont30 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Grid grid12 = new Guna.Charts.WinForms.Grid();
-            Guna.Charts.WinForms.PointLabel pointLabel4 = new Guna.Charts.WinForms.PointLabel();
-            Guna.Charts.WinForms.ChartFont chartFont31 = new Guna.Charts.WinForms.ChartFont();
-            Guna.Charts.WinForms.Tick tick12 = new Guna.Charts.WinForms.Tick();
-            Guna.Charts.WinForms.ChartFont chartFont32 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont33 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont34 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont35 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont36 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid13 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick13 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont37 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid14 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick14 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont38 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid15 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.PointLabel pointLabel5 = new Guna.Charts.WinForms.PointLabel();
+            Guna.Charts.WinForms.ChartFont chartFont39 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Tick tick15 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont40 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont41 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont42 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont43 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont44 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid16 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick16 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont45 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid17 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick17 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont46 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid18 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.PointLabel pointLabel6 = new Guna.Charts.WinForms.PointLabel();
+            Guna.Charts.WinForms.ChartFont chartFont47 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Tick tick18 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont48 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont49 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont50 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont51 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont52 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid19 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick19 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont53 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid20 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick20 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont54 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid21 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.PointLabel pointLabel7 = new Guna.Charts.WinForms.PointLabel();
+            Guna.Charts.WinForms.ChartFont chartFont55 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Tick tick21 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont56 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont57 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont58 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont59 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.ChartFont chartFont60 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid22 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick22 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont61 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid23 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.Tick tick23 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont62 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Grid grid24 = new Guna.Charts.WinForms.Grid();
+            Guna.Charts.WinForms.PointLabel pointLabel8 = new Guna.Charts.WinForms.PointLabel();
+            Guna.Charts.WinForms.ChartFont chartFont63 = new Guna.Charts.WinForms.ChartFont();
+            Guna.Charts.WinForms.Tick tick24 = new Guna.Charts.WinForms.Tick();
+            Guna.Charts.WinForms.ChartFont chartFont64 = new Guna.Charts.WinForms.ChartFont();
             this.lblWelcome = new System.Windows.Forms.Label();
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             this.lblLastActivity = new System.Windows.Forms.Label();
             this.lblUserWeight = new System.Windows.Forms.Label();
             this.lblTotalCaloriesBurned = new System.Windows.Forms.Label();
+            this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
             this.chartAchievedVsPending = new Guna.Charts.WinForms.GunaChart();
             this.gunaPieDataset1 = new Guna.Charts.WinForms.GunaPieDataset();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
             this.lblUpcomingGoal = new System.Windows.Forms.Label();
+            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
             this.lblUpcomingSchedule = new System.Windows.Forms.Label();
+            this.guna2PictureBox2 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.chartWeightTrend = new Guna.Charts.WinForms.GunaChart();
             this.gunaLineDataset1 = new Guna.Charts.WinForms.GunaLineDataset();
             this.chartSchedules = new Guna.Charts.WinForms.GunaChart();
             this.gunaBarDataset1 = new Guna.Charts.WinForms.GunaBarDataset();
             this.chartHistoricalComparison = new Guna.Charts.WinForms.GunaChart();
             this.guna2Panel4 = new Guna.UI2.WinForms.Guna2Panel();
-            this.lblStreakCounter = new System.Windows.Forms.Label();
             this.lblTotalGoalsAchieved = new System.Windows.Forms.Label();
+            this.lblStreakCounter = new System.Windows.Forms.Label();
             this.guna2PictureBox3 = new Guna.UI2.WinForms.Guna2PictureBox();
-            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
-            this.guna2PictureBox2 = new Guna.UI2.WinForms.Guna2PictureBox();
-            this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
             this.guna2Panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).BeginInit();
             this.guna2Panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
             this.guna2Panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox2)).BeginInit();
             this.guna2Panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).BeginInit();
             this.SuspendLayout();
             // 
             // lblWelcome
@@ -179,41 +179,53 @@
             this.lblTotalCaloriesBurned.TabIndex = 70;
             this.lblTotalCaloriesBurned.Text = "Total Calories Burned:";
             // 
+            // picProfilePhoto
+            // 
+            this.picProfilePhoto.Image = global::Fitness_Tracker.Properties.Resources.user_icon_1024x1024_dtzturco;
+            this.picProfilePhoto.ImageRotate = 0F;
+            this.picProfilePhoto.Location = new System.Drawing.Point(16, 13);
+            this.picProfilePhoto.Name = "picProfilePhoto";
+            this.picProfilePhoto.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
+            this.picProfilePhoto.Size = new System.Drawing.Size(250, 250);
+            this.picProfilePhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picProfilePhoto.TabIndex = 69;
+            this.picProfilePhoto.TabStop = false;
+            // 
             // chartAchievedVsPending
             // 
             this.chartAchievedVsPending.Datasets.AddRange(new Guna.Charts.Interfaces.IGunaDataset[] {
             this.gunaPieDataset1});
-            chartFont1.FontName = "Arial";
-            this.chartAchievedVsPending.Legend.LabelFont = chartFont1;
+            chartFont33.FontName = "Arial";
+            this.chartAchievedVsPending.Legend.LabelFont = chartFont33;
             this.chartAchievedVsPending.Location = new System.Drawing.Point(1210, 35);
             this.chartAchievedVsPending.Name = "chartAchievedVsPending";
             this.chartAchievedVsPending.Size = new System.Drawing.Size(419, 260);
             this.chartAchievedVsPending.TabIndex = 81;
-            chartFont2.FontName = "Arial";
-            chartFont2.Size = 12;
-            chartFont2.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            this.chartAchievedVsPending.Title.Font = chartFont2;
-            chartFont3.FontName = "Arial";
-            this.chartAchievedVsPending.Tooltips.BodyFont = chartFont3;
-            chartFont4.FontName = "Arial";
-            chartFont4.Size = 9;
-            chartFont4.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            this.chartAchievedVsPending.Tooltips.TitleFont = chartFont4;
-            this.chartAchievedVsPending.XAxes.GridLines = grid1;
-            chartFont5.FontName = "Arial";
-            tick1.Font = chartFont5;
-            this.chartAchievedVsPending.XAxes.Ticks = tick1;
-            this.chartAchievedVsPending.YAxes.GridLines = grid2;
-            chartFont6.FontName = "Arial";
-            tick2.Font = chartFont6;
-            this.chartAchievedVsPending.YAxes.Ticks = tick2;
-            this.chartAchievedVsPending.ZAxes.GridLines = grid3;
-            chartFont7.FontName = "Arial";
-            pointLabel1.Font = chartFont7;
-            this.chartAchievedVsPending.ZAxes.PointLabels = pointLabel1;
-            chartFont8.FontName = "Arial";
-            tick3.Font = chartFont8;
-            this.chartAchievedVsPending.ZAxes.Ticks = tick3;
+            chartFont34.FontName = "Arial";
+            chartFont34.Size = 12;
+            chartFont34.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartAchievedVsPending.Title.Font = chartFont34;
+            chartFont35.FontName = "Arial";
+            this.chartAchievedVsPending.Tooltips.BodyFont = chartFont35;
+            chartFont36.FontName = "Arial";
+            chartFont36.Size = 9;
+            chartFont36.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartAchievedVsPending.Tooltips.TitleFont = chartFont36;
+            this.chartAchievedVsPending.XAxes.GridLines = grid13;
+            chartFont37.FontName = "Arial";
+            tick13.Font = chartFont37;
+            this.chartAchievedVsPending.XAxes.Ticks = tick13;
+            this.chartAchievedVsPending.YAxes.GridLines = grid14;
+            chartFont38.FontName = "Arial";
+            tick14.Font = chartFont38;
+            this.chartAchievedVsPending.YAxes.Ticks = tick14;
+            this.chartAchievedVsPending.ZAxes.GridLines = grid15;
+            chartFont39.FontName = "Arial";
+            pointLabel5.Font = chartFont39;
+            this.chartAchievedVsPending.ZAxes.PointLabels = pointLabel5;
+            chartFont40.FontName = "Arial";
+            tick15.Font = chartFont40;
+            this.chartAchievedVsPending.ZAxes.Ticks = tick15;
             // 
             // gunaPieDataset1
             // 
@@ -242,6 +254,17 @@
             this.lblUpcomingGoal.TabIndex = 73;
             this.lblUpcomingGoal.Text = "Upcoming Goal:";
             // 
+            // guna2PictureBox1
+            // 
+            this.guna2PictureBox1.Image = global::Fitness_Tracker.Properties.Resources.report;
+            this.guna2PictureBox1.ImageRotate = 0F;
+            this.guna2PictureBox1.Location = new System.Drawing.Point(27, 13);
+            this.guna2PictureBox1.Name = "guna2PictureBox1";
+            this.guna2PictureBox1.Size = new System.Drawing.Size(278, 252);
+            this.guna2PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.guna2PictureBox1.TabIndex = 0;
+            this.guna2PictureBox1.TabStop = false;
+            // 
             // guna2Panel3
             // 
             this.guna2Panel3.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(53)))), ((int)(((byte)(85)))));
@@ -264,120 +287,131 @@
             this.lblUpcomingSchedule.TabIndex = 73;
             this.lblUpcomingSchedule.Text = "Upcoming Schedule:";
             // 
+            // guna2PictureBox2
+            // 
+            this.guna2PictureBox2.Image = global::Fitness_Tracker.Properties.Resources.schedule;
+            this.guna2PictureBox2.ImageRotate = 0F;
+            this.guna2PictureBox2.Location = new System.Drawing.Point(27, 13);
+            this.guna2PictureBox2.Name = "guna2PictureBox2";
+            this.guna2PictureBox2.Size = new System.Drawing.Size(205, 205);
+            this.guna2PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.guna2PictureBox2.TabIndex = 0;
+            this.guna2PictureBox2.TabStop = false;
+            // 
             // chartWeightTrend
             // 
             this.chartWeightTrend.Datasets.AddRange(new Guna.Charts.Interfaces.IGunaDataset[] {
             this.gunaLineDataset1});
-            chartFont9.FontName = "Arial";
-            this.chartWeightTrend.Legend.LabelFont = chartFont9;
+            chartFont41.FontName = "Arial";
+            this.chartWeightTrend.Legend.LabelFont = chartFont41;
             this.chartWeightTrend.Location = new System.Drawing.Point(780, 35);
             this.chartWeightTrend.Name = "chartWeightTrend";
             this.chartWeightTrend.Size = new System.Drawing.Size(419, 260);
             this.chartWeightTrend.TabIndex = 83;
-            chartFont10.FontName = "Arial";
-            chartFont10.Size = 12;
-            chartFont10.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            this.chartWeightTrend.Title.Font = chartFont10;
-            chartFont11.FontName = "Arial";
-            this.chartWeightTrend.Tooltips.BodyFont = chartFont11;
-            chartFont12.FontName = "Arial";
-            chartFont12.Size = 9;
-            chartFont12.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            this.chartWeightTrend.Tooltips.TitleFont = chartFont12;
-            this.chartWeightTrend.XAxes.GridLines = grid4;
-            chartFont13.FontName = "Arial";
-            tick4.Font = chartFont13;
-            this.chartWeightTrend.XAxes.Ticks = tick4;
-            this.chartWeightTrend.YAxes.GridLines = grid5;
-            chartFont14.FontName = "Arial";
-            tick5.Font = chartFont14;
-            this.chartWeightTrend.YAxes.Ticks = tick5;
-            this.chartWeightTrend.ZAxes.GridLines = grid6;
-            chartFont15.FontName = "Arial";
-            pointLabel2.Font = chartFont15;
-            this.chartWeightTrend.ZAxes.PointLabels = pointLabel2;
-            chartFont16.FontName = "Arial";
-            tick6.Font = chartFont16;
-            this.chartWeightTrend.ZAxes.Ticks = tick6;
+            chartFont42.FontName = "Arial";
+            chartFont42.Size = 12;
+            chartFont42.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartWeightTrend.Title.Font = chartFont42;
+            chartFont43.FontName = "Arial";
+            this.chartWeightTrend.Tooltips.BodyFont = chartFont43;
+            chartFont44.FontName = "Arial";
+            chartFont44.Size = 9;
+            chartFont44.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartWeightTrend.Tooltips.TitleFont = chartFont44;
+            this.chartWeightTrend.XAxes.GridLines = grid16;
+            chartFont45.FontName = "Arial";
+            tick16.Font = chartFont45;
+            this.chartWeightTrend.XAxes.Ticks = tick16;
+            this.chartWeightTrend.YAxes.GridLines = grid17;
+            chartFont46.FontName = "Arial";
+            tick17.Font = chartFont46;
+            this.chartWeightTrend.YAxes.Ticks = tick17;
+            this.chartWeightTrend.ZAxes.GridLines = grid18;
+            chartFont47.FontName = "Arial";
+            pointLabel6.Font = chartFont47;
+            this.chartWeightTrend.ZAxes.PointLabels = pointLabel6;
+            chartFont48.FontName = "Arial";
+            tick18.Font = chartFont48;
+            this.chartWeightTrend.ZAxes.Ticks = tick18;
             // 
             // gunaLineDataset1
             // 
             this.gunaLineDataset1.BorderColor = System.Drawing.Color.Empty;
             this.gunaLineDataset1.FillColor = System.Drawing.Color.Empty;
-            this.gunaLineDataset1.Label = "Line1";
+            this.gunaLineDataset1.Label = "Weight Trends";
             this.gunaLineDataset1.TargetChart = this.chartWeightTrend;
             // 
             // chartSchedules
             // 
-            chartFont17.FontName = "Arial";
-            this.chartSchedules.Legend.LabelFont = chartFont17;
+            chartFont49.FontName = "Arial";
+            this.chartSchedules.Legend.LabelFont = chartFont49;
             this.chartSchedules.Location = new System.Drawing.Point(765, 639);
             this.chartSchedules.Name = "chartSchedules";
             this.chartSchedules.Size = new System.Drawing.Size(414, 242);
             this.chartSchedules.TabIndex = 74;
-            chartFont18.FontName = "Arial";
-            chartFont18.Size = 12;
-            chartFont18.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            this.chartSchedules.Title.Font = chartFont18;
-            chartFont19.FontName = "Arial";
-            this.chartSchedules.Tooltips.BodyFont = chartFont19;
-            chartFont20.FontName = "Arial";
-            chartFont20.Size = 9;
-            chartFont20.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            this.chartSchedules.Tooltips.TitleFont = chartFont20;
-            this.chartSchedules.XAxes.GridLines = grid7;
-            chartFont21.FontName = "Arial";
-            tick7.Font = chartFont21;
-            this.chartSchedules.XAxes.Ticks = tick7;
-            this.chartSchedules.YAxes.GridLines = grid8;
-            chartFont22.FontName = "Arial";
-            tick8.Font = chartFont22;
-            this.chartSchedules.YAxes.Ticks = tick8;
-            this.chartSchedules.ZAxes.GridLines = grid9;
-            chartFont23.FontName = "Arial";
-            pointLabel3.Font = chartFont23;
-            this.chartSchedules.ZAxes.PointLabels = pointLabel3;
-            chartFont24.FontName = "Arial";
-            tick9.Font = chartFont24;
-            this.chartSchedules.ZAxes.Ticks = tick9;
+            chartFont50.FontName = "Arial";
+            chartFont50.Size = 12;
+            chartFont50.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartSchedules.Title.Font = chartFont50;
+            chartFont51.FontName = "Arial";
+            this.chartSchedules.Tooltips.BodyFont = chartFont51;
+            chartFont52.FontName = "Arial";
+            chartFont52.Size = 9;
+            chartFont52.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartSchedules.Tooltips.TitleFont = chartFont52;
+            this.chartSchedules.XAxes.GridLines = grid19;
+            chartFont53.FontName = "Arial";
+            tick19.Font = chartFont53;
+            this.chartSchedules.XAxes.Ticks = tick19;
+            this.chartSchedules.YAxes.GridLines = grid20;
+            chartFont54.FontName = "Arial";
+            tick20.Font = chartFont54;
+            this.chartSchedules.YAxes.Ticks = tick20;
+            this.chartSchedules.ZAxes.GridLines = grid21;
+            chartFont55.FontName = "Arial";
+            pointLabel7.Font = chartFont55;
+            this.chartSchedules.ZAxes.PointLabels = pointLabel7;
+            chartFont56.FontName = "Arial";
+            tick21.Font = chartFont56;
+            this.chartSchedules.ZAxes.Ticks = tick21;
             // 
             // gunaBarDataset1
             // 
-            this.gunaBarDataset1.Label = "Bar1";
+            this.gunaBarDataset1.Label = "Number of Schedules";
             // 
             // chartHistoricalComparison
             // 
-            chartFont25.FontName = "Arial";
-            this.chartHistoricalComparison.Legend.LabelFont = chartFont25;
+            chartFont57.FontName = "Arial";
+            this.chartHistoricalComparison.Legend.LabelFont = chartFont57;
             this.chartHistoricalComparison.Location = new System.Drawing.Point(1215, 639);
             this.chartHistoricalComparison.Name = "chartHistoricalComparison";
             this.chartHistoricalComparison.Size = new System.Drawing.Size(414, 242);
             this.chartHistoricalComparison.TabIndex = 88;
-            chartFont26.FontName = "Arial";
-            chartFont26.Size = 12;
-            chartFont26.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            this.chartHistoricalComparison.Title.Font = chartFont26;
-            chartFont27.FontName = "Arial";
-            this.chartHistoricalComparison.Tooltips.BodyFont = chartFont27;
-            chartFont28.FontName = "Arial";
-            chartFont28.Size = 9;
-            chartFont28.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
-            this.chartHistoricalComparison.Tooltips.TitleFont = chartFont28;
-            this.chartHistoricalComparison.XAxes.GridLines = grid10;
-            chartFont29.FontName = "Arial";
-            tick10.Font = chartFont29;
-            this.chartHistoricalComparison.XAxes.Ticks = tick10;
-            this.chartHistoricalComparison.YAxes.GridLines = grid11;
-            chartFont30.FontName = "Arial";
-            tick11.Font = chartFont30;
-            this.chartHistoricalComparison.YAxes.Ticks = tick11;
-            this.chartHistoricalComparison.ZAxes.GridLines = grid12;
-            chartFont31.FontName = "Arial";
-            pointLabel4.Font = chartFont31;
-            this.chartHistoricalComparison.ZAxes.PointLabels = pointLabel4;
-            chartFont32.FontName = "Arial";
-            tick12.Font = chartFont32;
-            this.chartHistoricalComparison.ZAxes.Ticks = tick12;
+            chartFont58.FontName = "Arial";
+            chartFont58.Size = 12;
+            chartFont58.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartHistoricalComparison.Title.Font = chartFont58;
+            chartFont59.FontName = "Arial";
+            this.chartHistoricalComparison.Tooltips.BodyFont = chartFont59;
+            chartFont60.FontName = "Arial";
+            chartFont60.Size = 9;
+            chartFont60.Style = Guna.Charts.WinForms.ChartFontStyle.Bold;
+            this.chartHistoricalComparison.Tooltips.TitleFont = chartFont60;
+            this.chartHistoricalComparison.XAxes.GridLines = grid22;
+            chartFont61.FontName = "Arial";
+            tick22.Font = chartFont61;
+            this.chartHistoricalComparison.XAxes.Ticks = tick22;
+            this.chartHistoricalComparison.YAxes.GridLines = grid23;
+            chartFont62.FontName = "Arial";
+            tick23.Font = chartFont62;
+            this.chartHistoricalComparison.YAxes.Ticks = tick23;
+            this.chartHistoricalComparison.ZAxes.GridLines = grid24;
+            chartFont63.FontName = "Arial";
+            pointLabel8.Font = chartFont63;
+            this.chartHistoricalComparison.ZAxes.PointLabels = pointLabel8;
+            chartFont64.FontName = "Arial";
+            tick24.Font = chartFont64;
+            this.chartHistoricalComparison.ZAxes.Ticks = tick24;
             // 
             // guna2Panel4
             // 
@@ -392,16 +426,6 @@
             this.guna2Panel4.Size = new System.Drawing.Size(767, 282);
             this.guna2Panel4.TabIndex = 75;
             // 
-            // lblStreakCounter
-            // 
-            this.lblStreakCounter.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStreakCounter.ForeColor = System.Drawing.Color.Black;
-            this.lblStreakCounter.Location = new System.Drawing.Point(329, 90);
-            this.lblStreakCounter.Name = "lblStreakCounter";
-            this.lblStreakCounter.Size = new System.Drawing.Size(350, 38);
-            this.lblStreakCounter.TabIndex = 73;
-            this.lblStreakCounter.Text = "Streak:";
-            // 
             // lblTotalGoalsAchieved
             // 
             this.lblTotalGoalsAchieved.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -411,6 +435,16 @@
             this.lblTotalGoalsAchieved.Size = new System.Drawing.Size(350, 81);
             this.lblTotalGoalsAchieved.TabIndex = 74;
             this.lblTotalGoalsAchieved.Text = "Total Goals Achieved:";
+            // 
+            // lblStreakCounter
+            // 
+            this.lblStreakCounter.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStreakCounter.ForeColor = System.Drawing.Color.Black;
+            this.lblStreakCounter.Location = new System.Drawing.Point(329, 90);
+            this.lblStreakCounter.Name = "lblStreakCounter";
+            this.lblStreakCounter.Size = new System.Drawing.Size(350, 38);
+            this.lblStreakCounter.TabIndex = 73;
+            this.lblStreakCounter.Text = "Streak:";
             // 
             // guna2PictureBox3
             // 
@@ -422,40 +456,6 @@
             this.guna2PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.guna2PictureBox3.TabIndex = 0;
             this.guna2PictureBox3.TabStop = false;
-            // 
-            // guna2PictureBox1
-            // 
-            this.guna2PictureBox1.Image = global::Fitness_Tracker.Properties.Resources.report;
-            this.guna2PictureBox1.ImageRotate = 0F;
-            this.guna2PictureBox1.Location = new System.Drawing.Point(27, 13);
-            this.guna2PictureBox1.Name = "guna2PictureBox1";
-            this.guna2PictureBox1.Size = new System.Drawing.Size(278, 252);
-            this.guna2PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.guna2PictureBox1.TabIndex = 0;
-            this.guna2PictureBox1.TabStop = false;
-            // 
-            // guna2PictureBox2
-            // 
-            this.guna2PictureBox2.Image = global::Fitness_Tracker.Properties.Resources.schedule;
-            this.guna2PictureBox2.ImageRotate = 0F;
-            this.guna2PictureBox2.Location = new System.Drawing.Point(27, 13);
-            this.guna2PictureBox2.Name = "guna2PictureBox2";
-            this.guna2PictureBox2.Size = new System.Drawing.Size(205, 205);
-            this.guna2PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.guna2PictureBox2.TabIndex = 0;
-            this.guna2PictureBox2.TabStop = false;
-            // 
-            // picProfilePhoto
-            // 
-            this.picProfilePhoto.Image = global::Fitness_Tracker.Properties.Resources.user_icon_1024x1024_dtzturco;
-            this.picProfilePhoto.ImageRotate = 0F;
-            this.picProfilePhoto.Location = new System.Drawing.Point(16, 13);
-            this.picProfilePhoto.Name = "picProfilePhoto";
-            this.picProfilePhoto.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            this.picProfilePhoto.Size = new System.Drawing.Size(250, 250);
-            this.picProfilePhoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picProfilePhoto.TabIndex = 69;
-            this.picProfilePhoto.TabStop = false;
             // 
             // frmHome
             // 
@@ -475,13 +475,13 @@
             this.Load += new System.EventHandler(this.frmHome_Load);
             this.guna2Panel1.ResumeLayout(false);
             this.guna2Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).EndInit();
             this.guna2Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).EndInit();
             this.guna2Panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox2)).EndInit();
             this.guna2Panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).EndInit();
             this.ResumeLayout(false);
 
         }

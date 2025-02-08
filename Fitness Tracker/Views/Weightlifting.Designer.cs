@@ -124,7 +124,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(454, 216);
+            this.label4.Location = new System.Drawing.Point(454, 236);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(107, 21);
             this.label4.TabIndex = 60;
@@ -144,7 +144,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(454, 103);
+            this.label2.Location = new System.Drawing.Point(454, 129);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(157, 21);
             this.label2.TabIndex = 58;
@@ -193,7 +193,7 @@
             this.txtWeightliftingReps.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtWeightliftingReps.IconLeft = global::Fitness_Tracker.Properties.Resources.reload;
             this.txtWeightliftingReps.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtWeightliftingReps.Location = new System.Drawing.Point(458, 241);
+            this.txtWeightliftingReps.Location = new System.Drawing.Point(458, 261);
             this.txtWeightliftingReps.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtWeightliftingReps.Name = "txtWeightliftingReps";
             this.txtWeightliftingReps.PasswordChar = '\0';
@@ -220,7 +220,7 @@
             this.txtWeightliftingWeight.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtWeightliftingWeight.IconLeft = global::Fitness_Tracker.Properties.Resources.weight_lifting;
             this.txtWeightliftingWeight.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtWeightliftingWeight.Location = new System.Drawing.Point(458, 128);
+            this.txtWeightliftingWeight.Location = new System.Drawing.Point(458, 154);
             this.txtWeightliftingWeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtWeightliftingWeight.Name = "txtWeightliftingWeight";
             this.txtWeightliftingWeight.PasswordChar = '\0';
@@ -439,7 +439,7 @@
             // 
             this.gunaLineDataset1.BorderColor = System.Drawing.Color.Empty;
             this.gunaLineDataset1.FillColor = System.Drawing.Color.Empty;
-            this.gunaLineDataset1.Label = "Line1";
+            this.gunaLineDataset1.Label = "WeightLifting - Calories Burned Over Time";
             this.gunaLineDataset1.TargetChart = this.chartWeightliftingProgress;
             // 
             // label1

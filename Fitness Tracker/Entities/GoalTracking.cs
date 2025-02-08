@@ -19,9 +19,14 @@ namespace Fitness_Tracker.Entities
         private Activity activity;
         private DateTime achievedDate;
 
-        public GoalTracking() { }
+        public GoalTracking()
+        {
 
-        public GoalTracking(int goalId, Person person, string goalType, decimal targetWeight, double dailyCaloriesTarget, bool isAchieved, DateTime createdAt, DateTime targetDate, Activity activity, DateTime achievedDate)
+        }
+
+        public GoalTracking(int goalId, Person person, string goalType, decimal targetWeight,
+            double dailyCaloriesTarget, bool isAchieved, DateTime createdAt, DateTime targetDate,
+            Activity activity, DateTime achievedDate)
         {
             this.goalId = goalId;
             this.person = person;

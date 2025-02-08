@@ -230,9 +230,9 @@
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(55, 352);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(96, 21);
+            this.label3.Size = new System.Drawing.Size(163, 21);
             this.label3.TabIndex = 53;
-            this.label3.Text = "Start Time:";
+            this.label3.Text = "Start Time(hh:mm):";
             // 
             // label2
             // 
@@ -281,9 +281,9 @@
             this.label1.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(55, 472);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 21);
+            this.label1.Size = new System.Drawing.Size(161, 21);
             this.label1.TabIndex = 59;
-            this.label1.Text = "Duration:";
+            this.label1.Text = "Duration(minutes):";
             // 
             // btnMakeSchedule
             // 
@@ -413,7 +413,7 @@
             // 
             // gunaBarDataset1
             // 
-            this.gunaBarDataset1.Label = "Bar1";
+            this.gunaBarDataset1.Label = "Number of Schedules";
             this.gunaBarDataset1.TargetChart = this.chartSchedules;
             // 
             // cboSortByDate
@@ -492,7 +492,7 @@
             // 
             this.gunaAreaDataset1.BorderColor = System.Drawing.Color.Empty;
             this.gunaAreaDataset1.FillColor = System.Drawing.Color.Empty;
-            this.gunaAreaDataset1.Label = "Area1";
+            this.gunaAreaDataset1.Label = "Schedules by Times";
             this.gunaAreaDataset1.TargetChart = this.chartScheduleByTime;
             // 
             // frmSchedule

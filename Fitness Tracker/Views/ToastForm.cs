@@ -41,11 +41,10 @@ namespace Fitness_Tracker.Views
 
             // Initialize and start the timer
             closeTimer = new Timer();
-            closeTimer.Interval = 5000; // 5 seconds
+            closeTimer.Interval = 10000; // 10 seconds
             closeTimer.Tick += CloseTimer_Tick;
             closeTimer.Start();
         }
-
 
         // Timer tick event to close the toast
         private void CloseTimer_Tick(object sender, EventArgs e)
@@ -60,7 +59,6 @@ namespace Fitness_Tracker.Views
             closeTimer?.Dispose();
             base.OnFormClosed(e);
         }
-
     }
 
 }

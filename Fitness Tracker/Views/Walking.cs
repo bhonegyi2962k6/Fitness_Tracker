@@ -94,7 +94,7 @@ namespace Fitness_Tracker.Views
             // Validate Intensity
             if (cboIntensity.SelectedItem == null)
             {
-                MessageBox.Show("Please select an intensity level.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select an Activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return (false, steps, distance, timeTaken, intensity);
             }
 
@@ -201,9 +201,8 @@ namespace Fitness_Tracker.Views
                     }
                 }
 
-                MessageBox.Show($"{activity.ActivityName} record successfully inserted!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Walking performance was recorded successfully! You burned {record.BurnedCalories} calories.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Optional: Create and associate a UserRecord object
                 var userRecord = new UserRecord
                 {
                     Person = user,
@@ -269,10 +268,6 @@ namespace Fitness_Tracker.Views
                     // Customize the chart title
                     chart.Title.Text = $"Calories Burned from {activity.ActivityName}";
                     chart.Update();
-                }
-                else
-                {
-                    MessageBox.Show($"No data available for {activity.ActivityName} graph.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -359,10 +354,6 @@ namespace Fitness_Tracker.Views
                     chart.Title.Text = $"{activity.ActivityName} Metrics Over Time";
                     chart.Update();
                 }
-                else
-                {
-                    MessageBox.Show($"No data available for {activity.ActivityName} metrics chart.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
             }
             catch (Exception ex)
             {
@@ -372,7 +363,7 @@ namespace Fitness_Tracker.Views
 
         private void LoadWalkingMetrics()
         {
-            LoadActivityMetrics(3, "Walking", chartWalkingMetrics); // Activity ID 1 is for Walking
+            LoadActivityMetrics(2, "Walking", chartWalkingMetrics); // Activity ID 2 is for Walking
         }
         private void LoadActivitySummary(int activityId, string activityName)
         {
@@ -558,10 +549,6 @@ namespace Fitness_Tracker.Views
                     // Customize the chart
                     chartHistoricalComparison.Title.Text = "Historical Calories Burned Comparison";
                     chartHistoricalComparison.Update();
-                }
-                else
-                {
-                    MessageBox.Show("No historical data available for comparison.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)

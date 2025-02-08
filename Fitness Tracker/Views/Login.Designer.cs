@@ -37,11 +37,14 @@
             this.btnExit = new Guna.UI2.WinForms.Guna2ControlBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblLockOutMessage = new System.Windows.Forms.Label();
             this.loginAttemptTimer = new System.Windows.Forms.Timer(this.components);
             this.txtPassword = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtUsername = new Guna.UI2.WinForms.Guna2TextBox();
             this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // linkLabelRegister
@@ -126,18 +129,29 @@
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(12, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 19);
+            this.label1.Size = new System.Drawing.Size(58, 19);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Login";
+            this.label1.Text = "Log In";
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(88)))), ((int)(((byte)(121)))));
+            this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel1.Location = new System.Drawing.Point(451, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(369, 390);
             this.panel1.TabIndex = 9;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Fitness_Tracker.Properties.Resources.photo_2025_01_26_08_35_10_1_;
+            this.pictureBox1.Location = new System.Drawing.Point(39, 53);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(294, 295);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // lblLockOutMessage
             // 
@@ -230,6 +244,8 @@
             this.Text = "Login";
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -249,5 +265,6 @@
         private System.Windows.Forms.Label lblLockOutMessage;
         private System.Windows.Forms.Timer loginAttemptTimer;
         private Guna.UI2.WinForms.Guna2ControlBox btnExit;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

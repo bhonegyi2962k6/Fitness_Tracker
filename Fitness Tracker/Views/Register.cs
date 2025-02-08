@@ -41,8 +41,8 @@ namespace Fitness_Tracker.Views
 
         private bool IsValidUsername(string username)
         {
-            // Validate that the username contains only letters and numbers and is between 5 and 15 characters long
-            return System.Text.RegularExpressions.Regex.IsMatch(username, "^[a-zA-Z0-9]{5,15}$");
+            // Validate that the username contains only letters and numbers and is between 6 and 15 characters long
+            return System.Text.RegularExpressions.Regex.IsMatch(username, "^[a-zA-Z0-9]{6,15}$");
         }
 
         private bool IsValidPassword(string password)
@@ -248,7 +248,7 @@ namespace Fitness_Tracker.Views
             }
             else if (!IsValidPassword(password))
             {
-                MessageBox.Show("Invalid password! Password must be 12 characters long and contain at least one uppercase and one lowercase letter.", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Invalid password! Password must be 12 characters long and contain at least one uppercase, one lowercase and one special letter.", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

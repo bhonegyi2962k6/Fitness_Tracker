@@ -146,9 +146,9 @@
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(462, 336);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(149, 21);
+            this.label3.Size = new System.Drawing.Size(182, 21);
             this.label3.TabIndex = 50;
-            this.label3.Text = "Time Taken(mm):";
+            this.label3.Text = "Time Taken(minutes):\r\n";
             // 
             // label2
             // 
@@ -439,7 +439,7 @@
             // 
             this.gunaLineDataset1.BorderColor = System.Drawing.Color.Empty;
             this.gunaLineDataset1.FillColor = System.Drawing.Color.Empty;
-            this.gunaLineDataset1.Label = "Line1";
+            this.gunaLineDataset1.Label = "Rowing - Calories Burned Over Time";
             this.gunaLineDataset1.TargetChart = this.chartRowingProgress;
             // 
             // label1

@@ -278,9 +278,9 @@
             this.label15.ForeColor = System.Drawing.Color.Black;
             this.label15.Location = new System.Drawing.Point(413, 577);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 20);
+            this.label15.Size = new System.Drawing.Size(93, 20);
             this.label15.TabIndex = 38;
-            this.label15.Text = "Weight:";
+            this.label15.Text = "Weight(kg):";
             // 
             // label16
             // 
@@ -289,9 +289,9 @@
             this.label16.ForeColor = System.Drawing.Color.Black;
             this.label16.Location = new System.Drawing.Point(719, 577);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(60, 20);
+            this.label16.Size = new System.Drawing.Size(93, 20);
             this.label16.TabIndex = 40;
-            this.label16.Text = "Height:";
+            this.label16.Text = "Height(cm):";
             // 
             // linkLabelLogin
             // 
@@ -301,10 +301,10 @@
             this.linkLabelLogin.LinkColor = System.Drawing.Color.Black;
             this.linkLabelLogin.Location = new System.Drawing.Point(413, 663);
             this.linkLabelLogin.Name = "linkLabelLogin";
-            this.linkLabelLogin.Size = new System.Drawing.Size(270, 20);
+            this.linkLabelLogin.Size = new System.Drawing.Size(257, 20);
             this.linkLabelLogin.TabIndex = 43;
             this.linkLabelLogin.TabStop = true;
-            this.linkLabelLogin.Text = "Already have an account? Register";
+            this.linkLabelLogin.Text = "Already have an account? Log In";
             this.linkLabelLogin.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLogin_LinkClicked);
             // 
             // btnRegister
@@ -608,6 +608,7 @@
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmRegister";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Register";
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picProfilePhoto)).EndInit();

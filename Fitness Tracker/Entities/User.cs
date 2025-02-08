@@ -12,7 +12,10 @@ namespace Fitness_Tracker.Entities
         private static readonly object lockObj = new object();
 
         // Private constructor to prevent instantiation
-        private User() { }
+        private User() 
+        {
+
+        }
 
         // Static method to get the single instance
         public static User GetInstance()

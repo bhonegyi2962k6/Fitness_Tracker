@@ -27,7 +27,7 @@ namespace Fitness_Tracker.Views
         {
             
                 dtpScheduleDate.MinDate = DateTime.Today;
-                dataGridViewSchedule.RowTemplate.Height = 45; // Adjust this value to your desired height
+                dataGridViewSchedule.RowTemplate.Height = 45; 
                 dataGridViewSchedule.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
 
                 LoadSchedules(); // Load the data into the DataGridView
@@ -91,7 +91,7 @@ namespace Fitness_Tracker.Views
                             scheduleActivity.Schedule.ScheduledDate.ToString("yyyy-MM-dd"),
                             scheduleActivity.StartTime.ToString(@"hh\:mm"),
                             $"{scheduleActivity.DurationMinutes} minutes",
-                            "Delete" // Text for the delete button
+                            "Delete" 
                         );
                     }
                 }
@@ -105,7 +105,6 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading schedules: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void LoadActivities()
         {
             try
@@ -131,8 +130,6 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading activities: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
         private void btnMakeSchedule_Click(object sender, EventArgs e)
         {
             try
@@ -232,8 +229,8 @@ namespace Fitness_Tracker.Views
                     // Clear input fields
                     txtActivityStartTime.Text = string.Empty;
                     txtActivityDuration.Text = string.Empty;
-                    cboActivity.SelectedIndex = 0; // Reset combo box selection
-                    dtpScheduleDate.Value = DateTime.Today; // Reset to today's date
+                    cboActivity.SelectedIndex = 0; 
+                    dtpScheduleDate.Value = DateTime.Today; 
                 }
                 else
                 {
@@ -324,11 +321,11 @@ namespace Fitness_Tracker.Views
                             ActivityName = activityName
                         };
 
-                        // Create Schedule object (dummy schedule for visualization purposes)
+                        // Create Schedule object 
                         var schedule = new Schedule
                         {
                             Person = frmLogin.user,
-                            ScheduledDate = DateTime.Now // Set to the current date or a placeholder
+                            ScheduledDate = DateTime.Now 
                         };
 
                         // Create ScheduleActivity object
@@ -336,7 +333,6 @@ namespace Fitness_Tracker.Views
                         {
                             Schedule = schedule,
                             Activity = activity,
-                            // StartTime and DurationMinutes are not relevant here, but can be added if needed
                         };
 
                         // Add to the list
@@ -379,7 +375,7 @@ namespace Fitness_Tracker.Views
             cboSortByDate.Items.Add("Last 7 Days");
             cboSortByDate.Items.Add("Last Month");
 
-            cboSortByDate.SelectedIndex = 0; // Default to "All Dates"
+            cboSortByDate.SelectedIndex = 0;
         }
 
         private void cboSortByDate_SelectedIndexChanged(object sender, EventArgs e)
@@ -473,9 +469,6 @@ namespace Fitness_Tracker.Views
                             "Delete"
                         );
                     }
-
-                    // Debug or further process objects if needed
-                    Console.WriteLine($"Loaded {scheduleActivities.Count} schedules.");
                 }
                 else
                 {
@@ -568,8 +561,6 @@ namespace Fitness_Tracker.Views
                     // Clear the dataset if no data is returned
                     gunaBarDataset1.DataPoints.Clear();
                     chartSchedules.Update();
-
-                    MessageBox.Show("No data available for the selected date range.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -600,7 +591,7 @@ namespace Fitness_Tracker.Views
                             Person = frmLogin.user // Assuming the current user is the person associated with the schedule
                         };
 
-                        // Create a dummy Activity object (since the query doesn't provide activity details)
+                        // Create a Activity object (since the query doesn't provide activity details)
                         Activity activity = new Activity();
 
                         // Create ScheduleActivity object
@@ -609,7 +600,7 @@ namespace Fitness_Tracker.Views
                             Schedule = schedule,
                             Activity = activity,
                             StartTime = TimeSpan.FromHours(Convert.ToInt32(row["Hour"])),
-                            DurationMinutes = 0 // Duration is not relevant in this context
+                            DurationMinutes = 0 
                         };
 
                         // Add the ScheduleActivity object to the list

@@ -23,7 +23,6 @@ namespace Fitness_Tracker.Views
             InitializeComponent();
             db = ConnectionDB.GetInstance(); // Use the Singleton instance
             LoadRecords();
-            cboDateRange.SelectedIndex = 0;
         }
         private void LoadRecords()
         {
@@ -76,7 +75,7 @@ namespace Fitness_Tracker.Views
                         record.Activity.ActivityName,    // Activity name
                         record.RecordDate.ToString("yyyy-MM-dd"), // Record date
                         record.BurnedCalories,           // Burned calories
-                        db.GetActivityDetails(record.RecordId) ?? "N/A", // Additional activity details
+                        db.GetActivityDetails(record.RecordId) ?? "N/A", // activity details
                         record.IntensityLevel,            // Intensity level
                         "Delete"                         // Action column
                     );
@@ -86,7 +85,7 @@ namespace Fitness_Tracker.Views
                 }
 
                 // Update total calories label
-                lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)}";
+                lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)} kal";
             }
             catch (Exception ex)
             {
@@ -215,10 +214,6 @@ namespace Fitness_Tracker.Views
                     chartActivityCalories.Title.Text = "Historical Calories Burned Comparison";
                     chartActivityCalories.Update();
                 }
-                else
-                {
-                    MessageBox.Show("No historical data available for comparison.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
             }
             catch (Exception ex)
             {
@@ -275,7 +270,7 @@ namespace Fitness_Tracker.Views
                             string[] details = activityDetailsString.Split(new string[] { ", " }, StringSplitOptions.None); // Correct way to split by ", "
                             foreach (string detail in details)
                             {
-                                string[] metricParts = detail.Split(':'); // Change to Split(':') for char
+                                string[] metricParts = detail.Split(':'); // Split(':') for char
                                 if (metricParts.Length == 2)
                                 {
                                     string metricName = metricParts[0].Trim();
@@ -315,13 +310,13 @@ namespace Fitness_Tracker.Views
                     }
 
                     // Display total calories
-                    lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)}";
+                    lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)} kal";
                 }
                 else
                 {
                     // No records found
                     dataGridViewRecord.Rows.Clear();
-                    lblTotalCalories.Text = "Total Calories: 0";
+                    lblTotalCalories.Text = "Total Calories: 0 kal";
                 }
             }
             catch (Exception ex)
@@ -329,7 +324,6 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading records: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-     
         private void cboDateRange_SelectedIndexChanged(object sender, EventArgs e)
         {
             DateTime startDate = DateTime.MinValue;
@@ -445,13 +439,13 @@ namespace Fitness_Tracker.Views
                         }
 
                         // Display total calories
-                        lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)}";
+                        lblTotalCalories.Text = $"Total Calories: {Math.Round(totalCalories, 3)} kal";
                     }
                     else
                     {
                         // No records found
                         dataGridViewRecord.Rows.Clear();
-                        lblTotalCalories.Text = "Total Calories: 0";
+                        lblTotalCalories.Text = "Total Calories: 0 kal";
                     }
                 }
             }
@@ -559,10 +553,6 @@ namespace Fitness_Tracker.Views
                     // Customize chart title and axis labels
                     chartDailyCalories.Title.Text = "Calories Burned Per Day";
                     chartDailyCalories.Update(); // Refresh the chart
-                }
-                else
-                {
-                    MessageBox.Show("No data available for the selected date range.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)

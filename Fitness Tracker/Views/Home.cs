@@ -98,9 +98,9 @@ namespace Fitness_Tracker.Views
                         TargetDate = DateTime.Today // Placeholder, if needed
                     };
 
-                    // Fetch counts from the DataTable
-                    achievedGoals.GoalId = Convert.ToInt32(dt.Rows[0]["achieved_count"]);
-                    pendingGoals.GoalId = Convert.ToInt32(dt.Rows[0]["pending_count"]);
+                    // Fetch counts from the DataTable and handle NULL values
+                    achievedGoals.GoalId = dt.Rows[0]["achieved_count"] != DBNull.Value ? Convert.ToInt32(dt.Rows[0]["achieved_count"]) : 0;
+                    pendingGoals.GoalId = dt.Rows[0]["pending_count"] != DBNull.Value ? Convert.ToInt32(dt.Rows[0]["pending_count"]) : 0;
 
                     // Clear existing data points
                     gunaPieDataset1.DataPoints.Clear();
@@ -258,10 +258,6 @@ namespace Fitness_Tracker.Views
                     chartWeightTrend.Title.Text = "Weight Trends Over Time";
                     chartWeightTrend.Update();
                 }
-                else
-                {
-                    MessageBox.Show("No weight tracking data available.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
             }
             catch (Exception ex)
             {
@@ -384,10 +380,7 @@ namespace Fitness_Tracker.Views
                     chartHistoricalComparison.Title.Text = "Historical Calories Burned Comparison";
                     chartHistoricalComparison.Update();
                 }
-                else
-                {
-                    MessageBox.Show("No historical data available for comparison.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+               
             }
             catch (Exception ex)
             {
@@ -447,23 +440,49 @@ namespace Fitness_Tracker.Views
                 // Fetch total burned calories from the database
                 double burnedCalories = ConnectionDB.GetInstance().GetTotalBurnedCalories(user.PersonID);
 
-                string title = "Achievement Unlocked!";
+                string title = "🔥 Achievement Unlocked!";
                 string message;
                 Color badgeColor;
 
-                if (burnedCalories >= 1000)
+                // Assign badge colors dynamically based on burned calories
+                if (burnedCalories >= 20000)
                 {
-                    message = "You earned a Green Badge for burning 1000+ kcal!";
+                    message = "🏆 You earned a Diamond Badge for burning 20,000+ kcal!";
+                    badgeColor = Color.Cyan;
+                }
+                else if (burnedCalories >= 15000)
+                {
+                    message = "🔥 You earned a Platinum Badge for burning 15,000+ kcal!";
+                    badgeColor = Color.Purple;
+                }
+                else if (burnedCalories >= 10000)
+                {
+                    message = "🥇 You earned a Gold Badge for burning 10,000+ kcal!";
+                    badgeColor = Color.Gold;
+                }
+                else if (burnedCalories >= 5000)
+                {
+                    message = "🥈 You earned a Silver Badge for burning 5,000+ kcal!";
+                    badgeColor = Color.Silver;
+                }
+                else if (burnedCalories >= 2000)
+                {
+                    message = "🥉 You earned a Bronze Badge for burning 2,000+ kcal!";
+                    badgeColor = Color.Brown;
+                }
+                else if (burnedCalories >= 1000)
+                {
+                    message = "🔴 You earned a Red Badge for burning 1,000+ kcal!";
                     badgeColor = Color.Red;
                 }
                 else if (burnedCalories >= 500)
                 {
-                    message = "You earned a Yellow Badge for burning 500–999 kcal!";
+                    message = "🟡 You earned a Yellow Badge for burning 500–999 kcal!";
                     badgeColor = Color.Yellow;
                 }
                 else
                 {
-                    message = "Keep going! Burn more than 500 kcal for a badge.";
+                    message = "💪 Keep going! Burn more than 500 kcal for a badge.";
                     badgeColor = Color.Green;
                 }
 
@@ -476,6 +495,7 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error displaying badge notification: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
     }
 }

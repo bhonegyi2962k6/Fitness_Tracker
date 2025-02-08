@@ -12,7 +12,10 @@ namespace Fitness_Tracker.Entities
         private Person person;
         private Record record;
 
-        public UserRecord() { }
+        public UserRecord() 
+        { 
+
+        }
         public UserRecord(Person person, Record record)
         {
             this.person = person;

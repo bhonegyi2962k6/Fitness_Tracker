@@ -124,7 +124,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(462, 228);
+            this.label4.Location = new System.Drawing.Point(462, 243);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(125, 21);
             this.label4.TabIndex = 42;
@@ -136,15 +136,15 @@
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(462, 354);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(149, 21);
+            this.label3.Size = new System.Drawing.Size(182, 21);
             this.label3.TabIndex = 41;
-            this.label3.Text = "Time Taken(mm):";
+            this.label3.Text = "Time Taken(minutes):";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(462, 115);
+            this.label2.Location = new System.Drawing.Point(462, 130);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(187, 21);
             this.label2.TabIndex = 40;
@@ -203,7 +203,7 @@
             this.txtHikingDistance.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtHikingDistance.IconLeft = global::Fitness_Tracker.Properties.Resources.distance;
             this.txtHikingDistance.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtHikingDistance.Location = new System.Drawing.Point(466, 253);
+            this.txtHikingDistance.Location = new System.Drawing.Point(466, 268);
             this.txtHikingDistance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtHikingDistance.Name = "txtHikingDistance";
             this.txtHikingDistance.PasswordChar = '\0';
@@ -230,7 +230,7 @@
             this.txtHikingElevation.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtHikingElevation.IconLeft = global::Fitness_Tracker.Properties.Resources.mountain;
             this.txtHikingElevation.IconLeftSize = new System.Drawing.Size(25, 25);
-            this.txtHikingElevation.Location = new System.Drawing.Point(466, 140);
+            this.txtHikingElevation.Location = new System.Drawing.Point(466, 155);
             this.txtHikingElevation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtHikingElevation.Name = "txtHikingElevation";
             this.txtHikingElevation.PasswordChar = '\0';
@@ -488,7 +488,7 @@
             // 
             this.gunaLineDataset1.BorderColor = System.Drawing.Color.Empty;
             this.gunaLineDataset1.FillColor = System.Drawing.Color.Empty;
-            this.gunaLineDataset1.Label = "Line1";
+            this.gunaLineDataset1.Label = "Hiking - Calories Burned Over Time";
             this.gunaLineDataset1.TargetChart = this.chartHikingProgress;
             // 
             // label9

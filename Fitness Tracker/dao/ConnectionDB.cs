@@ -18,7 +18,6 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace Fitness_Tracker.dao
 {
-
     public class ConnectionDB
     {
         // Singleton instance
@@ -32,13 +31,14 @@ namespace Fitness_Tracker.dao
         private readonly string server = "localhost";
         private readonly string username = "root";
         private readonly string password = "monk2962006";
-        private readonly string database = "assignment";
+        private readonly string database = "fitness_tracker";
         private string sql;
-        // Private constructor to prevent external instantiation
+
         private ConnectionDB()
         {
             string url = $"Server={server};Uid={username};Pwd={password};Database={database}";
             conn = new MySqlConnection(url);
+            InitializeDatabase();
         }
 
         // Thread-safe Singleton Instance Getter
@@ -85,6 +85,193 @@ namespace Fitness_Tracker.dao
                 MessageBox.Show("Failed to close connection: " + ex.Message);
             }
         }
+        private void InitializeDatabase()
+        {
+            try
+            {
+                // Step 1: Create Database If Not Exists
+                using (var tempConn = new MySqlConnection($"Server={server};Uid={username};Pwd={password};"))
+                {
+                    tempConn.Open();
+                    string createDatabaseQuery = "CREATE DATABASE IF NOT EXISTS fitness_tracker";
+                    using (var cmd = new MySqlCommand(createDatabaseQuery, tempConn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Step 2: Connect to the Newly Created Database
+                OpenConnection();
+
+                // Step 3: Create Tables
+                string schemaQuery = @"
+            USE fitness_tracker;
+
+            CREATE TABLE IF NOT EXISTS person (
+                person_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                username VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                first_name VARCHAR(255),
+                last_name VARCHAR(255),
+                email VARCHAR(255),
+                date_of_birth DATE,
+                gender VARCHAR(255),
+                mobile VARCHAR(255),
+                weight DOUBLE,
+                height DOUBLE,
+                photo_path VARCHAR(255)
+            );
+
+            CREATE TABLE IF NOT EXISTS activity (
+                activity_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                activity_name VARCHAR(100) UNIQUE NOT NULL,
+                description VARCHAR(255) NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS metric (
+                metric_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                activity_id INT NOT NULL,
+                metric_name VARCHAR(255) NOT NULL,
+                calculation_factor DOUBLE NOT NULL,
+                FOREIGN KEY (activity_id) REFERENCES activity(activity_id)
+            );
+
+            CREATE TABLE IF NOT EXISTS record (
+                record_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                person_id INT NOT NULL,
+                activity_id INT NOT NULL,
+                record_date DATE NOT NULL,
+                burned_calories DOUBLE NOT NULL,
+                intensity_level VARCHAR(50),
+                FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE,
+                FOREIGN KEY (activity_id) REFERENCES activity(activity_id)
+            );
+
+            CREATE TABLE IF NOT EXISTS user_record (
+                person_id INT NOT NULL,
+                record_id INT NOT NULL,
+                FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE,
+                FOREIGN KEY (record_id) REFERENCES record(record_id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS metric_values (
+                metric_value_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                activity_id INT NOT NULL,
+                record_id INT NOT NULL,
+                metric_id INT NOT NULL,
+                value DOUBLE NOT NULL,
+                FOREIGN KEY (activity_id) REFERENCES activity(activity_id) ON DELETE CASCADE,
+                FOREIGN KEY (record_id) REFERENCES record(record_id) ON DELETE CASCADE,
+                FOREIGN KEY (metric_id) REFERENCES metric(metric_id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS goal_tracking (
+                goal_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                person_id INT NOT NULL,
+                goal_type VARCHAR(255) NOT NULL,
+                target_weight DECIMAL(5,2) NOT NULL,
+                daily_calories_target DOUBLE NOT NULL,
+                is_achieved BOOLEAN DEFAULT FALSE,
+                created_at DATE,
+                target_date DATE,
+                activity_id INT,
+                achieved_date DATE NULL,
+                FOREIGN KEY (person_id) REFERENCES person(person_id),
+                FOREIGN KEY (activity_id) REFERENCES activity(activity_id) ON DELETE SET NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS schedule (
+                schedule_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                person_id INT NOT NULL,
+                scheduled_date DATE NOT NULL,
+                FOREIGN KEY (person_id) REFERENCES person(person_id)
+            );
+
+            CREATE TABLE IF NOT EXISTS schedule_activity (
+                schedule_id INT NOT NULL,
+                activity_id INT NOT NULL,
+                start_time TIME NOT NULL,
+                duration_minutes INT NOT NULL,
+                FOREIGN KEY (schedule_id) REFERENCES schedule(schedule_id),
+                FOREIGN KEY (activity_id) REFERENCES activity(activity_id)
+            );
+
+            CREATE TABLE IF NOT EXISTS met_values (
+                met_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                activity_id INT NOT NULL,
+                intensity_level VARCHAR(50) NOT NULL,
+                met_value DOUBLE NOT NULL,
+                FOREIGN KEY (activity_id) REFERENCES activity(activity_id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS weight_tracking (
+                weight_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                person_id INT NOT NULL,
+                recorded_date DATE NOT NULL,
+                weight DOUBLE NOT NULL,
+                FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE
+            );";
+
+                ExecuteNonQuery(schemaQuery);
+
+                // Step 4: Insert Default Data
+                string insertActivitiesQuery = @"
+            INSERT IGNORE INTO activity (activity_name, description)
+            VALUES 
+                ('Swimming', 'A water-based physical activity'),
+                ('Walking', 'A low-impact cardio exercise'),
+                ('Cycling', 'A cardio exercise performed using a bicycle'),
+                ('Hiking', 'Walking in nature or on trails'),
+                ('Weightlifting', 'A strength-based physical activity involving lifting weights'),
+                ('Rowing', 'A full-body workout simulating rowing motion');";
+                ExecuteNonQuery(insertActivitiesQuery);
+
+                string insertMetricsQuery = @"
+            INSERT IGNORE INTO metric (activity_id, metric_name, calculation_factor)
+            VALUES
+                (1, 'Laps', 0.1), (1, 'Time Taken', 0.02), (1, 'Average Heart Rate', 0.05),
+                (2, 'Steps', 0.05), (2, 'Distance', 0.1), (2, 'Time Taken', 0.02),
+                (3, 'Speed', 0.2), (3, 'Distance', 0.1), (3, 'Ride Duration', 0.03),
+                (4, 'Elevation Gained', 0.15), (4, 'Distance', 0.1), (4, 'Time Taken', 0.02),
+                (5, 'Weight Lifted', 0.25), (5, 'Repetitions', 0.05), (5, 'Sets Completed', 0.1),
+                (6, 'Total Strokes', 0.1), (6, 'Distance', 0.08), (6, 'Time Taken', 0.02);";
+                ExecuteNonQuery(insertMetricsQuery);
+
+                string insertMetValuesQuery = @"
+            INSERT IGNORE INTO met_values (activity_id, intensity_level, met_value)
+            VALUES
+                (1, 'Light', 6.0), (1, 'Moderate', 8.0), (1, 'Vigorous', 9.8),
+                (2, 'Light', 3.3), (2, 'Moderate', 5.0), (2, 'Vigorous', 6.3),
+                (3, 'Light', 4.0), (3, 'Moderate', 8.0), (3, 'Vigorous', 10.0),
+                (4, 'Moderate', 6.0), (4, 'Vigorous', 9.0),
+                (5, 'Light', 3.0), (5, 'Moderate', 4.5), (5, 'Vigorous', 6.0),
+                (6, 'Light', 3.5), (6, 'Moderate', 6.0), (6, 'Vigorous', 8.5);";
+                ExecuteNonQuery(insertMetValuesQuery);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Database Initialization Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+        private void ExecuteNonQuery(string query)
+        {
+            try
+            {
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"SQL Execution Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         // Check if User Exists
         public bool IsUserExists(string username, string email)
@@ -110,7 +297,6 @@ namespace Fitness_Tracker.dao
                 CloseConnection();
             }
         }
-
         // Validate User Login
         public User IsValidUser(string username, string password)
         {
@@ -163,7 +349,6 @@ namespace Fitness_Tracker.dao
 
             return null; // Invalid credentials
         }
-
         // Add User
         public bool AddUser(Person person)
         {
@@ -202,7 +387,6 @@ namespace Fitness_Tracker.dao
                 CloseConnection();
             }
         }
-    
         public Dictionary<int, double> GetCalculationFactors(int activityId)
         {
             Dictionary<int, double> calculationFactors = new Dictionary<int, double>();
@@ -238,7 +422,6 @@ namespace Fitness_Tracker.dao
 
             return calculationFactors;
         }
-
         public int InsertRecords(double burnedCalories, int activityId, string intensityLevel)
         {
             int recordId = -1; // Default to -1 to indicate failure
@@ -290,20 +473,19 @@ namespace Fitness_Tracker.dao
             }
             return recordId;
         }
-
         public bool InsertMetricValues(int activityId, int recordId, Dictionary<int, double> metrics)
         {
             bool isSuccess = true;
 
             try
             {
-                OpenConnection(); // Ensure the connection is open
+                OpenConnection(); // connection is open
 
                 foreach (var metric in metrics)
                 {
                     sql = @"
-            INSERT INTO metric_values (activity_id, record_id, metric_id, value)
-            VALUES (@activityId, @recordId, @metricId, @value)";
+                            INSERT INTO metric_values (activity_id, record_id, metric_id, value)
+                            VALUES (@activityId, @recordId, @metricId, @value)";
 
                     cmd = new MySqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@activityId", activityId);
@@ -325,22 +507,20 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
-
             return isSuccess;
         }
-
         public int InsertSchedule(int personID, DateTime scheduledDate)
         {
             try
             {
-                OpenConnection(); // Ensure the connection is open
+                OpenConnection(); // connection is open
 
                 sql = @"
-            INSERT INTO schedule (person_id, scheduled_date)
-            VALUES (@personId, @scheduledDate);
-            SELECT LAST_INSERT_ID();";
+                    INSERT INTO schedule (person_id, scheduled_date)
+                    VALUES (@personId, @scheduledDate);
+                    SELECT LAST_INSERT_ID();";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -356,19 +536,18 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
         }
-
         public bool InsertScheduleActivity(int scheduleId, int activityId, TimeSpan startTime, int durationMinutes)
         {
             try
             {
-                OpenConnection(); // Ensure the connection is open
+                OpenConnection(); // connection is open
 
                 sql = @"
-            INSERT INTO schedule_activity (schedule_id, activity_id, start_time, duration_minutes)
-            VALUES (@scheduleId, @activityId, @startTime, @durationMinutes)";
+                        INSERT INTO schedule_activity (schedule_id, activity_id, start_time, duration_minutes)
+                        VALUES (@scheduleId, @activityId, @startTime, @durationMinutes)";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@scheduleId", scheduleId);
@@ -385,10 +564,9 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
         }
-
         public DataTable GetSchedules(int personID)
         {
             DataTable dt = new DataTable();
@@ -397,17 +575,17 @@ namespace Fitness_Tracker.dao
             {
                 OpenConnection(); // Ensure the connection is open
 
-                string sql = @"
-            SELECT 
-                s.schedule_id AS 'Schedule Id',
-                a.activity_name AS 'Activity', 
-                s.scheduled_date AS 'Date', 
-                sa.start_time AS 'Start Time', 
-                sa.duration_minutes AS 'Duration'
-            FROM schedule s
-            JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
-            JOIN activity a ON sa.activity_id = a.activity_id
-            WHERE s.person_id = @personId;"; // Sort by date and time
+                sql = @"
+                        SELECT 
+                            s.schedule_id AS 'Schedule Id',
+                            a.activity_name AS 'Activity', 
+                            s.scheduled_date AS 'Date', 
+                            sa.start_time AS 'Start Time', 
+                            sa.duration_minutes AS 'Duration'
+                        FROM schedule s
+                        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+                        JOIN activity a ON sa.activity_id = a.activity_id
+                        WHERE s.person_id = @personId;"; // Sort by date and time
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personID);
@@ -426,7 +604,6 @@ namespace Fitness_Tracker.dao
 
             return dt;
         }
-
         public Dictionary<int, string> GetActivities()
         {
             Dictionary<int, string> activities = new Dictionary<int, string>();
@@ -484,7 +661,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                // Ensure the connection is closed
+                // connection is closed
                 CloseConnection();
             }
         }
@@ -494,19 +671,19 @@ namespace Fitness_Tracker.dao
 
             try
             {
-                OpenConnection(); // Ensure the connection is open
+                OpenConnection(); // the connection is open
 
                 sql = @"
-            SELECT 
-                r.record_id AS 'Record Id',
-                a.activity_name AS 'Activity',
-                r.record_date AS 'Record Date',
-                r.burned_calories AS 'Burned Calories',
-                r.intensity_level AS 'Activity Type' -- Use the new column
-            FROM record r
-            JOIN activity a ON r.activity_id = a.activity_id
-            WHERE r.person_id = @personId
-            ORDER BY r.record_date DESC";
+                    SELECT 
+                        r.record_id AS 'Record Id',
+                        a.activity_name AS 'Activity',
+                        r.record_date AS 'Record Date',
+                        r.burned_calories AS 'Burned Calories',
+                        r.intensity_level AS 'Activity Type' 
+                    FROM record r
+                    JOIN activity a ON r.activity_id = a.activity_id
+                    WHERE r.person_id = @personId
+                    ORDER BY r.record_date DESC";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personID);
@@ -520,25 +697,30 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
         }
-
         public bool DeleteRecord(int recordId)
         {
             try
             {
                 OpenConnection();
 
-                // Delete the associated rows in the user_record table
+                // Step 1: Delete from metric_values table first 
+                sql = "DELETE FROM metric_values WHERE record_id = @recordId";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@recordId", recordId);
+                cmd.ExecuteNonQuery();  // Execute deletion
+
+                // Step 2: Delete from user_record table
                 sql = "DELETE FROM user_record WHERE record_id = @recordId";
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@recordId", recordId);
                 cmd.ExecuteNonQuery();
 
-                // Delete the record from the record table
+                // Step 3: Finally, delete from record table
                 sql = "DELETE FROM record WHERE record_id = @recordId";
                 MySqlCommand deleteRecordCmd = new MySqlCommand(sql, conn);
                 deleteRecordCmd.Parameters.AddWithValue("@recordId", recordId);
@@ -562,13 +744,13 @@ namespace Fitness_Tracker.dao
 
             try
             {
-                OpenConnection(); // Ensure connection is open
+                OpenConnection(); // connection is open
 
                 sql = @"
-        SELECT m.metric_name, mv.value
-        FROM metric_values mv
-        JOIN metric m ON mv.metric_id = m.metric_id
-        WHERE mv.record_id = @recordId";
+                    SELECT m.metric_name, mv.value
+                    FROM metric_values mv
+                    JOIN metric m ON mv.metric_id = m.metric_id
+                    WHERE mv.record_id = @recordId";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@recordId", recordId);
@@ -583,7 +765,6 @@ namespace Fitness_Tracker.dao
                     }
                 }
 
-                // Remove the trailing comma and space
                 if (activityDetails.Length > 0)
                 {
                     activityDetails.Length -= 2;
@@ -595,19 +776,18 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return activityDetails.ToString();
         }
-
         public double GetMetValue(int activityId, string intensity)
         {
             double metValue = 0;
 
             try
             {
-                OpenConnection(); // Ensure connection is open
+                OpenConnection(); // connection is open
 
                 sql = "SELECT met_value FROM met_values WHERE activity_id = @activityId AND intensity_level = @intensity";
                 cmd = new MySqlCommand(sql, conn);
@@ -626,28 +806,27 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return metValue;
         }
-
         public bool UpdateGoal(int goalId, string goalType, double targetWeight, double dailyCaloriesTarget, DateTime targetDate, int activityId)
         {
             bool isSuccess = false;
 
             try
             {
-                OpenConnection(); // Ensure connection is open
+                OpenConnection(); // connection is open
 
                 sql = @"
-        UPDATE goal_tracking 
-        SET goal_type = @goalType, 
-            target_weight = @targetWeight, 
-            daily_calories_target = @dailyCaloriesTarget, 
-            target_date = @targetDate, 
-            activity_id = @activityId 
-        WHERE goal_id = @goalId";
+                        UPDATE goal_tracking 
+                        SET goal_type = @goalType, 
+                            target_weight = @targetWeight, 
+                            daily_calories_target = @dailyCaloriesTarget, 
+                            target_date = @targetDate, 
+                            activity_id = @activityId 
+                        WHERE goal_id = @goalId";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@goalId", goalId);
@@ -665,7 +844,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return isSuccess;
@@ -676,7 +855,7 @@ namespace Fitness_Tracker.dao
 
             try
             {
-                OpenConnection(); // Ensure the connection is open
+                OpenConnection(); // the connection is open
 
                 sql = "DELETE FROM goal_tracking WHERE goal_id = @goalId";
 
@@ -691,7 +870,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return isSuccess;
@@ -702,12 +881,12 @@ namespace Fitness_Tracker.dao
 
             try
             {
-                OpenConnection(); // Ensure the connection is open
+                OpenConnection(); // connection is open
 
                 sql = @"
-        UPDATE goal_tracking
-        SET is_achieved = 1, achieved_date = NOW()
-        WHERE goal_id = @goalID;";
+                UPDATE goal_tracking
+                SET is_achieved = 1, achieved_date = NOW()
+                WHERE goal_id = @goalID;";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@goalID", goalId);
@@ -720,7 +899,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); //  connection is closed
             }
 
             return isSuccess;
@@ -731,24 +910,24 @@ namespace Fitness_Tracker.dao
 
             try
             {
-                OpenConnection(); // Ensure the connection is open
+                OpenConnection(); //  connection is open
 
                 sql = @"SELECT 
-            goal_tracking.goal_id,
-            goal_tracking.goal_type,
-            goal_tracking.target_weight,
-            goal_tracking.daily_calories_target,
-            goal_tracking.is_achieved,
-            goal_tracking.created_at,
-            goal_tracking.target_date,
-            activity.activity_name
-        FROM 
-            goal_tracking
-        LEFT JOIN 
-            activity ON goal_tracking.activity_id = activity.activity_id
-        WHERE 
-            goal_tracking.person_id = @personID
-        ORDER BY created_at ASC";
+                            goal_tracking.goal_id,
+                            goal_tracking.goal_type,
+                            goal_tracking.target_weight,
+                            goal_tracking.daily_calories_target,
+                            goal_tracking.is_achieved,
+                            goal_tracking.created_at,
+                            goal_tracking.target_date,
+                            activity.activity_name
+                        FROM 
+                            goal_tracking
+                        LEFT JOIN 
+                            activity ON goal_tracking.activity_id = activity.activity_id
+                        WHERE 
+                            goal_tracking.person_id = @personID
+                        ORDER BY created_at ASC";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -762,19 +941,18 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
         }
-
         public int GetAchievedGoalsCountByType(int personID, string goalType)
         {
             int achievedGoalsCount = 0;
 
             try
             {
-                OpenConnection(); // Ensure the connection is open
+                OpenConnection(); //  connection is open
 
                 string sql = "SELECT COUNT(*) FROM goal_tracking WHERE person_id = @personID AND is_achieved = 1 AND goal_type = @goalType";
 
@@ -790,7 +968,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return achievedGoalsCount;
@@ -804,9 +982,9 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the connection
 
                 sql = @"
-        INSERT INTO goal_tracking 
-        (person_id, goal_type, target_weight, daily_calories_target, is_achieved, created_at, target_date, activity_id)
-        VALUES (@personID, @goalType, @targetWeight, @dailyCaloriesTarget, 0, NOW(), @targetDate, @activityId)";
+                        INSERT INTO goal_tracking 
+                        (person_id, goal_type, target_weight, daily_calories_target, is_achieved, created_at, target_date, activity_id)
+                        VALUES (@personID, @goalType, @targetWeight, @dailyCaloriesTarget, 0, NOW(), @targetDate, @activityId)";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -824,7 +1002,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return isSuccess;
@@ -850,7 +1028,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return isUpdated;
@@ -879,34 +1057,39 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return activityId;
         }
-        public DataTable GetGoalAchievementByMonth()
+        public DataTable GetGoalAchievementByMonth(int personID)
         {
             DataTable dt = new DataTable();
             try
             {
                 OpenConnection(); // Open the database connection
 
-                sql = @"
-        SELECT 
-            DATE_FORMAT(achieved_date, '%Y-%m') AS achievement_month, 
-            COUNT(*) AS achieved_count
-        FROM 
-            goal_tracking
-        WHERE 
-            is_achieved = 1
-        GROUP BY 
-            DATE_FORMAT(achieved_date, '%Y-%m')
-        ORDER BY 
-            achievement_month ASC";
+                string sql = @"
+                    SELECT 
+                        DATE_FORMAT(achieved_date, '%Y-%m') AS achievement_month, 
+                        COUNT(*) AS achieved_count
+                    FROM 
+                        goal_tracking
+                    WHERE 
+                        is_achieved = 1 AND person_id = @personID
+                    GROUP BY 
+                        DATE_FORMAT(achieved_date, '%Y-%m')
+                    ORDER BY 
+                        achievement_month ASC";
 
-                cmd = new MySqlCommand(sql, conn);
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@personID", personID);
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dt);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -914,11 +1097,12 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
         }
+
         public DataTable GetAchievedAndPendingGoals(int personID)
         {
             DataTable dt = new DataTable();
@@ -927,17 +1111,20 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            SUM(CASE WHEN is_achieved = 1 THEN 1 ELSE 0 END) AS achieved_count,
-            SUM(CASE WHEN is_achieved = 0 THEN 1 ELSE 0 END) AS pending_count
-        FROM goal_tracking
-        WHERE person_id = @personID";
+                    SELECT 
+                        COALESCE(SUM(CASE WHEN is_achieved = 1 THEN 1 ELSE 0 END), 0) AS achieved_count,
+                        COALESCE(SUM(CASE WHEN is_achieved = 0 THEN 1 ELSE 0 END), 0) AS pending_count
+                    FROM goal_tracking
+                    WHERE person_id = @personID";
 
-                cmd = new MySqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@personID", personID);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                adapter.Fill(dt);
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@personID", personID);
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dt);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -945,11 +1132,12 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
         }
+
         public bool InsertWeightTracking(int personID, double weight)
         {
             bool isSuccess = false;
@@ -958,8 +1146,8 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        INSERT INTO weight_tracking (person_id, recorded_date, weight)
-        VALUES (@personID, NOW(), @weight);";
+                    INSERT INTO weight_tracking (person_id, recorded_date, weight)
+                    VALUES (@personID, NOW(), @weight);";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -973,7 +1161,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return isSuccess;
@@ -986,15 +1174,15 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            DATE_FORMAT(recorded_date, '%Y-%m-%d') AS recorded_date,
-            weight
-        FROM 
-            weight_tracking
-        WHERE 
-            person_id = @personID
-        ORDER BY 
-            recorded_date ASC";
+                        SELECT 
+                            DATE_FORMAT(recorded_date, '%Y-%m-%d') AS recorded_date,
+                            weight
+                        FROM 
+                            weight_tracking
+                        WHERE 
+                            person_id = @personID
+                        ORDER BY 
+                            recorded_date ASC";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -1008,7 +1196,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
@@ -1021,16 +1209,16 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            r.record_id AS 'Record Id',
-            a.activity_name AS 'Activity',
-            r.record_date AS 'Record Date',
-            r.burned_calories AS 'Burned Calories',
-            r.intensity_level AS 'Activity Type'
-        FROM record r
-        JOIN activity a ON r.activity_id = a.activity_id
-        WHERE r.person_id = @personID AND r.record_date BETWEEN @startDate AND @endDate
-        ORDER BY r.record_date DESC";
+                    SELECT 
+                        r.record_id AS 'Record Id',
+                        a.activity_name AS 'Activity',
+                        r.record_date AS 'Record Date',
+                        r.burned_calories AS 'Burned Calories',
+                        r.intensity_level AS 'Activity Type'
+                    FROM record r
+                    JOIN activity a ON r.activity_id = a.activity_id
+                    WHERE r.person_id = @personID AND r.record_date BETWEEN @startDate AND @endDate
+                    ORDER BY r.record_date DESC";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -1046,7 +1234,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
@@ -1059,16 +1247,16 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            r.record_id AS 'Record Id',
-            a.activity_name AS 'Activity',
-            r.record_date AS 'Record Date',
-            r.burned_calories AS 'Burned Calories',
-            r.intensity_level AS 'Activity Type'
-        FROM record r
-        JOIN activity a ON r.activity_id = a.activity_id
-        WHERE r.person_id = @personID AND a.activity_name = @activityName
-        ORDER BY r.record_date DESC";
+                        SELECT 
+                            r.record_id AS 'Record Id',
+                            a.activity_name AS 'Activity',
+                            r.record_date AS 'Record Date',
+                            r.burned_calories AS 'Burned Calories',
+                            r.intensity_level AS 'Activity Type'
+                        FROM record r
+                        JOIN activity a ON r.activity_id = a.activity_id
+                        WHERE r.person_id = @personID AND a.activity_name = @activityName
+                        ORDER BY r.record_date DESC";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -1083,7 +1271,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
@@ -1096,13 +1284,13 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            DATE(record_date) AS record_date, 
-            SUM(burned_calories) AS total_calories
-        FROM record
-        WHERE person_id = @personID AND record_date BETWEEN @startDate AND @endDate
-        GROUP BY DATE(record_date)
-        ORDER BY record_date ASC";
+                    SELECT 
+                        DATE(record_date) AS record_date, 
+                        SUM(burned_calories) AS total_calories
+                    FROM record
+                    WHERE person_id = @personID AND record_date BETWEEN @startDate AND @endDate
+                    GROUP BY DATE(record_date)
+                    ORDER BY record_date ASC";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -1118,7 +1306,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); //connection is closed
             }
 
             return dt;
@@ -1131,15 +1319,15 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            a.activity_name AS Activity,
-            COUNT(s.schedule_id) AS TotalSchedules
-        FROM schedule s
-        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
-        JOIN activity a ON sa.activity_id = a.activity_id
-        WHERE s.person_id = @personID
-        GROUP BY a.activity_name
-        ORDER BY TotalSchedules DESC";
+                    SELECT 
+                        a.activity_name AS Activity,
+                        COUNT(s.schedule_id) AS TotalSchedules
+                    FROM schedule s
+                    JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+                    JOIN activity a ON sa.activity_id = a.activity_id
+                    WHERE s.person_id = @personID
+                    GROUP BY a.activity_name
+                    ORDER BY TotalSchedules DESC";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personID", personID);
@@ -1153,7 +1341,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
@@ -1166,10 +1354,10 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT COUNT(*) 
-        FROM schedule s
-        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
-        WHERE s.person_id = @personId AND s.scheduled_date = @scheduleDate";
+                    SELECT COUNT(*) 
+                    FROM schedule s
+                    JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+                    WHERE s.person_id = @personId AND s.scheduled_date = @scheduleDate";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personID);
@@ -1184,7 +1372,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return count;
@@ -1197,16 +1385,16 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            s.schedule_id AS 'Schedule Id',
-            a.activity_name AS 'Activity',
-            s.scheduled_date AS 'Date',
-            sa.start_time AS 'Start Time',
-            sa.duration_minutes AS 'Duration'
-        FROM schedule s
-        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
-        JOIN activity a ON sa.activity_id = a.activity_id
-        WHERE s.person_id = @personID";
+                        SELECT 
+                            s.schedule_id AS 'Schedule Id',
+                            a.activity_name AS 'Activity',
+                            s.scheduled_date AS 'Date',
+                            sa.start_time AS 'Start Time',
+                            sa.duration_minutes AS 'Duration'
+                        FROM schedule s
+                        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+                        JOIN activity a ON sa.activity_id = a.activity_id
+                        WHERE s.person_id = @personID";
 
                 if (startDate.HasValue && endDate.HasValue)
                 {
@@ -1233,7 +1421,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
@@ -1247,16 +1435,16 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT COUNT(*) 
-        FROM schedule s
-        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
-        WHERE s.person_id = @personId
-        AND s.scheduled_date = @date
-        AND (
-            (@startTime >= sa.start_time AND @startTime < ADDTIME(sa.start_time, SEC_TO_TIME(sa.duration_minutes * 60)))
-            OR (ADDTIME(@startTime, SEC_TO_TIME(@durationMinutes * 60)) > sa.start_time 
-                AND ADDTIME(@startTime, SEC_TO_TIME(@durationMinutes * 60)) <= ADDTIME(sa.start_time, SEC_TO_TIME(sa.duration_minutes * 60)))
-        )";
+                    SELECT COUNT(*) 
+                    FROM schedule s
+                    JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+                    WHERE s.person_id = @personId
+                    AND s.scheduled_date = @date
+                    AND (
+                        (@startTime >= sa.start_time AND @startTime < ADDTIME(sa.start_time, SEC_TO_TIME(sa.duration_minutes * 60)))
+                        OR (ADDTIME(@startTime, SEC_TO_TIME(@durationMinutes * 60)) > sa.start_time 
+                            AND ADDTIME(@startTime, SEC_TO_TIME(@durationMinutes * 60)) <= ADDTIME(sa.start_time, SEC_TO_TIME(sa.duration_minutes * 60)))
+                    )";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personId);
@@ -1272,7 +1460,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return isOverlapping;
@@ -1286,14 +1474,14 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            HOUR(sa.start_time) AS Hour, 
-            COUNT(*) AS Count
-        FROM schedule s
-        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
-        WHERE s.person_id = @personId
-        GROUP BY Hour
-        ORDER BY Hour";
+                    SELECT 
+                        HOUR(sa.start_time) AS Hour, 
+                        COUNT(*) AS Count
+                    FROM schedule s
+                    JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+                    WHERE s.person_id = @personId
+                    GROUP BY Hour
+                    ORDER BY Hour";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personId);
@@ -1307,7 +1495,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
@@ -1321,14 +1509,14 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            DATE(r.record_date) AS Date, 
-            SUM(r.burned_calories) AS CaloriesBurned
-        FROM record r
-        JOIN activity a ON r.activity_id = a.activity_id
-        WHERE r.person_id = @personId AND r.activity_id = @activityId
-        GROUP BY DATE(r.record_date)
-        ORDER BY DATE(r.record_date)";
+                    SELECT 
+                        DATE(r.record_date) AS Date, 
+                        SUM(r.burned_calories) AS CaloriesBurned
+                    FROM record r
+                    JOIN activity a ON r.activity_id = a.activity_id
+                    WHERE r.person_id = @personId AND r.activity_id = @activityId
+                    GROUP BY DATE(r.record_date)
+                    ORDER BY DATE(r.record_date)";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personID);
@@ -1343,7 +1531,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
@@ -1354,15 +1542,15 @@ namespace Fitness_Tracker.dao
             {
                 OpenConnection();
 
-                string sql = @"
-            SELECT r.record_date AS Date, 
-                   mv.value AS Value, 
-                   m.metric_name AS MetricName
-            FROM record r
-            INNER JOIN metric_values mv ON r.record_id = mv.record_id
-            INNER JOIN metric m ON mv.metric_id = m.metric_id
-            WHERE r.person_id = @personId AND r.activity_id = @activityId
-            ORDER BY r.record_date;";
+                sql = @"
+                    SELECT r.record_date AS Date, 
+                           mv.value AS Value, 
+                           m.metric_name AS MetricName
+                    FROM record r
+                    INNER JOIN metric_values mv ON r.record_id = mv.record_id
+                    INNER JOIN metric m ON mv.metric_id = m.metric_id
+                    WHERE r.person_id = @personId AND r.activity_id = @activityId
+                    ORDER BY r.record_date;";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personId);
@@ -1390,14 +1578,14 @@ namespace Fitness_Tracker.dao
             {
                 OpenConnection();
 
-                string sql = @"
-            SELECT 
-                m.metric_name,
-                mv.value
-            FROM metric_values mv
-            INNER JOIN metric m ON mv.metric_id = m.metric_id
-            INNER JOIN record r ON mv.record_id = r.record_id
-            WHERE r.person_id = @personId AND r.activity_id = @activityId;";
+                sql = @"
+                    SELECT 
+                        m.metric_name,
+                        mv.value
+                    FROM metric_values mv
+                    INNER JOIN metric m ON mv.metric_id = m.metric_id
+                    INNER JOIN record r ON mv.record_id = r.record_id
+                    WHERE r.person_id = @personId AND r.activity_id = @activityId;";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personId);
@@ -1428,10 +1616,10 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT MAX(r.burned_calories) AS MaxCalories
-        FROM record r
-        WHERE r.person_id = @personId
-          AND r.activity_id = @activityId;";
+                    SELECT MAX(r.burned_calories) AS MaxCalories
+                    FROM record r
+                    WHERE r.person_id = @personId
+                      AND r.activity_id = @activityId;";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personID);
@@ -1449,7 +1637,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return maxCalories;
@@ -1463,14 +1651,14 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            a.activity_name AS ActivityName,
-            SUM(r.burned_calories) AS CaloriesBurned
-        FROM record r
-        JOIN activity a ON r.activity_id = a.activity_id
-        WHERE r.person_id = @personId
-        GROUP BY a.activity_id, a.activity_name
-        ORDER BY CaloriesBurned DESC;";
+                SELECT 
+                    a.activity_name AS ActivityName,
+                    SUM(r.burned_calories) AS CaloriesBurned
+                FROM record r
+                JOIN activity a ON r.activity_id = a.activity_id
+                WHERE r.person_id = @personId
+                GROUP BY a.activity_id, a.activity_name
+                ORDER BY CaloriesBurned DESC;";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personID);
@@ -1484,7 +1672,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
@@ -1498,19 +1686,19 @@ namespace Fitness_Tracker.dao
                 OpenConnection(); // Open the database connection
 
                 sql = @"
-        SELECT 
-            s.scheduled_date AS Date, 
-            sa.start_time AS StartTime, 
-            sa.duration_minutes AS Duration
-        FROM schedule s
-        JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
-        WHERE 
-            s.person_id = @personId 
-            AND sa.activity_id = @activityId 
-            AND s.scheduled_date >= CURDATE()
-        ORDER BY 
-            s.scheduled_date ASC, 
-            sa.start_time ASC;";
+                    SELECT 
+                        s.scheduled_date AS Date, 
+                        sa.start_time AS StartTime, 
+                        sa.duration_minutes AS Duration
+                    FROM schedule s
+                    JOIN schedule_activity sa ON s.schedule_id = sa.schedule_id
+                    WHERE 
+                        s.person_id = @personId 
+                        AND sa.activity_id = @activityId 
+                        AND s.scheduled_date >= CURDATE()
+                    ORDER BY 
+                        s.scheduled_date ASC, 
+                        sa.start_time ASC;";
 
                 cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personID);
@@ -1525,7 +1713,7 @@ namespace Fitness_Tracker.dao
             }
             finally
             {
-                CloseConnection(); // Ensure the connection is closed
+                CloseConnection(); // connection is closed
             }
 
             return dt;
@@ -1535,18 +1723,18 @@ namespace Fitness_Tracker.dao
             try
             {
                 OpenConnection();
-                string sql = @"
-            UPDATE person 
-            SET first_name = @firstname, 
-                last_name = @lastname, 
-                email = @email, 
-                date_of_birth = @dob, 
-                gender = @gender, 
-                mobile = @mobile, 
-                weight = @weight, 
-                height = @height, 
-                photo_path = @photo
-            WHERE person_id = @personId";
+                sql = @"
+                    UPDATE person 
+                    SET first_name = @firstname, 
+                        last_name = @lastname, 
+                        email = @email, 
+                        date_of_birth = @dob, 
+                        gender = @gender, 
+                        mobile = @mobile, 
+                        weight = @weight, 
+                        height = @height, 
+                        photo_path = @photo
+                    WHERE person_id = @personId";
 
                 cmd = new MySqlCommand(sql, conn);
 
@@ -1617,6 +1805,31 @@ namespace Fitness_Tracker.dao
                 CloseConnection();
             }
         }
+        // for setting
+        public bool IsUserExists(string username, string email, int personID)
+        {
+            try
+            {
+                OpenConnection();
+                sql = "SELECT COUNT(*) FROM person WHERE (username = @username OR email = @email) AND person_id <> @personID";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@personID", personID);
+
+                int userExists = Convert.ToInt32(cmd.ExecuteScalar());
+                return userExists > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error checking user existence: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
         public bool UpdatePassword(int personId, string newPassword)
         {
             try
@@ -1655,7 +1868,7 @@ namespace Fitness_Tracker.dao
                 {
                     while (reader.Read())
                     {
-                        // Safely retrieve data
+                        // retrieve data
                         double burnedCalories = reader["burned_calories"] != DBNull.Value
                             ? reader.GetDouble("burned_calories")
                             : 0;
@@ -1766,7 +1979,7 @@ namespace Fitness_Tracker.dao
             {
                 OpenConnection();
 
-                string sql = @"
+                sql = @"
             SELECT gt.goal_id, gt.goal_type, gt.target_weight, gt.daily_calories_target, 
                    gt.is_achieved, gt.created_at, gt.target_date, gt.achieved_date, 
                    a.activity_id, a.activity_name
@@ -1783,10 +1996,10 @@ namespace Fitness_Tracker.dao
 
                 if (reader.Read())
                 {
-                    // Create Person object (assume the logged-in user)
+                    // Create Person object 
                     Person person = User.GetInstance();
 
-                    // Create Activity object if applicable
+                    // Create Activity object 
                     Activity activity = null;
                     if (!reader.IsDBNull(reader.GetOrdinal("activity_id")))
                     {
@@ -1834,7 +2047,7 @@ namespace Fitness_Tracker.dao
             {
                 OpenConnection();
 
-                string sql = @"
+                sql = @"
             SELECT schedule_id, scheduled_date 
             FROM schedule
             WHERE person_id = @person_id AND scheduled_date >= CURDATE()
@@ -1873,7 +2086,7 @@ namespace Fitness_Tracker.dao
             {
                 OpenConnection();
 
-                string sql = @"
+                sql = @"
             SELECT sa.activity_id, sa.start_time, sa.duration_minutes, a.activity_name
             FROM schedule_activity sa
             INNER JOIN activity a ON sa.activity_id = a.activity_id
@@ -1890,7 +2103,7 @@ namespace Fitness_Tracker.dao
                 {
                     return new ScheduleActivity
                     {
-                        Schedule = new Schedule { ScheduleId = scheduleId }, // Reference the schedule
+                        Schedule = new Schedule { ScheduleId = scheduleId },
                         Activity = new Activity
                         {
                             ActivityId = reader.GetInt32("activity_id"),
@@ -1980,7 +2193,6 @@ namespace Fitness_Tracker.dao
 
             return records;
         }
-
         public List<GoalTracking> GetGoalsForUser(int personId)
         {
             List<GoalTracking> goals = new List<GoalTracking>();
@@ -1989,7 +2201,7 @@ namespace Fitness_Tracker.dao
             {
                 OpenConnection();
 
-                string query = @"SELECT g.goal_id, g.goal_type, g.target_weight, g.daily_calories_target, g.is_achieved,
+                sql = @"SELECT g.goal_id, g.goal_type, g.target_weight, g.daily_calories_target, g.is_achieved,
                                 g.created_at, g.target_date, g.achieved_date,
                                 a.activity_id, a.activity_name,
                                 p.person_id, p.first_name, p.last_name, p.username
@@ -1998,7 +2210,7 @@ namespace Fitness_Tracker.dao
                          LEFT JOIN activity a ON g.activity_id = a.activity_id
                          WHERE g.person_id = @personId";
 
-                MySqlCommand cmd = new MySqlCommand(query, conn);
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@personId", personId);
 
                 using (var reader = cmd.ExecuteReader())
@@ -2009,7 +2221,7 @@ namespace Fitness_Tracker.dao
                         var person = User.GetInstance();
 
 
-                        // Create Activity object (optional, may be null)
+                        // Create Activity object
                         Activity activity = null;
                         if (!reader.IsDBNull(reader.GetOrdinal("activity_id")))
                         {
@@ -2059,7 +2271,7 @@ namespace Fitness_Tracker.dao
             {
                 OpenConnection();
 
-                string sql = @"SELECT SUM(burned_calories) AS TotalCalories
+                sql = @"SELECT SUM(burned_calories) AS TotalCalories
                        FROM record
                        WHERE person_id = @personId";
 
@@ -2083,7 +2295,6 @@ namespace Fitness_Tracker.dao
 
             return totalBurnedCalories;
         }
-
     }
 }
 

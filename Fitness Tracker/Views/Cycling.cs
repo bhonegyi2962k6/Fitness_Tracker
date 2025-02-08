@@ -24,7 +24,7 @@ namespace Fitness_Tracker.Views
 
         private void btnCyclingRecord_Click(object sender, EventArgs e)
         {
-            try
+             try
             {
                 // Validate inputs
                 var (isValid, speed, distance, rideDuration, intensity) = ValidateInputs();
@@ -88,28 +88,11 @@ namespace Fitness_Tracker.Views
             // Validate Intensity
             if (cboIntensity.SelectedItem == null)
             {
-                MessageBox.Show("Please select an intensity level.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select an Activity type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return (false, speed, distance, rideDuration, intensity);
             }
 
             intensity = cboIntensity.SelectedItem.ToString();
-
-            // Intensity-based validation
-            if (intensity == "Light" && (speed > 15 || distance > 10 || rideDuration > 30))
-            {
-                MessageBox.Show("For Light intensity, speed should be ≤ 15 km/h, distance ≤ 10 km, and duration ≤ 30 minutes. Please adjust your inputs or intensity level.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return (false, speed, distance, rideDuration, intensity);
-            }
-            else if (intensity == "Moderate" && (speed < 16 || speed > 25 || distance > 20 || rideDuration > 60))
-            {
-                MessageBox.Show("For Moderate intensity, speed should be between 16 and 25 km/h, distance ≤ 20 km, and duration ≤ 60 minutes. Please adjust your inputs or intensity level.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return (false, speed, distance, rideDuration, intensity);
-            }
-            else if (intensity == "Vigorous" && (speed < 26 || distance > 50 || rideDuration > 120))
-            {
-                MessageBox.Show("For Vigorous intensity, speed should be ≥ 26 km/h, distance ≤ 50 km, and duration ≤ 120 minutes. Please adjust your inputs or intensity level.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return (false, speed, distance, rideDuration, intensity);
-            }
 
             return (true, speed, distance, rideDuration, intensity);
         }
@@ -214,7 +197,7 @@ namespace Fitness_Tracker.Views
                     }
                 }
 
-                MessageBox.Show("Cycling record successfully inserted!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Cycling performance was recorded successfully! You burned {record.BurnedCalories} calories.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Optional: Create and associate a UserRecord object
                 var userRecord = new UserRecord
@@ -282,10 +265,6 @@ namespace Fitness_Tracker.Views
                     // Customize the chart title
                     chart.Title.Text = $"Calories Burned from {activity.ActivityName}";
                     chart.Update();
-                }
-                else
-                {
-                    MessageBox.Show($"No data available for {activity.ActivityName} graph.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -372,10 +351,6 @@ namespace Fitness_Tracker.Views
                     // Step 5: Customize the chart title and update it
                     chart.Title.Text = $"{activity.ActivityName} Metrics Over Time";
                     chart.Update();
-                }
-                else
-                {
-                    MessageBox.Show($"No data available for {activity.ActivityName} metrics chart.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -571,10 +546,6 @@ namespace Fitness_Tracker.Views
                     // Customize the chart
                     chartHistoricalComparison.Title.Text = "Historical Calories Burned Comparison";
                     chartHistoricalComparison.Update();
-                }
-                else
-                {
-                    MessageBox.Show("No historical data available for comparison.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)

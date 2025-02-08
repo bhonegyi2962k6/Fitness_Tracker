@@ -20,7 +20,6 @@ namespace Fitness_Tracker.Views
             InitializeComponent();
             InitializeMotivationalQuoteTimer();
         }
-
         private Timer motivationalQuoteTimer; // Timer for updating quotes
         private readonly string[] quotes = {
             "Quotes: The journey of a thousand miles begins with a single step.",
@@ -52,7 +51,6 @@ namespace Fitness_Tracker.Views
                 }
             }
         }
-
         private void dropDownTimer_Tick(object sender, EventArgs e)
         {
             if (isCollapsed)
@@ -74,13 +72,31 @@ namespace Fitness_Tracker.Views
                 }
             }
         }
+        private void ResetAllButtonColors()
+        {
+            // Reset FillColor for activity buttons to their default color
+            btnSwimming.FillColor = Color.FromArgb(62, 100, 121);
+            btnWalking.FillColor = Color.FromArgb(62, 100, 121);
+            btnCycling.FillColor = Color.FromArgb(62, 100, 121);
+            btnHiking.FillColor = Color.FromArgb(62, 100, 121);
+            btnWeightlifiting.FillColor = Color.FromArgb(62, 100, 121);
+            btnRowing.FillColor = Color.FromArgb(62, 100, 121);
 
+            // Reset FillColor for non-activity buttons to their default color
+            btnHome.FillColor = Color.FromArgb(62, 88, 121);
+            btnSetGoal.FillColor = Color.FromArgb(62, 88, 121);
+            btnMonitorActivity.FillColor = Color.FromArgb(62, 88, 121);
+            btnSchedule.FillColor = Color.FromArgb(62, 88, 121);
+            btnSetting.FillColor = Color.FromArgb(62, 88, 121);
+        }
         private void frmMainForm_Load(object sender, EventArgs e)
         {
             User currentUser = User.GetInstance();
             lblWelcomeUsername.Text = currentUser.Username;
 
             ClearUpperPanelForHome();
+            ResetAllButtonColors(); // Reset colors for all buttons
+            btnHome.FillColor = Color.FromArgb(62, 100, 121); // Highlight Home button
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmHome());
 
@@ -106,7 +122,6 @@ namespace Fitness_Tracker.Views
             motivationalQuoteTimer.Tick += MotivationalQuoteTimer_Tick;
             motivationalQuoteTimer.Start();
         }
-
         private void MotivationalQuoteTimer_Tick(object sender, EventArgs e)
         {
             DisplayMotivationalQuote();
@@ -155,7 +170,6 @@ namespace Fitness_Tracker.Views
                 this.Close();
             }
         }
-
         private void ClearUserSession()
         {
             // Clear the logged-in user object
@@ -164,6 +178,8 @@ namespace Fitness_Tracker.Views
         }
         private void btnSwimming_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors(); // Reset all buttons to default FillColor
+            btnSwimming.FillColor = Color.FromArgb(33, 53, 85); // Set active button FillColor
             RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmSwimming());
@@ -171,6 +187,8 @@ namespace Fitness_Tracker.Views
 
         private void btnWalking_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors();
+            btnWalking.FillColor = Color.FromArgb(33, 53, 85);
             RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmWalking());
@@ -178,6 +196,8 @@ namespace Fitness_Tracker.Views
 
         private void btnCycling_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors();
+            btnCycling.FillColor = Color.FromArgb(33, 53, 85);
             RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmCycling());
@@ -185,6 +205,8 @@ namespace Fitness_Tracker.Views
 
         private void btnHiking_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors();
+            btnHiking.FillColor = Color.FromArgb(33, 53, 85);
             RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmHiking());
@@ -192,6 +214,8 @@ namespace Fitness_Tracker.Views
 
         private void btnWeightlifiting_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors();
+            btnWeightlifiting.FillColor = Color.FromArgb(33, 53, 85);
             RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmWeightlifting());
@@ -199,6 +223,8 @@ namespace Fitness_Tracker.Views
 
         private void btnRowing_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors();
+            btnRowing.FillColor = Color.FromArgb(33, 53, 85);
             RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmRowing());
@@ -206,6 +232,8 @@ namespace Fitness_Tracker.Views
 
         private void btnSchedule_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors(); // Reset colors for all buttons
+            btnSchedule.FillColor = Color.FromArgb(62, 100, 121); // Highlight Home button
             RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmSchedule());
@@ -213,6 +241,8 @@ namespace Fitness_Tracker.Views
 
         private void btnRecords_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors(); // Reset colors for all buttons
+            btnMonitorActivity.FillColor = Color.FromArgb(62, 100, 121); // Highlight Home button
             RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmMonitorActivity());
@@ -220,6 +250,8 @@ namespace Fitness_Tracker.Views
 
         private void btnSetGoal_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors(); // Reset colors for all buttons
+            btnSetGoal.FillColor = Color.FromArgb(62, 100, 121); // Highlight Home button
             RestoreUpperPanel();
             panelMain.Controls.Clear();
             panelMain.Controls.Add(new frmSetGoal());
@@ -227,6 +259,8 @@ namespace Fitness_Tracker.Views
 
         private void btnHome_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors(); // Reset colors for all buttons
+            btnHome.FillColor = Color.FromArgb(62, 100, 121); // Highlight Home button
             DisplayMotivationalQuote();
             ClearUpperPanelForHome();
             panelMain.Controls.Clear();
@@ -257,9 +291,10 @@ namespace Fitness_Tracker.Views
             }
         }
 
-
         private void btnSetting_Click(object sender, EventArgs e)
         {
+            ResetAllButtonColors(); // Reset colors for all buttons
+            btnSetting.FillColor = Color.FromArgb(62, 100, 121); // Highlight Home button
             frmSetting settingsForm = new frmSetting();
 
             // Subscribe to the OnPhotoUpdated event

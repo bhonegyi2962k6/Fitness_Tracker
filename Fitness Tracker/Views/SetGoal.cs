@@ -24,7 +24,7 @@ namespace Fitness_Tracker.Views
             db = ConnectionDB.GetInstance(); // Use the Singleton instance
             LoadCurrentGoal();
             dtpTargetDate.MinDate = DateTime.Today;
-            dgvGoals.RowTemplate.Height = 45; // Adjust this value to your desired height
+            dgvGoals.RowTemplate.Height = 45; 
             dgvGoals.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
         }
         private void LoadGoalsToGrid()
@@ -89,7 +89,6 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error loading goals: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void LoadCurrentGoal()
         {
             try
@@ -182,7 +181,7 @@ namespace Fitness_Tracker.Views
             double timeProgress = 0;
 
             // Baseline weight when the goal was created
-            double baselineWeight = 100; // Example value, replace with actual baseline
+            double baselineWeight = 100;
             double currentWeight = frmLogin.user.Weight;
             double targetWeight;
 
@@ -528,6 +527,7 @@ namespace Fitness_Tracker.Views
                     LoadGoalAchievementByMonthGraph();
                     LoadAchievedVsPendingGraph();
                     LoadWeightTrendGraph();
+                    ClearGoalInputFields();
                 }
                 else
                 {
@@ -629,8 +629,6 @@ namespace Fitness_Tracker.Views
                 MessageBox.Show($"Error deleting goal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
         private void btnAchieved_Click(object sender, EventArgs e)
         {
             try
@@ -778,7 +776,7 @@ namespace Fitness_Tracker.Views
             try
             {
                 // Fetch data from the database
-                DataTable dt = db.GetGoalAchievementByMonth();
+                DataTable dt = db.GetGoalAchievementByMonth(frmLogin.user.PersonID);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -818,11 +816,6 @@ namespace Fitness_Tracker.Views
                     chartGoalAchievementByMonth.Title.Text = "Goal Achievement by Month";
                     chartGoalAchievementByMonth.Update(); // Refresh the chart
                 }
-                else
-                {
-                    // Handle the case where no data is returned
-                    MessageBox.Show("No data available for goal achievement by month.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
             }
             catch (Exception ex)
             {
@@ -855,9 +848,9 @@ namespace Fitness_Tracker.Views
                         TargetDate = DateTime.Today // Placeholder, if needed
                     };
 
-                    // Fetch counts from the DataTable
-                    achievedGoals.GoalId = Convert.ToInt32(dt.Rows[0]["achieved_count"]);
-                    pendingGoals.GoalId = Convert.ToInt32(dt.Rows[0]["pending_count"]);
+                    // Fetch counts from the DataTable and handle NULL values
+                    achievedGoals.GoalId = dt.Rows[0]["achieved_count"] != DBNull.Value ? Convert.ToInt32(dt.Rows[0]["achieved_count"]) : 0;
+                    pendingGoals.GoalId = dt.Rows[0]["pending_count"] != DBNull.Value ? Convert.ToInt32(dt.Rows[0]["pending_count"]) : 0;
 
                     // Clear existing data points
                     gunaPieDataset1.DataPoints.Clear();
@@ -876,10 +869,6 @@ namespace Fitness_Tracker.Views
                     chartAchievedVsPending.Datasets.Clear();
                     chartAchievedVsPending.Datasets.Add(gunaPieDataset1);
                     chartAchievedVsPending.Update();
-                }
-                else
-                {
-                    MessageBox.Show("No data found for Achieved vs Pending Goals.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -933,10 +922,6 @@ namespace Fitness_Tracker.Views
                     chartWeightTrend.Title.Text = "Weight Trends Over Time";
                     chartWeightTrend.Update();
                 }
-                else
-                {
-                    MessageBox.Show("No weight tracking data available.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
             }
             catch (Exception ex)
             {
@@ -965,8 +950,8 @@ namespace Fitness_Tracker.Views
         // Define a dictionary for recommended activities based on goal types
         private readonly Dictionary<string, List<string>> activityRecommendations = new Dictionary<string, List<string>>
         {
-                { "Weight Loss", new List<string> {"Swimming", "Walking", "Cycling" ,"Rowing", "Hiking" } },
-                { "Weight Gain", new List<string> {"Weightlifting" } },
+                { "Weight Loss", new List<string> {"Swimming", "Walking", "Cycling" ,"Rowing", "Hiking", "Weightlifting" } },
+                { "Weight Gain", new List<string> { "Walking", "Cycling" , "Weightlifting" } },
                 { "Maintain Weight", new List<string> { "Rowing", "Hiking", "Walking", "Cycling" } }
         };
 

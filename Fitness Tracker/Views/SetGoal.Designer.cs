@@ -133,6 +133,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvGoals)).BeginInit();
             this.guna2Panel2.SuspendLayout();
             this.guna2Panel3.SuspendLayout();
+            this.progressBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // cboGoalType
@@ -199,9 +200,9 @@
             this.label1.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(17, 169);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(133, 21);
+            this.label1.Size = new System.Drawing.Size(165, 21);
             this.label1.TabIndex = 59;
-            this.label1.Text = "Target Weight:";
+            this.label1.Text = "Target Weight(kg):";
             // 
             // txtCaloriesTarget
             // 
@@ -224,7 +225,7 @@
             this.txtCaloriesTarget.Name = "txtCaloriesTarget";
             this.txtCaloriesTarget.PasswordChar = '\0';
             this.txtCaloriesTarget.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txtCaloriesTarget.PlaceholderText = "Enter Your Calories Target";
+            this.txtCaloriesTarget.PlaceholderText = "Enter Your Daily Calories Target";
             this.txtCaloriesTarget.SelectedText = "";
             this.txtCaloriesTarget.Size = new System.Drawing.Size(357, 48);
             this.txtCaloriesTarget.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
@@ -236,9 +237,9 @@
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(17, 265);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(140, 21);
+            this.label3.Size = new System.Drawing.Size(220, 21);
             this.label3.TabIndex = 61;
-            this.label3.Text = "Calories Target:";
+            this.label3.Text = "Daily Calories Target(kal):";
             // 
             // btnSetGoal
             // 
@@ -714,7 +715,7 @@
             // 
             this.lblProgress.AutoSize = true;
             this.lblProgress.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblProgress.Location = new System.Drawing.Point(100, 629);
+            this.lblProgress.Location = new System.Drawing.Point(52, 112);
             this.lblProgress.Name = "lblProgress";
             this.lblProgress.Size = new System.Drawing.Size(82, 21);
             this.lblProgress.TabIndex = 77;
@@ -723,6 +724,7 @@
             // progressBar
             // 
             this.progressBar.BackColor = System.Drawing.Color.Transparent;
+            this.progressBar.Controls.Add(this.lblProgress);
             this.progressBar.FillColor = System.Drawing.Color.Gray;
             this.progressBar.FillThickness = 35;
             this.progressBar.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -733,7 +735,7 @@
             this.progressBar.ProgressEndCap = System.Drawing.Drawing2D.LineCap.Round;
             this.progressBar.ProgressThickness = 35;
             this.progressBar.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            this.progressBar.Size = new System.Drawing.Size(238, 238);
+            this.progressBar.Size = new System.Drawing.Size(250, 250);
             this.progressBar.TabIndex = 78;
             // 
             // chartGoalAchievementByMonth
@@ -774,7 +776,7 @@
             // 
             // gunaBarDataset1
             // 
-            this.gunaBarDataset1.Label = "Bar1";
+            this.gunaBarDataset1.Label = "Goal Achieved";
             this.gunaBarDataset1.TargetChart = this.chartGoalAchievementByMonth;
             // 
             // chartAchievedVsPending
@@ -868,7 +870,7 @@
             // 
             this.gunaLineDataset1.BorderColor = System.Drawing.Color.Empty;
             this.gunaLineDataset1.FillColor = System.Drawing.Color.Empty;
-            this.gunaLineDataset1.Label = "Line1";
+            this.gunaLineDataset1.Label = "Weight Trends";
             this.gunaLineDataset1.TargetChart = this.chartWeightTrend;
             // 
             // frmSetGoal
@@ -882,7 +884,6 @@
             this.Controls.Add(this.chartGoalAchievementByMonth);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.lblProgress);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.guna2Panel3);
             this.Controls.Add(this.guna2Panel2);
@@ -900,6 +901,8 @@
             this.guna2Panel2.PerformLayout();
             this.guna2Panel3.ResumeLayout(false);
             this.guna2Panel3.PerformLayout();
+            this.progressBar.ResumeLayout(false);
+            this.progressBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

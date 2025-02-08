@@ -41,11 +41,12 @@
             this.btnMenuBar = new Guna.UI2.WinForms.Guna2CircleButton();
             this.btnHome = new Guna.UI2.WinForms.Guna2Button();
             this.btnSetGoal = new Guna.UI2.WinForms.Guna2Button();
-            this.btnRecords = new Guna.UI2.WinForms.Guna2Button();
+            this.btnMonitorActivity = new Guna.UI2.WinForms.Guna2Button();
             this.btnSchedule = new Guna.UI2.WinForms.Guna2Button();
             this.btnSetting = new Guna.UI2.WinForms.Guna2Button();
             this.btnExit = new Guna.UI2.WinForms.Guna2ControlBox();
             this.panelMainControl = new System.Windows.Forms.Panel();
+            this.lblMotivationalQuote = new System.Windows.Forms.Label();
             this.panelUserSide = new System.Windows.Forms.Panel();
             this.picProfilePhoto = new Guna.UI2.WinForms.Guna2CirclePictureBox();
             this.lblWelcome = new System.Windows.Forms.Label();
@@ -56,7 +57,6 @@
             this.panelMain = new System.Windows.Forms.Panel();
             this.sideMenuTimer = new System.Windows.Forms.Timer(this.components);
             this.dropDownTimer = new System.Windows.Forms.Timer(this.components);
-            this.lblMotivationalQuote = new System.Windows.Forms.Label();
             this.panelDropDown.SuspendLayout();
             this.panelSide.SuspendLayout();
             this.panelMainControl.SuspendLayout();
@@ -75,7 +75,7 @@
             this.panelDropDown.Controls.Add(this.btnCycling);
             this.panelDropDown.Controls.Add(this.btnSwimming);
             this.panelDropDown.Location = new System.Drawing.Point(3, 220);
-            this.panelDropDown.MaximumSize = new System.Drawing.Size(258, 379);
+            this.panelDropDown.MaximumSize = new System.Drawing.Size(258, 346);
             this.panelDropDown.MinimumSize = new System.Drawing.Size(258, 75);
             this.panelDropDown.Name = "panelDropDown";
             this.panelDropDown.Size = new System.Drawing.Size(258, 75);
@@ -88,15 +88,15 @@
             this.btnRowing.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnRowing.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnRowing.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(100)))), ((int)(((byte)(121)))));
-            this.btnRowing.Font = new System.Drawing.Font("Century Gothic", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRowing.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRowing.ForeColor = System.Drawing.Color.White;
             this.btnRowing.Image = global::Fitness_Tracker.Properties.Resources.man_in_canoe;
             this.btnRowing.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnRowing.ImageSize = new System.Drawing.Size(40, 40);
-            this.btnRowing.Location = new System.Drawing.Point(3, 326);
+            this.btnRowing.Location = new System.Drawing.Point(4, 296);
             this.btnRowing.Name = "btnRowing";
             this.btnRowing.Padding = new System.Windows.Forms.Padding(0, 0, 30, 0);
-            this.btnRowing.Size = new System.Drawing.Size(252, 50);
+            this.btnRowing.Size = new System.Drawing.Size(252, 45);
             this.btnRowing.TabIndex = 12;
             this.btnRowing.Text = "Rowing";
             this.btnRowing.Click += new System.EventHandler(this.btnRowing_Click);
@@ -108,15 +108,15 @@
             this.btnWeightlifiting.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnWeightlifiting.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnWeightlifiting.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(100)))), ((int)(((byte)(121)))));
-            this.btnWeightlifiting.Font = new System.Drawing.Font("Century Gothic", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnWeightlifiting.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnWeightlifiting.ForeColor = System.Drawing.Color.White;
             this.btnWeightlifiting.Image = global::Fitness_Tracker.Properties.Resources.weight_lifting;
             this.btnWeightlifiting.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnWeightlifiting.ImageSize = new System.Drawing.Size(40, 40);
-            this.btnWeightlifiting.Location = new System.Drawing.Point(3, 276);
+            this.btnWeightlifiting.Location = new System.Drawing.Point(4, 251);
             this.btnWeightlifiting.Name = "btnWeightlifiting";
-            this.btnWeightlifiting.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
-            this.btnWeightlifiting.Size = new System.Drawing.Size(252, 50);
+            this.btnWeightlifiting.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.btnWeightlifiting.Size = new System.Drawing.Size(252, 45);
             this.btnWeightlifiting.TabIndex = 11;
             this.btnWeightlifiting.Text = "Weightlifting";
             this.btnWeightlifiting.Click += new System.EventHandler(this.btnWeightlifiting_Click);
@@ -128,15 +128,15 @@
             this.btnHiking.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnHiking.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnHiking.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(100)))), ((int)(((byte)(121)))));
-            this.btnHiking.Font = new System.Drawing.Font("Century Gothic", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHiking.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHiking.ForeColor = System.Drawing.Color.White;
             this.btnHiking.Image = global::Fitness_Tracker.Properties.Resources.mountain_hiking;
             this.btnHiking.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnHiking.ImageSize = new System.Drawing.Size(40, 40);
-            this.btnHiking.Location = new System.Drawing.Point(3, 226);
+            this.btnHiking.Location = new System.Drawing.Point(4, 206);
             this.btnHiking.Name = "btnHiking";
             this.btnHiking.Padding = new System.Windows.Forms.Padding(0, 0, 40, 0);
-            this.btnHiking.Size = new System.Drawing.Size(252, 50);
+            this.btnHiking.Size = new System.Drawing.Size(252, 45);
             this.btnHiking.TabIndex = 10;
             this.btnHiking.Text = "Hiking";
             this.btnHiking.Click += new System.EventHandler(this.btnHiking_Click);
@@ -153,7 +153,7 @@
             this.btnActivity.Image = global::Fitness_Tracker.Properties.Resources.exercise;
             this.btnActivity.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnActivity.ImageSize = new System.Drawing.Size(50, 50);
-            this.btnActivity.Location = new System.Drawing.Point(3, 3);
+            this.btnActivity.Location = new System.Drawing.Point(4, 2);
             this.btnActivity.Name = "btnActivity";
             this.btnActivity.Padding = new System.Windows.Forms.Padding(0, 0, 30, 0);
             this.btnActivity.Size = new System.Drawing.Size(252, 73);
@@ -163,20 +163,21 @@
             // 
             // btnWalking
             // 
+            this.btnWalking.BorderStyle = System.Drawing.Drawing2D.DashStyle.DashDotDot;
             this.btnWalking.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
             this.btnWalking.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btnWalking.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnWalking.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnWalking.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(100)))), ((int)(((byte)(121)))));
-            this.btnWalking.Font = new System.Drawing.Font("Century Gothic", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnWalking.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnWalking.ForeColor = System.Drawing.Color.White;
             this.btnWalking.Image = global::Fitness_Tracker.Properties.Resources.person;
             this.btnWalking.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnWalking.ImageSize = new System.Drawing.Size(40, 40);
-            this.btnWalking.Location = new System.Drawing.Point(3, 126);
+            this.btnWalking.Location = new System.Drawing.Point(4, 116);
             this.btnWalking.Name = "btnWalking";
             this.btnWalking.Padding = new System.Windows.Forms.Padding(0, 0, 30, 0);
-            this.btnWalking.Size = new System.Drawing.Size(252, 50);
+            this.btnWalking.Size = new System.Drawing.Size(252, 45);
             this.btnWalking.TabIndex = 8;
             this.btnWalking.Text = "Walking";
             this.btnWalking.Click += new System.EventHandler(this.btnWalking_Click);
@@ -188,15 +189,15 @@
             this.btnCycling.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnCycling.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnCycling.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(100)))), ((int)(((byte)(121)))));
-            this.btnCycling.Font = new System.Drawing.Font("Century Gothic", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCycling.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCycling.ForeColor = System.Drawing.Color.White;
             this.btnCycling.Image = global::Fitness_Tracker.Properties.Resources.track;
             this.btnCycling.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnCycling.ImageSize = new System.Drawing.Size(40, 40);
-            this.btnCycling.Location = new System.Drawing.Point(3, 176);
+            this.btnCycling.Location = new System.Drawing.Point(4, 161);
             this.btnCycling.Name = "btnCycling";
             this.btnCycling.Padding = new System.Windows.Forms.Padding(0, 0, 30, 0);
-            this.btnCycling.Size = new System.Drawing.Size(252, 50);
+            this.btnCycling.Size = new System.Drawing.Size(252, 45);
             this.btnCycling.TabIndex = 9;
             this.btnCycling.Text = "Cycling";
             this.btnCycling.Click += new System.EventHandler(this.btnCycling_Click);
@@ -208,15 +209,15 @@
             this.btnSwimming.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnSwimming.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnSwimming.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(100)))), ((int)(((byte)(121)))));
-            this.btnSwimming.Font = new System.Drawing.Font("Century Gothic", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSwimming.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSwimming.ForeColor = System.Drawing.Color.White;
             this.btnSwimming.Image = global::Fitness_Tracker.Properties.Resources.swimming_silhouette;
             this.btnSwimming.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnSwimming.ImageSize = new System.Drawing.Size(40, 40);
-            this.btnSwimming.Location = new System.Drawing.Point(3, 76);
+            this.btnSwimming.Location = new System.Drawing.Point(4, 71);
             this.btnSwimming.Name = "btnSwimming";
             this.btnSwimming.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.btnSwimming.Size = new System.Drawing.Size(252, 50);
+            this.btnSwimming.Size = new System.Drawing.Size(252, 45);
             this.btnSwimming.TabIndex = 7;
             this.btnSwimming.Text = "Swimming";
             this.btnSwimming.Click += new System.EventHandler(this.btnSwimming_Click);
@@ -228,7 +229,7 @@
             this.panelSide.Controls.Add(this.btnHome);
             this.panelSide.Controls.Add(this.btnSetGoal);
             this.panelSide.Controls.Add(this.panelDropDown);
-            this.panelSide.Controls.Add(this.btnRecords);
+            this.panelSide.Controls.Add(this.btnMonitorActivity);
             this.panelSide.Controls.Add(this.btnSchedule);
             this.panelSide.Controls.Add(this.btnSetting);
             this.panelSide.Dock = System.Windows.Forms.DockStyle.Left;
@@ -236,7 +237,7 @@
             this.panelSide.MaximumSize = new System.Drawing.Size(263, 1080);
             this.panelSide.MinimumSize = new System.Drawing.Size(75, 948);
             this.panelSide.Name = "panelSide";
-            this.panelSide.Size = new System.Drawing.Size(263, 1000);
+            this.panelSide.Size = new System.Drawing.Size(75, 1000);
             this.panelSide.TabIndex = 10;
             // 
             // btnMenuBar
@@ -298,25 +299,25 @@
             this.btnSetGoal.Text = "Set Goal";
             this.btnSetGoal.Click += new System.EventHandler(this.btnSetGoal_Click);
             // 
-            // btnRecords
+            // btnMonitorActivity
             // 
-            this.btnRecords.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnRecords.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnRecords.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnRecords.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnRecords.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(88)))), ((int)(((byte)(121)))));
-            this.btnRecords.Font = new System.Drawing.Font("Century Gothic", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRecords.ForeColor = System.Drawing.Color.White;
-            this.btnRecords.Image = global::Fitness_Tracker.Properties.Resources.dashboard;
-            this.btnRecords.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btnRecords.ImageSize = new System.Drawing.Size(40, 45);
-            this.btnRecords.Location = new System.Drawing.Point(3, 301);
-            this.btnRecords.Name = "btnRecords";
-            this.btnRecords.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
-            this.btnRecords.Size = new System.Drawing.Size(256, 73);
-            this.btnRecords.TabIndex = 14;
-            this.btnRecords.Text = "Records";
-            this.btnRecords.Click += new System.EventHandler(this.btnRecords_Click);
+            this.btnMonitorActivity.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnMonitorActivity.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnMonitorActivity.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnMonitorActivity.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnMonitorActivity.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(88)))), ((int)(((byte)(121)))));
+            this.btnMonitorActivity.Font = new System.Drawing.Font("Century Gothic", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMonitorActivity.ForeColor = System.Drawing.Color.White;
+            this.btnMonitorActivity.Image = global::Fitness_Tracker.Properties.Resources.dashboard;
+            this.btnMonitorActivity.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.btnMonitorActivity.ImageSize = new System.Drawing.Size(40, 45);
+            this.btnMonitorActivity.Location = new System.Drawing.Point(3, 301);
+            this.btnMonitorActivity.Name = "btnMonitorActivity";
+            this.btnMonitorActivity.Padding = new System.Windows.Forms.Padding(40, 0, 0, 0);
+            this.btnMonitorActivity.Size = new System.Drawing.Size(256, 73);
+            this.btnMonitorActivity.TabIndex = 14;
+            this.btnMonitorActivity.Text = "Monitor Activity";
+            this.btnMonitorActivity.Click += new System.EventHandler(this.btnRecords_Click);
             // 
             // btnSchedule
             // 
@@ -378,10 +379,20 @@
             this.panelMainControl.Controls.Add(this.panelUserSide);
             this.panelMainControl.Controls.Add(this.panelControl);
             this.panelMainControl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelMainControl.Location = new System.Drawing.Point(263, 0);
+            this.panelMainControl.Location = new System.Drawing.Point(75, 0);
             this.panelMainControl.Name = "panelMainControl";
-            this.panelMainControl.Size = new System.Drawing.Size(1657, 100);
+            this.panelMainControl.Size = new System.Drawing.Size(1845, 100);
             this.panelMainControl.TabIndex = 11;
+            // 
+            // lblMotivationalQuote
+            // 
+            this.lblMotivationalQuote.AutoSize = true;
+            this.lblMotivationalQuote.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMotivationalQuote.ForeColor = System.Drawing.Color.White;
+            this.lblMotivationalQuote.Location = new System.Drawing.Point(481, 37);
+            this.lblMotivationalQuote.Name = "lblMotivationalQuote";
+            this.lblMotivationalQuote.Size = new System.Drawing.Size(0, 19);
+            this.lblMotivationalQuote.TabIndex = 5;
             // 
             // panelUserSide
             // 
@@ -432,7 +443,7 @@
             this.panelControl.Controls.Add(this.btnExit);
             this.panelControl.Controls.Add(this.btnLogOut);
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panelControl.Location = new System.Drawing.Point(1428, 0);
+            this.panelControl.Location = new System.Drawing.Point(1616, 0);
             this.panelControl.Name = "panelControl";
             this.panelControl.Size = new System.Drawing.Size(229, 100);
             this.panelControl.TabIndex = 18;
@@ -473,9 +484,9 @@
             // 
             this.panelMain.BackColor = System.Drawing.Color.White;
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelMain.Location = new System.Drawing.Point(263, 100);
+            this.panelMain.Location = new System.Drawing.Point(75, 100);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(1657, 900);
+            this.panelMain.Size = new System.Drawing.Size(1845, 900);
             this.panelMain.TabIndex = 12;
             // 
             // sideMenuTimer
@@ -487,16 +498,6 @@
             // 
             this.dropDownTimer.Interval = 10;
             this.dropDownTimer.Tick += new System.EventHandler(this.dropDownTimer_Tick);
-            // 
-            // lblMotivationalQuote
-            // 
-            this.lblMotivationalQuote.AutoSize = true;
-            this.lblMotivationalQuote.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMotivationalQuote.ForeColor = System.Drawing.Color.White;
-            this.lblMotivationalQuote.Location = new System.Drawing.Point(481, 37);
-            this.lblMotivationalQuote.Name = "lblMotivationalQuote";
-            this.lblMotivationalQuote.Size = new System.Drawing.Size(0, 19);
-            this.lblMotivationalQuote.TabIndex = 5;
             // 
             // frmMainForm
             // 
@@ -537,7 +538,7 @@
         private Guna.UI2.WinForms.Guna2Button btnSetGoal;
         private System.Windows.Forms.Panel panelDropDown;
         private System.Windows.Forms.FlowLayoutPanel panelSide;
-        private Guna.UI2.WinForms.Guna2Button btnRecords;
+        private Guna.UI2.WinForms.Guna2Button btnMonitorActivity;
         private Guna.UI2.WinForms.Guna2ControlBox btnExit;
         private System.Windows.Forms.Panel panelMainControl;
         private Guna.UI2.WinForms.Guna2CirclePictureBox picProfilePhoto;
