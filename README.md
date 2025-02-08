@@ -68,7 +68,7 @@ A **test plan** was developed to validate:
 - Goal tracking and **achievement reporting**.
 
 ## 🎯 **Assignment Requirements & Justification**
-This project fulfills the **NCC DDOOCP functional and non-functional requirements**, including:
+This project fulfills the **NCC Level(4) DDOOCP functional and non-functional requirements**, including:
 - **Object-Oriented Design (OOP)**
 - **Encapsulation & Code Readability**
 - **Validation & Exception Handling**
@@ -76,7 +76,7 @@ This project fulfills the **NCC DDOOCP functional and non-functional requirement
 - **Graphical User Interface (GUI)**
 
 ## 🏆 **Author**
-- **[Your Name]**
+- **[Bhone Naing Khant]**
 - **GitHub Repository:** [Fitness_Tracker](https://github.com/bhonegyi2962k6/Fitness_Tracker.git)
 
 ---
