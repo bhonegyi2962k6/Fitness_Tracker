@@ -12,7 +12,10 @@ namespace Fitness_Tracker.Entities
         private Person person;
         private DateTime scheduledDate;
 
-        public Schedule() { }
+        public Schedule()
+        {
+        
+        }
         public Schedule(int scheduleId, Person person, DateTime scheduledDate)
         {
             this.scheduleId = scheduleId;

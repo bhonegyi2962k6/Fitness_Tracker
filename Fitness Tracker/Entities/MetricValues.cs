@@ -14,7 +14,10 @@ namespace Fitness_Tracker.Entities
         private Metric metric;
         private double value;
 
-        public MetricValues() { }
+        public MetricValues() 
+        { 
+        
+        }
         public MetricValues(int metricValueId, Activity activity, Record record, Metric metric, double value)
         {
             this.metricValueId = metricValueId;

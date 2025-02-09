@@ -13,6 +13,11 @@ namespace Fitness_Tracker.Entities
         private string intensityLevel;
         private double metValue;
 
+        public MetValues()
+        {
+
+        }
+
         public MetValues(int metId, Activity activity, string intensityLevel, double metValue)
         {
             this.metId = metId;

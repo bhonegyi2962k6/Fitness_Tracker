@@ -12,7 +12,10 @@ namespace Fitness_Tracker.Entities
         private Person person;
         private DateTime recorededDate;
         private double weight;
-        public WeightTracking() { }
+        public WeightTracking() 
+        {
+        
+        }
 
         public WeightTracking(int weightId, Person person, DateTime recorededDate, double weight)
         {

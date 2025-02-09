@@ -16,7 +16,10 @@ namespace Fitness_Tracker.Entities
         private double burnedCalories;
         private string intensityLevel;
 
-        public Record() { } 
+        public Record() 
+        {
+        
+        } 
 
         public Record(int recordId, Person person, Activity activity, DateTime recordDate, double burnedCalories, string intesityLevel)
         {

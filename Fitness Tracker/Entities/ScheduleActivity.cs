@@ -13,7 +13,10 @@ namespace Fitness_Tracker.Entities
         private TimeSpan startTime;
         private int durationMinutes;
 
-        public ScheduleActivity() { }
+        public ScheduleActivity() 
+        {
+        
+        }
         public ScheduleActivity(Schedule schedule, Activity activity, TimeSpan startTime, int durationMinutes)
         {
             this.schedule = schedule;
